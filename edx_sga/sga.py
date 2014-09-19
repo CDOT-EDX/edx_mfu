@@ -10,6 +10,7 @@ import mimetypes
 import os
 import pkg_resources
 import pytz
+import subprocess
 
 from functools import partial
 
@@ -271,6 +272,63 @@ class StaffGradedAssignmentXBlock(XBlock):
     def upload_assignment(self, request, suffix=''):
         assert self.upload_allowed()
         upload = request.params['assignment']
+
+        # NEW CODE BEGINS :
+
+        studentName = request.user.username
+
+        #studentDirectory = 'static/' + studentName + datetime.now().strftime("/%Y/%m/%d/%H/%M/%S")
+
+        studentDirectory = studentName + datetime.now().strftime("/%Y/%m/%d/%H/%M/%S")
+
+        edxStorageDirectory = '/edx/var/edxapp/uploads/'
+
+        edxStudentDirectory = edxStorageDirectory + studentDirectory
+
+        #studentOutput = studentName + datetime.now().strftime("/%Y/%m/%d/%H/%M/%S")
+
+        execute('mkdir -p ' + edxStudentDirectory)
+
+        #execute('touch static/testData/' + edxStudentDirectory + '/MyDataReader2_output.txt')
+
+        execute('touch ' + edxStudentDirectory + '/' + 'MyDataReader2_output.txt')
+
+        # The line bellow not needed again
+        #execute('cp ' + edxStorageDirectory + 'MyDataReader2.txt' + ' ' + edxStudentDirectory) # edxStorageDirectory / 'MyDataReader2.txt'
+
+        # strip leading path from file name to avoid directory traversal attacks
+        fname = os.path.basename(upload.file.name)
+
+        open(os.path.join(edxStudentDirectory, fname), 'wb').write(upload.file.read())
+
+        # : NEW CODE ENDS
+
+        # Does the subprocess work here?
+
+        process = subprocess.Popen('java -jar ' + edxStudentDirectory + '/' + upload.file.name + ' hello < ' + edxStudentDirectory + '/MyDataReader2.txt > ' + edxStudentDirectory + '/MyDataReader2_output.txt', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output = ''
+
+        # Poll process for new output until finished
+        for line in iter(process.stdout.readline, ""):
+            print line,
+            output += line
+
+        process.wait()
+        exitCode = process.returncode
+
+        if (exitCode != 0):
+            gettingOutput = open(edxStudentDirectory + '/MyDataReader2_output.txt', "w" )
+            gettingOutput.write("%s" % '--------:Try Again:--------')
+            gettingOutput.write("\n%s" % 'Command attempted:    ' + 'java -jar ' + edxStudentDirectory + ' hello < ' + edxStudentDirectory + '/MyDataReader2.txt > ' + edxStudentDirectory + '/MyDataReader2_output.txt')
+            gettingOutput.write("\n%s" % 'Exit code:    ' + str(exitCode))
+            gettingOutput.write("\n%s" % output)
+
+            for x in range(0, 26):
+                gettingOutput.write("\n%s" % 'Try Again!')
+
+
+        # Does the subprocess work?
+
         self.uploaded_sha1 = _get_sha1(upload.file)
         self.uploaded_filename = upload.file.name
         self.uploaded_mimetype = mimetypes.guess_type(upload.file.name)[0]
@@ -280,8 +338,50 @@ class StaffGradedAssignmentXBlock(XBlock):
             self.uploaded_sha1,
             self.uploaded_filename
         )
+
+        # Can I use the location for other files?
+        # Can I make another sha1?
+        # Can I do another filename?
+
+
         if not default_storage.exists(path):
             default_storage.save(path, File(upload.file))
+
+            # NEW CODE BEGINS :
+
+            #default_storage.save(studentDirectory, File(upload.file))
+
+            #default_storage.save(studentDirectory, File('static/testData/MyDataReader2.txt'))
+
+            #execute('touch static/testData/' + studentOutput + '/MyDataReader2_output.txt')
+
+                #Moving the subprocess up |p|
+
+            # process = subprocess.Popen('java -jar ' + studentDirectory + '/' + upload.file.name + ' hello < ' + studentDirectory + '/MyDataReader2.txt > static/testData/' + studentOutput + '/MyDataReader2_output.txt', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            # output = ''
+            #
+            # # Poll process for new output until finished
+            # for line in iter(process.stdout.readline, ""):
+            #     print line,
+            #     output += line
+            #
+            # process.wait()
+            # exitCode = process.returncode
+            #
+            # if (exitCode != 0):
+            #     gettingOutput = open('static/testData/' + studentOutput + '/MyDataReader2_output.txt', "w" )
+            #     gettingOutput.write("%s" % '--------:Try Again:--------')
+            #     gettingOutput.write("\n%s" % 'Command attempted:    ' + 'java -jar ' + studentDirectory + ' hello < ' + studentDirectory + '/MyDataReader2.txt > static/testData/' + studentOutput + '/MyDataReader2_output.txt')
+            #     gettingOutput.write("\n%s" % 'Exit code:    ' + str(exitCode))
+            #     gettingOutput.write("\n%s" % output)
+            #
+            #     for x in range(0, 26):
+            #         gettingOutput.write("\n%s" % 'Try Again!')
+
+                #Moving the subprocess |p|
+
+            # : NEW CODE ENDS
+
         return Response(json_body=self.student_state())
 
     @XBlock.handler
@@ -473,3 +573,20 @@ def render_template(template_path, context={}):
     template_str = load_resource(template_path)
     template = Template(template_str)
     return template.render(Context(context))
+
+def execute(command):
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    output = ''
+
+    # Poll process for new output until finished
+    for line in iter(process.stdout.readline, ""):
+        print line,
+        output += line
+
+    process.wait()
+    exitCode = process.returncode
+
+    if (exitCode == 0):
+        return output
+    else:
+        raise Exception(command, exitCode, output)
