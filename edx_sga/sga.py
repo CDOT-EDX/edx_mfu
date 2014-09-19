@@ -293,7 +293,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         execute('touch ' + edxStudentDirectory + '/' + 'MyDataReader2_output.txt')
 
-        # The line bellow not needed again
+        # The line bellow not needed again # was wrong
         #execute('cp ' + edxStorageDirectory + 'MyDataReader2.txt' + ' ' + edxStudentDirectory) # edxStorageDirectory / 'MyDataReader2.txt'
 
         # strip leading path from file name to avoid directory traversal attacks
@@ -305,7 +305,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         # Does the subprocess work here?
 
-        process = subprocess.Popen('java -jar ' + edxStudentDirectory + '/' + upload.file.name + ' hello < ' + edxStudentDirectory + '/MyDataReader2.txt > ' + edxStudentDirectory + '/MyDataReader2_output.txt', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        process = subprocess.Popen('java -jar ' + edxStudentDirectory + '/' + upload.file.name + ' hello < ' + edxStorageDirectory + 'MyDataReader2.txt > ' + edxStudentDirectory + '/MyDataReader2_output.txt', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output = ''
 
         # Poll process for new output until finished
