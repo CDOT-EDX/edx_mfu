@@ -275,6 +275,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         # NEW CODE BEGINS :
 
+        ###There is no user property in a webob.request object.
         studentName = request.user.username
 
         #studentDirectory = 'static/' + studentName + datetime.now().strftime("/%Y/%m/%d/%H/%M/%S")
