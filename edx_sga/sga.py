@@ -278,7 +278,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         # NEW CODE BEGINS :
 
         #This may not work for retrieval.
-        studentName = self.scope_ids.username
+        #studentName = self.scope_ids.username
 
         #studentDirectory = 'static/' + studentName + datetime.now().strftime("/%Y/%m/%d/%H/%M/%S")
 
