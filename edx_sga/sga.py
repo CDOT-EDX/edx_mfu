@@ -308,28 +308,32 @@ class StaffGradedAssignmentXBlock(XBlock):
         # : NEW CODE ENDS
 
         # Does the subprocess work here?
-        # This should be handeled by a worker.
-        process = subprocess.Popen('java -jar ' + edxStudentDirectory + '/' + upload.file.name + ' hello < ' + edxStorageDirectory + 'MyDataReader2.txt > ' + edxStudentDirectory + '/MyDataReader2_output.txt', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        output = ''
+        #### Compiling java code is the responability of an ORA2 worker, not the Xblock.
 
-        # Poll process for new output until finished
-        for line in iter(process.stdout.readline, ""):
-            print line,
-            output += line
+        #### MOVE TO WORKER CODE ####
 
-        process.wait()
-        exitCode = process.returncode
+        # process = subprocess.Popen('java -jar ' + edxStudentDirectory + '/' + upload.file.name + ' hello < ' + edxStorageDirectory + 'MyDataReader2.txt > ' + edxStudentDirectory + '/MyDataReader2_output.txt', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        # output = ''
 
-        if (exitCode != 0):
-            gettingOutput = open(edxStudentDirectory + '/MyDataReader2_output.txt', "w" )
-            gettingOutput.write("%s" % '--------:Try Again:--------')
-            gettingOutput.write("\n%s" % 'Command attempted:    ' + 'java -jar ' + edxStudentDirectory + ' hello < ' + edxStudentDirectory + '/MyDataReader2.txt > ' + edxStudentDirectory + '/MyDataReader2_output.txt')
-            gettingOutput.write("\n%s" % 'Exit code:    ' + str(exitCode))
-            gettingOutput.write("\n%s" % output)
+        # # Poll process for new output until finished
+        # for line in iter(process.stdout.readline, ""):
+        #     print line,
+        #     output += line
 
-            for x in range(0, 26):
-                gettingOutput.write("\n%s" % 'Try Again!')
+        # process.wait()
+        # exitCode = process.returncode
 
+        # if (exitCode != 0):
+        #     gettingOutput = open(edxStudentDirectory + '/MyDataReader2_output.txt', "w" )
+        #     gettingOutput.write("%s" % '--------:Try Again:--------')
+        #     gettingOutput.write("\n%s" % 'Command attempted:    ' + 'java -jar ' + edxStudentDirectory + ' hello < ' + edxStudentDirectory + '/MyDataReader2.txt > ' + edxStudentDirectory + '/MyDataReader2_output.txt')
+        #     gettingOutput.write("\n%s" % 'Exit code:    ' + str(exitCode))
+        #     gettingOutput.write("\n%s" % output)
+
+        #     for x in range(0, 26):
+        #         gettingOutput.write("\n%s" % 'Try Again!')
+
+        ####BLOCK ENDS ####
 
         # Does the subprocess work?
 
@@ -343,7 +347,7 @@ class StaffGradedAssignmentXBlock(XBlock):
             self.uploaded_filename
         )
 
-        # Can I use the location for other files?
+        # Can I use the location for other files
         # Can I make another sha1?
         # Can I do another filename?
 
