@@ -268,6 +268,8 @@ class StaffGradedAssignmentXBlock(XBlock):
         for name in ('display_name', 'points', 'weight'):
             setattr(self, name, data.get(name, getattr(self, name)))
 
+    #uses AWS for storage w/ boto.  Need to configure platform to use local.
+    #see http://iambusychangingtheworld.blogspot.ca/2014/07/edx-platform-edx-sgas.html
     @XBlock.handler
     def upload_assignment(self, request, suffix=''):
         assert self.upload_allowed()
@@ -277,14 +279,14 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         ###There is no user property in a webob.request object.
         #studentName = request.user.username
+
+        #This may not work for retrieval.
         studentName = self.scope_ids.username
 
         #studentDirectory = 'static/' + studentName + datetime.now().strftime("/%Y/%m/%d/%H/%M/%S")
 
         studentDirectory = studentName + datetime.now().strftime("/%Y/%m/%d/%H/%M/%S")
-
         edxStorageDirectory = '/edx/var/edxapp/uploads/'
-
         edxStudentDirectory = edxStorageDirectory + studentDirectory
 
         #studentOutput = studentName + datetime.now().strftime("/%Y/%m/%d/%H/%M/%S")
@@ -306,7 +308,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         # : NEW CODE ENDS
 
         # Does the subprocess work here?
-
+        # This should be handeled by a worker.
         process = subprocess.Popen('java -jar ' + edxStudentDirectory + '/' + upload.file.name + ' hello < ' + edxStorageDirectory + 'MyDataReader2.txt > ' + edxStudentDirectory + '/MyDataReader2_output.txt', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output = ''
 
