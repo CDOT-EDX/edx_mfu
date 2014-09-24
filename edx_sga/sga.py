@@ -291,19 +291,16 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         #studentOutput = studentName + datetime.now().strftime("/%Y/%m/%d/%H/%M/%S")
 
-        execute('mkdir -p ' + edxStudentDirectory)
+        #execute('mkdir -p ' + edxStudentDirectory)
 
         #execute('touch static/testData/' + edxStudentDirectory + '/MyDataReader2_output.txt')
 
-        execute('touch ' + edxStudentDirectory + '/' + 'MyDataReader2_output.txt')
+        #execute('touch ' + edxStudentDirectory + '/' + 'MyDataReader2_output.txt')
 
         # The line bellow not needed again # was wrong
         #execute('cp ' + edxStorageDirectory + 'MyDataReader2.txt' + ' ' + edxStudentDirectory) # edxStorageDirectory / 'MyDataReader2.txt'
 
-        # strip leading path from file name to avoid directory traversal attacks
-        fname = os.path.basename(upload.file.name)
 
-        open(os.path.join(edxStudentDirectory, fname), 'wb').write(upload.file.read())
 
         # : NEW CODE ENDS
 
@@ -311,6 +308,11 @@ class StaffGradedAssignmentXBlock(XBlock):
         #### Compiling java code is the responability of an ORA2 worker, not the Xblock.
 
         #### MOVE TO WORKER CODE ####
+
+        # strip leading path from file name to avoid directory traversal attacks
+        #fname = os.path.basename(upload.file.name)
+
+        #open(os.path.join(edxStudentDirectory, fname), 'wb').write(upload.file.read())
 
         # process = subprocess.Popen('java -jar ' + edxStudentDirectory + '/' + upload.file.name + ' hello < ' + edxStorageDirectory + 'MyDataReader2.txt > ' + edxStudentDirectory + '/MyDataReader2_output.txt', shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # output = ''
