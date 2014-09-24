@@ -288,8 +288,9 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         # Does the subprocess work?
 
-        #self.uploaded_sha1 = _get_sha1(upload.file)
-        self.uploaded_sha1 = _get_sha1(self.scope_ids.username)
+        self.uploaded_sha1 = _get_sha1(upload.file)
+        #self.uploaded_sha1 = _get_sha1(self.scope_ids.username)
+        #self.uploaded_sha1 = _get_sha1(upload.file).update(datetime.now().to_deprecated_string)
         self.uploaded_filename = upload.file.name
         self.uploaded_mimetype = mimetypes.guess_type(upload.file.name)[0]
         self.uploaded_timestamp = _now()
@@ -470,7 +471,8 @@ def _get_sha1(file):
     for block in iter(partial(file.read, BLOCK_SIZE), ''):
         sha1.update(block)
     file.seek(0)
-    return sha1.hexdigest()
+    #return sha1.hexdigest()
+    return sha1.update(datetime.now().to_deprecated_string).hexdigest()
 
 
 def _resource(path):  # pragma: NO COVER
