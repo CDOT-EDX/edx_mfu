@@ -301,9 +301,22 @@ class StaffGradedAssignmentXBlock(XBlock):
         assert self.upload_allowed()
         upload = request.params['assignment']
 
+        # NEW CODE BEGINS :
+
+        #This may not work for retrieval.
+        #studentName = self.scope_ids.username
+
+        #studentDirectory = 'static/' + studentName + datetime.now().strftime("/%Y/%m/%d/%H/%M/%S")
+
+        # studentDirectory = studentName + datetime.now().strftime("/%Y/%m/%d/%H/%M/%S")
+        # edxStorageDirectory = '/edx/var/edxapp/uploads/'
+        # edxStudentDirectory = edxStorageDirectory + studentDirectory
+
         # Does the subprocess work?
 
         self.uploaded_sha1 = _get_sha1(upload.file)
+        #self.uploaded_sha1 = _get_sha1(self.scope_ids.username)
+        #self.uploaded_sha1 = _get_sha1(upload.file).update(datetime.now().to_deprecated_string)
         self.uploaded_filename = upload.file.name
         self.uploaded_mimetype = mimetypes.guess_type(upload.file.name)[0]
         self.uploaded_timestamp = _now()
@@ -312,6 +325,11 @@ class StaffGradedAssignmentXBlock(XBlock):
             self.uploaded_sha1,
             self.uploaded_filename
         )
+
+        # Can I use the location for other files
+        # Can I make another sha1?
+        # Can I do another filename?
+
 
         if not default_storage.exists(path):
             default_storage.save(path, File(upload.file))
@@ -485,7 +503,6 @@ def _get_sha1(file):
         sha1.update(block)
     file.seek(0)
     #return sha1.hexdigest()
-    #guarentee of uniqueness if two identical files uploaded.
     return sha1.update(datetime.now().to_deprecated_string).hexdigest()
 
 
