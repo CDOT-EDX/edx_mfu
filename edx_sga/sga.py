@@ -102,34 +102,6 @@ class StaffGradedAssignmentXBlock(XBlock):
         help="Files uploaded by the user. Tuple of filename, mimetype and timestamp"
     )
 
-    # uploaded_sha1 = String(
-    #     display_name="Upload SHA1",
-    #     scope=Scope.user_state,
-    #     default=None,
-    #     help="sha1 of the file uploaded by the student for this assignment."
-    # )
-
-    # uploaded_filename = String(
-    #     display_name="Upload file name",
-    #     scope=Scope.user_state,
-    #     default=None,
-    #     help="The name of the file uploaded for this assignment."
-    # )
-
-    # uploaded_mimetype = String(
-    #     display_name="Mime type of uploaded file",
-    #     scope=Scope.user_state,
-    #     default=None,
-    #     help="The mimetype of the file uploaded for this assignment."
-    # )
-
-    # uploaded_timestamp = DateTime(
-    #     display_name="Timestamp",
-    #     scope=Scope.user_state,
-    #     default=None,
-    #     help="When the file was uploaded"
-    # )
-
     annotated_sha1 = String(
         display_name="Annotated SHA1",
         scope=Scope.user_state,
@@ -344,10 +316,6 @@ class StaffGradedAssignmentXBlock(XBlock):
         return Response(json_body=self.student_state())
 
     @XBlock.handler
-    def staff_upload_annotated(self, request, suffix=''):
-        pass
-
-    @XBlock.handler
     def download_assignment(self, request, suffix=''):
         #temporory: return the first file.
         sha1 = self.uploaded_files.keys()[0]
@@ -355,11 +323,10 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         path = _file_storage_path(
             self.location.to_deprecated_string(),
-            #self.uploaded_sha1,
             sha1,
-            #self.uploaded_filename
             metadata.filename
         )
+
         return self.download(
             path,
             #self.uploaded_mimetype,
@@ -368,9 +335,24 @@ class StaffGradedAssignmentXBlock(XBlock):
             metadata.filename
         )
 
-    @XBlock.handler
-    def download_annotated(self, request, suffix=''):
-        pass
+        # ret = []
+
+        # for sha1, metadata in self.uploaded_files.iteritems():            
+        #     path = _file_storage_path(
+        #         self.location.to_deprecated_string(),
+        #         sha1,
+        #         metadata.filename
+        #     )
+
+        #     ret.append(self.download(
+        #         path,
+        #         metadata.mimetype,
+        #         metadata.filename
+        #     ))
+
+       #return ret;
+
+
 
     @XBlock.handler
     def staff_download(self, request, suffix=''):
@@ -398,106 +380,56 @@ class StaffGradedAssignmentXBlock(XBlock):
         )
 
     @XBlock.handler
+    def staff_upload_annotated(self, request, suffix=''):
+        assert self.is_course_staff()
+        upload = request.params['annotated']
+        module = StudentModule.objects.get(pk=request.params['module_id'])
+        state = json.loads(module.state)
+        state['annotated_sha1'] = sha1 = _get_sha1(upload.file)
+        state['annotated_filename'] = filename = upload.file.name
+        state['annotated_mimetype'] = mimetypes.guess_type(upload.file.name)[0]
+        state['annotated_timestamp'] = _now().strftime(
+            DateTime.DATETIME_FORMAT
+        )
+        path = _file_storage_path(
+            self.location.to_deprecated_string(),
+            sha1,
+            filename
+        )
+        if not default_storage.exists(path):
+            default_storage.save(path, File(upload.file))
+        module.state = json.dumps(state)
+        module.save()
+        return Response(json_body=self.staff_grading_data())
+
+    @XBlock.handler
+    def download_annotated(self, request, suffix=''):
+        path = _file_storage_path(
+            self.location.to_deprecated_string(),
+            self.annotated_sha1,
+            self.annotated_filename
+        )
+        return self.download(
+            path,
+            self.annotated_mimetype,
+            self.annotated_filename
+        )
+
+    @XBlock.handler
     def staff_download_annotated(self, request, suffix=''):
-        pass
-
-    # @XBlock.handler
-    # def upload_assignment(self, request, suffix=''):
-    #     assert self.upload_allowed()
-    #     upload = request.params['assignment']
-    #     self.uploaded_sha1 = _get_sha1(upload.file)
-    #     self.uploaded_filename = upload.file.name
-    #     self.uploaded_mimetype = mimetypes.guess_type(upload.file.name)[0]
-    #     self.uploaded_timestamp = _now()
-    #     path = _file_storage_path(
-    #         self.location.to_deprecated_string(),
-    #         self.uploaded_sha1,
-    #         self.uploaded_filename
-    #     )
-    #     if not default_storage.exists(path):
-    #         default_storage.save(path, File(upload.file))
-    #     return Response(json_body=self.student_state())
-
-    # @XBlock.handler
-    # def staff_upload_annotated(self, request, suffix=''):
-    #     assert self.is_course_staff()
-    #     upload = request.params['annotated']
-    #     module = StudentModule.objects.get(pk=request.params['module_id'])
-    #     state = json.loads(module.state)
-    #     state['annotated_sha1'] = sha1 = _get_sha1(upload.file)
-    #     state['annotated_filename'] = filename = upload.file.name
-    #     state['annotated_mimetype'] = mimetypes.guess_type(upload.file.name)[0]
-    #     state['annotated_timestamp'] = _now().strftime(
-    #         DateTime.DATETIME_FORMAT
-    #     )
-    #     path = _file_storage_path(
-    #         self.location.to_deprecated_string(),
-    #         sha1,
-    #         filename
-    #     )
-    #     if not default_storage.exists(path):
-    #         default_storage.save(path, File(upload.file))
-    #     module.state = json.dumps(state)
-    #     module.save()
-    #     return Response(json_body=self.staff_grading_data())
-
-    # @XBlock.handler
-    # def download_assignment(self, request, suffix=''):
-    #     path = _file_storage_path(
-    #         self.location.to_deprecated_string(),
-    #         self.uploaded_sha1,
-    #         self.uploaded_filename
-    #     )
-    #     return self.download(
-    #         path,
-    #         self.uploaded_mimetype,
-    #         self.uploaded_filename
-    #     )
-
-    # @XBlock.handler
-    # def download_annotated(self, request, suffix=''):
-    #     path = _file_storage_path(
-    #         self.location.to_deprecated_string(),
-    #         self.annotated_sha1,
-    #         self.annotated_filename
-    #     )
-    #     return self.download(
-    #         path,
-    #         self.annotated_mimetype,
-    #         self.annotated_filename
-    #     )
-
-    # @XBlock.handler
-    # def staff_download(self, request, suffix=''):
-    #     assert self.is_course_staff()
-    #     module = StudentModule.objects.get(pk=request.params['module_id'])
-    #     state = json.loads(module.state)
-    #     path = _file_storage_path(
-    #         module.module_state_key.to_deprecated_string(),
-    #         state['uploaded_sha1'],
-    #         state['uploaded_filename']
-    #     )
-    #     return self.download(
-    #         path,
-    #         state['uploaded_mimetype'],
-    #         state['uploaded_filename']
-    #     )
-
-    # @XBlock.handler
-    # def staff_download_annotated(self, request, suffix=''):
-    #     assert self.is_course_staff()
-    #     module = StudentModule.objects.get(pk=request.params['module_id'])
-    #     state = json.loads(module.state)
-    #     path = _file_storage_path(
-    #         module.module_state_key.to_deprecated_string(),
-    #         state['annotated_sha1'],
-    #         state['annotated_filename']
-    #     )
-    #     return self.download(
-    #         path,
-    #         state['annotated_mimetype'],
-    #         state['annotated_filename']
-    #     )
+        assert self.is_course_staff()
+        module = StudentModule.objects.get(pk=request.params['module_id'])
+        state = json.loads(module.state)
+        path = _file_storage_path(
+            module.module_state_key.to_deprecated_string(),
+            state['annotated_sha1'],
+            state['annotated_filename']
+        )
+        return self.download(
+            path,
+            state['annotated_mimetype'],
+            state['annotated_filename']
+        )
 
     def download(self, path, mimetype, filename):
         BLOCK_SIZE = 2**10 * 8  # 8kb
