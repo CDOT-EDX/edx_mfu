@@ -391,7 +391,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         return self.download(
             path,
             #state['uploaded_mimetype'],
-            metadata.mimetype
+            metadata.mimetype,
             #state['uploaded_filename']
             metadata.filename
         )
