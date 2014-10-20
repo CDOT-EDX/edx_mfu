@@ -307,14 +307,6 @@ class StaffGradedAssignmentXBlock(XBlock):
         assert self.upload_allowed()
         upload = request.params['assignment']
 
-        sha1hash = _get_sha1(upload.file)
-
-        fileinfo = (
-            upload.file_name, 
-            mimetypes.guess_type(upload.file.name),
-            _now()
-        )
-
         uploaded_sha1 = _get_sha1(upload.file)
         uploaded_filename = upload.file.name
         uploaded_mimetype = mimetypes.guess_type(upload.file.name)[0]
