@@ -41,6 +41,8 @@ class StaffGradedAssignmentXBlock(XBlock):
     has_score = True
     icon_class = 'problem'
 
+    FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
+
     display_name = String(
         default='Staff Graded Assignment', scope=Scope.settings,
         help="This name appears in the horizontal navigation at the top of "
@@ -568,8 +570,6 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     def upload_allowed(self):
         return not self.past_due() and self.score is None
-
-    self.FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
 
 def _file_storage_path(url, sha1, filename):
