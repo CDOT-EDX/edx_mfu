@@ -19,7 +19,7 @@ setup(
     version='0.3.1',
     description='edx-sga Staff Graded Assignment XBlock',
     license='Affero GNU General Public License v3 (GPLv3)',
-    url="https://github.com/mitodl/edx-sga",
+    url="https://github.com/wastedelectrons/edx-sga/tree/bssnively_multifileupload",
     author="MITx",
     zip_safe=False,
     packages=find_packages(),
