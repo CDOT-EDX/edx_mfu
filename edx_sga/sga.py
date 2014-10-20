@@ -22,7 +22,7 @@ from django.template import Context, Template
 from webob.response import Response
 
 from xblock.core import XBlock
-from xblock.fields import Boolean, DateTime, Scope, String, Float
+from xblock.fields import Boolean, DateTime, Scope, String, Float, Dict
 from xblock.fragment import Fragment
 
 from xmodule.util.duedate import get_extended_due_date
