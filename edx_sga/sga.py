@@ -95,7 +95,7 @@ class StaffGradedAssignmentXBlock(XBlock):
     uploaded_files = Dict(
         display_name="Uploaded Files",
         scope=Scope.user_state,
-        default=None,
+        default=Dict(),
         help="Files uploaded by the user. Tuple of filename, mimetype and timestamp"
     )
 
