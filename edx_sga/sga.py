@@ -318,7 +318,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         # uploaded_mimetype = mimetypes.guess_type(upload.file.name)[0]
         # uploaded_timestamp = _now()
 
-        metadata = FileMetaData(
+        metadata = self.FileMetaData(
             upload.file.name,
             mimetypes.guess_type(upload.file.name)[0],
             _now()
@@ -569,7 +569,7 @@ class StaffGradedAssignmentXBlock(XBlock):
     def upload_allowed(self):
         return not self.past_due() and self.score is None
 
-    FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
+    self.FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
 
 def _file_storage_path(url, sha1, filename):
