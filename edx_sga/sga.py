@@ -312,7 +312,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         uploaded_mimetype = mimetypes.guess_type(upload.file.name)[0]
         uploaded_timestamp = _now()
 
-        self.uploaded_files[sha1hash] = (
+        self.uploaded_files[uploaded_sha1] = (
             uploaded_filename,
             uploaded_mimetype,
             uploaded_timestamp,
