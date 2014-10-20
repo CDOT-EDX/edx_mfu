@@ -27,6 +27,8 @@ from xblock.fragment import Fragment
 
 from xmodule.util.duedate import get_extended_due_date
 
+from collections import namedtuple
+
 
 log = logging.getLogger(__name__)
 
@@ -211,6 +213,10 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         if len(self.uploaded_files) != 0:
             #uploaded = {"filename": self.uploaded_filename}
+            #temporary untill view is changed.
+
+            ()
+
             uploaded = None
         else:
             uploaded = None
@@ -308,21 +314,30 @@ class StaffGradedAssignmentXBlock(XBlock):
         upload = request.params['assignment']
 
         uploaded_sha1 = _get_sha1(upload.file)
-        uploaded_filename = upload.file.name
-        uploaded_mimetype = mimetypes.guess_type(upload.file.name)[0]
-        uploaded_timestamp = _now()
+        # uploaded_filename = upload.file.name
+        # uploaded_mimetype = mimetypes.guess_type(upload.file.name)[0]
+        # uploaded_timestamp = _now()
 
-        self.uploaded_files[uploaded_sha1] = (
-            uploaded_filename,
-            uploaded_mimetype,
-            uploaded_timestamp,
+        metadata = FileMetaData(
+            upload.file.name,
+            mimetypes.guess_type(upload.file.name)[0],
+            _now()
         )
+
+        # self.uploaded_files[uploaded_sha1] = (
+        #     uploaded_filename,
+        #     uploaded_mimetype,
+        #     uploaded_timestamp,
+        # )
+
+        self.uploaded_files[uploaded_sha1] = metadata
 
         path = _file_storage_path(
             self.location.to_deprecated_string(),
             uploaded_sha1,
-            uploaded_filename
+            metadata.filename
         )
+
         if not default_storage.exists(path):
             default_storage.save(path, File(upload.file))
         return Response(json_body=self.student_state())
@@ -333,7 +348,24 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     @XBlock.handler
     def download_assignment(self, request, suffix=''):
-        pass
+        #temporory: return the first file.
+        sha1 = uploaded_files.keys()[0]
+        metadata = uploaded_files[sha1]
+
+        path = _file_storage_path(
+            self.location.to_deprecated_string(),
+            #self.uploaded_sha1,
+            sha1,
+            #self.uploaded_filename
+            metadata.filename
+        )
+        return self.download(
+            path,
+            #self.uploaded_mimetype,
+            metadata.mimetype,
+            #self.uploaded_filename
+            metadata.filename
+        )
 
     @XBlock.handler
     def download_annotated(self, request, suffix=''):
@@ -341,15 +373,32 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     @XBlock.handler
     def staff_download(self, request, suffix=''):
-        pass
+        assert self.is_course_staff()
+        module = StudentModule.objects.get(pk=request.params['module_id'])
+        state = json.loads(module.state)
+
+        #temporory: return the first file.
+        sha1 = state['uploaded_files'].keys()[0]
+        metadata = state[uploaded_files][sha1]
+
+        path = _file_storage_path(
+            module.module_state_key.to_deprecated_string(),
+            #state['uploaded_sha1'],
+            sha1,
+            #state['uploaded_filename']
+            metadata.filename
+        )
+        return self.download(
+            path,
+            #state['uploaded_mimetype'],
+            metadata.mimetype
+            #state['uploaded_filename']
+            metadata.filename
+        )
 
     @XBlock.handler
     def staff_download_annotated(self, request, suffix=''):
         pass
-
-    def download(self, path, mimetype, filename):
-        pass
-
 
     # @XBlock.handler
     # def upload_assignment(self, request, suffix=''):
@@ -449,14 +498,14 @@ class StaffGradedAssignmentXBlock(XBlock):
     #         state['annotated_filename']
     #     )
 
-    # def download(self, path, mimetype, filename):
-    #     BLOCK_SIZE = 2**10 * 8  # 8kb
-    #     file = default_storage.open(path)
-    #     app_iter = iter(partial(file.read, BLOCK_SIZE), '')
-    #     return Response(
-    #         app_iter=app_iter,
-    #         content_type=mimetype,
-    #         content_disposition="attachment; filename=" + filename)
+    def download(self, path, mimetype, filename):
+        BLOCK_SIZE = 2**10 * 8  # 8kb
+        file = default_storage.open(path)
+        app_iter = iter(partial(file.read, BLOCK_SIZE), '')
+        return Response(
+            app_iter=app_iter,
+            content_type=mimetype,
+            content_disposition="attachment; filename=" + filename)
 
     @XBlock.handler
     def get_staff_grading_data(self, request, suffix=''):
@@ -519,6 +568,8 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     def upload_allowed(self):
         return not self.past_due() and self.score is None
+
+    FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
 
 def _file_storage_path(url, sha1, filename):
