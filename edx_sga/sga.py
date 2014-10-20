@@ -208,8 +208,10 @@ class StaffGradedAssignmentXBlock(XBlock):
         Returns a JSON serializable representation of student's state for
         rendering in client view.
         """
-        if self.uploaded_sha1:
-            uploaded = {"filename": self.uploaded_filename}
+        #if self.uploaded_sha1:
+        if len(self.uploaded_files) != 0:
+            #uploaded = {"filename": self.uploaded_filename}
+            uploaded = None
         else:
             uploaded = None
 
