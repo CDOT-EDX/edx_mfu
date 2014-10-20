@@ -95,7 +95,7 @@ class StaffGradedAssignmentXBlock(XBlock):
     uploaded_files = Dict(
         display_name="Uploaded Files",
         scope=Scope.user_state,
-        default=Dict(),
+        default=dict(),
         help="Files uploaded by the user. Tuple of filename, mimetype and timestamp"
     )
 
@@ -208,11 +208,8 @@ class StaffGradedAssignmentXBlock(XBlock):
         Returns a JSON serializable representation of student's state for
         rendering in client view.
         """
-        #if self.uploaded_sha1:
-        uf = state.get("uploaded_files")
 
-        if len(uf) != 0:
-        #if len(self.uploaded_files) != 0:
+        if len(self.uploaded_files) != 0:
             #uploaded = {"filename": self.uploaded_filename}
             uploaded = None
         else:
