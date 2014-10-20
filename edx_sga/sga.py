@@ -350,8 +350,8 @@ class StaffGradedAssignmentXBlock(XBlock):
     @XBlock.handler
     def download_assignment(self, request, suffix=''):
         #temporory: return the first file.
-        sha1 = uploaded_files.keys()[0]
-        metadata = uploaded_files[sha1]
+        sha1 = self.uploaded_files.keys()[0]
+        metadata = self.uploaded_files[sha1]
 
         path = _file_storage_path(
             self.location.to_deprecated_string(),
@@ -380,7 +380,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         #temporory: return the first file.
         sha1 = state['uploaded_files'].keys()[0]
-        metadata = state[uploaded_files][sha1]
+        metadata = state['uploaded_files'][sha1]
 
         path = _file_storage_path(
             module.module_state_key.to_deprecated_string(),
