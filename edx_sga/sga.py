@@ -209,7 +209,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         rendering in client view.
         """
         #if self.uploaded_sha1:
-        if len(self.uploaded_files) != 0:
+        if len(self.uploaded_files.keys()) != 0:
             #uploaded = {"filename": self.uploaded_filename}
             uploaded = None
         else:
