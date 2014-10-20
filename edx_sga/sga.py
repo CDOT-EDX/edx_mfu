@@ -32,6 +32,7 @@ from collections import namedtuple
 
 log = logging.getLogger(__name__)
 
+FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
 class StaffGradedAssignmentXBlock(XBlock):
     """
@@ -40,8 +41,6 @@ class StaffGradedAssignmentXBlock(XBlock):
     """
     has_score = True
     icon_class = 'problem'
-
-    FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
     display_name = String(
         default='Staff Graded Assignment', scope=Scope.settings,
@@ -320,7 +319,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         # uploaded_mimetype = mimetypes.guess_type(upload.file.name)[0]
         # uploaded_timestamp = _now()
 
-        metadata = self.FileMetaData(
+        metadata = FileMetaData(
             upload.file.name,
             mimetypes.guess_type(upload.file.name)[0],
             _now()
