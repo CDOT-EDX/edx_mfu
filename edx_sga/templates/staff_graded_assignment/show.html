@@ -3,7 +3,7 @@
 <div class="sga-block" data-state="{{ student_state }}" 
      data-staff="{{ is_course_staff }}">
   <script type="text/template" id="sga-tmpl">
-    <% if (uploaded > 0) { %>
+    <% if (uploaded.length > 0) { %>
       <p><b>File uploaded</b> 
         <ul>
         <% for (var i = 0; i < uploaded.length; i++) { %>
