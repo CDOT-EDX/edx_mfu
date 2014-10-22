@@ -7,7 +7,7 @@
       <p><b>File uploaded</b> 
         <ul>
         <% for (var i = 0; i < uploaded.length; i++) { %>
-        <li><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a><li>
+        <li><%= uploaded[i].filename %><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a><li>
         <% } %>
         </ul>
       </p>
