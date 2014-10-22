@@ -294,7 +294,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         metadata = FileMetaData(
             upload.file.name,
             mimetypes.guess_type(upload.file.name)[0],
-            _now()
+            str( _now() )
         )
 
         # self.uploaded_files[uploaded_sha1] = (
