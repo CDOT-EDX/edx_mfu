@@ -289,21 +289,12 @@ class StaffGradedAssignmentXBlock(XBlock):
         upload = request.params['assignment']
 
         uploaded_sha1 = _get_sha1(upload.file)
-        # uploaded_filename = upload.file.name
-        # uploaded_mimetype = mimetypes.guess_type(upload.file.name)[0]
-        # uploaded_timestamp = _now()
 
         metadata = FileMetaData(
             upload.file.name,
             mimetypes.guess_type(upload.file.name)[0],
             str( _now() )
         )
-
-        # self.uploaded_files[uploaded_sha1] = (
-        #     uploaded_filename,
-        #     uploaded_mimetype,
-        #     uploaded_timestamp,
-        # )
 
         self.uploaded_files[uploaded_sha1] = metadata
 
@@ -342,25 +333,6 @@ class StaffGradedAssignmentXBlock(XBlock):
             #self.uploaded_filename
             metadata.filename
         )
-
-        # ret = []
-
-        # for sha1, metadata in self.uploaded_files.iteritems():            
-        #     path = _file_storage_path(
-        #         self.location.to_deprecated_string(),
-        #         sha1,
-        #         metadata.filename
-        #     )
-
-        #     ret.append(self.download(
-        #         path,
-        #         metadata.mimetype,
-        #         metadata.filename
-        #     ))
-
-       #return ret;
-
-
 
     @XBlock.handler
     def staff_download(self, request, suffix=''):
@@ -525,7 +497,7 @@ def _get_sha1(file):
         sha1.update(block)
     file.seek(0)
 
-    sha1.update(_now().to_deprecated_string)
+    #sha1.update(_now().to_deprecated_string)
     return sha1.hexdigest()
 
 
