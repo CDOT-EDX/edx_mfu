@@ -102,6 +102,13 @@ class StaffGradedAssignmentXBlock(XBlock):
         help="Files uploaded by the user. Tuple of filename, mimetype and timestamp"
     )
 
+    uploaded_files_last_timestamp = String(
+        display_name="Submitted",
+        scope=Scope.user_state,
+        default=str(_now()),
+        help="The time and date the student last uploaded a file."
+    )
+
     annotated_sha1 = String(
         display_name="Annotated SHA1",
         scope=Scope.user_state,
@@ -189,18 +196,6 @@ class StaffGradedAssignmentXBlock(XBlock):
             metadata = FileMetaData._make(metadata)
             uploaded.append({"sha1": sha1, "filename": metadata.filename})
 
-        # if len(self.uploaded_files) != 0:
-        #     #uploaded = {"filename": self.uploaded_filename}
-        #     #temporary until view is changed.
-        #     uploaded = []
-        #     for sha1, metadata in self.uploaded_files.iteritems():
-        #         metadata = FileMetaData._make(metadata)
-        #         uploaded.append({"sha1": sha1, "filename": metadata.filename})
-
-        #     #uploaded = {"filename": metadata.filename}
-        # else:
-        #     uploaded = None
-
         if self.annotated_sha1:
             annotated = {"filename": self.annotated_filename}
         else:
@@ -226,12 +221,24 @@ class StaffGradedAssignmentXBlock(XBlock):
             instructor = self.is_instructor()
             score = state.get('score')
             approved = state.get('score_approved')
+
+            uploaded = []
+            for sha1, metadata in state.get("uploaded_files").iteritems():
+                metadata = FileMetaData._make(metadata)
+                uploaded.append({
+                    "sha1": sha1, 
+                    "filename": metadata.filename,
+                    "timestamp": metadata.timestamp
+                })
+
+
             return {
                 'module_id': module.id,
                 'username': module.student.username,
                 'fullname': module.student.profile.name,
-                'filename': state.get("uploaded_filename"),
-                'timestamp': state.get("uploaded_timestamp"),
+                'uploaded': uploaded,
+                #'filename': state.get("uploaded_filename"),
+                'timestamp': state.get("uploaded_files_last_timestamp"),
                 'published': state.get("score_published"),
                 'score': score,
                 'approved': approved,
@@ -301,6 +308,8 @@ class StaffGradedAssignmentXBlock(XBlock):
             str( _now() )
         )
 
+        self.uploaded_files_last_timestamp = metadata.timestamp
+
         self.uploaded_files[uploaded_sha1] = metadata
 
         path = _file_storage_path(
@@ -317,27 +326,21 @@ class StaffGradedAssignmentXBlock(XBlock):
     def download_assignment(self, request, suffix=''):
         #temporory: return the first file.
 
-        sha1 = ''
         if (suffix not in self.uploaded_files):
-            sha1 = suffix
-        else:
-            sha1 = self.uploaded_files.keys()[0]
+            log.error("File download failure: No matching file belongs to this student.", exc_info=True)
+            raise
 
-        sha1 = suffix
-
-        metadata = FileMetaData._make(self.uploaded_files[sha1])
+        metadata = FileMetaData._make(self.uploaded_files[suffix])
 
         path = _file_storage_path(
             self.location.to_deprecated_string(),
-            sha1, 
+            suffix, 
             metadata.filename
         )
 
         return self.download(
             path,
-            #self.uploaded_mimetype,
             metadata.mimetype,
-            #self.uploaded_filename
             metadata.filename
         )
 
@@ -347,22 +350,20 @@ class StaffGradedAssignmentXBlock(XBlock):
         module = StudentModule.objects.get(pk=request.params['module_id'])
         state = json.loads(module.state)
 
-        #temporory: return the first file.
-        sha1 = state['uploaded_files'].keys()[0]
-        metadata = state['uploaded_files'][sha1]
+        if (suffix not in state['uploaded_files']):
+            log.error("File download failure: No matching file belongs to this student.", exc_info=True)
+            raise
+
+        metadata = FileMetaData._make(state['uploaded_files'][suffix])
 
         path = _file_storage_path(
             module.module_state_key.to_deprecated_string(),
-            #state['uploaded_sha1'],
-            sha1,
-            #state['uploaded_filename']
+            suffix,
             metadata.filename
         )
         return self.download(
             path,
-            #state['uploaded_mimetype'],
             metadata.mimetype,
-            #state['uploaded_filename']
             metadata.filename
         )
 
@@ -488,6 +489,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     def upload_allowed(self):
         return not self.past_due() and self.score is None
+
 
 
 def _file_storage_path(url, sha1, filename):
