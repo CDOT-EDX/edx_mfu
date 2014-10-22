@@ -192,7 +192,8 @@ class StaffGradedAssignmentXBlock(XBlock):
                 metadata = FileMetaData._make(metadata)
 
                 #uploaded = {"filename": metadata.filename}
-                uploaded.appen({"sha1": sha1, "filename": metadata.filename})
+                #uploaded.appen({"sha1": sha1, "filename": metadata.filename})
+            uploaded = None
         else:
             uploaded = None
 
