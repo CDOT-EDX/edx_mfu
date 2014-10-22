@@ -5,7 +5,11 @@
   <script type="text/template" id="sga-tmpl">
     <% if (uploaded) { %>
       <p><b>File uploaded</b> 
-        <a href="<%= downloadUrl %>"><%= uploaded.filename %></a></p>
+        <ul>
+        <% for (var i = 0; i < uploads.length; i++) { %>
+        <li><a href=<%= downloadUrl + '/' + uploaded[i].sha1 %>><%= uploaded[i].filename %></a><li>
+        <% } %>
+        </ul></p>
     <% } else { %>
       <p>No file has been uploaded.</p>
     <% } %>
@@ -52,7 +56,7 @@
         <th>Filename</th>
         <th>Uploaded</th>
         <th>Grade</th>
-        <th>Instructor's comments</th>
+        <th>Instructors comments</th>
         <th>Annotated</th>
       </tr>
       <% for (var i = 0; i < assignments.length; i++) { %>
