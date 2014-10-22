@@ -4,7 +4,6 @@
      data-staff="{{ is_course_staff }}">
   <script type="text/template" id="sga-tmpl">
     <% if (uploaded.length > 0) { %>
-      <p><%= uploaded.length %></p>
       <p><b>File uploaded</b> 
         <ul>
         <% for (var i = 0; i < uploaded.length; i++) { %>
@@ -67,10 +66,12 @@
           <td><%= assignment.username %></td>
           <td><%= assignment.fullname %></td>
           <td>
-            <% if (assignment.filename) { %>
-              <a href="<%= downloadUrl %>?module_id=<%= assignment.module_id %>">
-                <%= assignment.filename %>
-              </a>
+            <% if (assignment.uploaded.length > 0) { %>
+              <% for (int i = 0; i < assignment.uploaded[i].length; i++) { %>
+                <a href="<%= downloadUrl + '/' + assignment.uploaded.sha1 %>?module_id=<%= assignment.module_id %>">
+                  <%= assignment.uploaded[i].filename %>
+                </a>
+              <% } %>
             <% } %>
           </td>
           <td><%= assignment.timestamp %></td>

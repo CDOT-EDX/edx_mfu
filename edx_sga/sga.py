@@ -222,8 +222,10 @@ class StaffGradedAssignmentXBlock(XBlock):
             score = state.get('score')
             approved = state.get('score_approved')
 
+            metadatalist = state.get("uploaded_files")
+
             uploaded = []
-            for sha1, metadata in state.get("uploaded_files").iteritems():
+            for sha1, metadata in metadatalist.iteritems():
                 metadata = FileMetaData._make(metadata)
                 uploaded.append({
                     "sha1": sha1, 
