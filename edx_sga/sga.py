@@ -188,7 +188,7 @@ class StaffGradedAssignmentXBlock(XBlock):
             #uploaded = {"filename": self.uploaded_filename}
             #temporary until view is changed.
             sha1 = self.uploaded_files.keys()[0]
-            metadata = self.uploaded_files[sha1]
+            metadata = FileMetaData._make(self.uploaded_files[sha1])
 
             uploaded = {"filename": metadata.filename}
         else:
