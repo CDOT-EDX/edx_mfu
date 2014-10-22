@@ -105,7 +105,7 @@ class StaffGradedAssignmentXBlock(XBlock):
     uploaded_files_last_timestamp = String(
         display_name="Submitted",
         scope=Scope.user_state,
-        default=str(_now()),
+        default=None,
         help="The time and date the student last uploaded a file."
     )
 
