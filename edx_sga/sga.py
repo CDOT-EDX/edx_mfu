@@ -502,7 +502,7 @@ def _get_sha1(file):
         sha1.update(block)
     file.seek(0)
 
-    sha1.update(_now().to_deprecated_string)
+    sha1.update(_now().to_deprecated_string())
     return sha1.hexdigest()
 
 
