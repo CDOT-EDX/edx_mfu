@@ -323,6 +323,8 @@ class StaffGradedAssignmentXBlock(XBlock):
         else:
             sha1 = self.uploaded_files.keys()[0]
 
+        sha1 = suffix
+
         metadata = FileMetaData._make(self.uploaded_files[sha1])
 
         path = _file_storage_path(
