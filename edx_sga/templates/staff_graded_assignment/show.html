@@ -5,6 +5,11 @@
   <script type="text/template" id="sga-tmpl">
     <% if (uploaded > 0) { %>
       <p><b>File uploaded</b> 
+        <ul>
+        <% for (var i = 0; i < uploaded.length; i++) { %>
+        <li><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a><li>
+        <% } %>
+        </ul>
       </p>
     <% } else { %>
       <p>No file has been uploaded.</p>

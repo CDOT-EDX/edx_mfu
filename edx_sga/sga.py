@@ -190,10 +190,9 @@ class StaffGradedAssignmentXBlock(XBlock):
             uploaded = []
             for sha1, metadata in self.uploaded_files.iteritems():
                 metadata = FileMetaData._make(metadata)
+                uploaded.appen({"sha1": sha1, "filename": metadata.filename})
 
-                #uploaded = {"filename": metadata.filename}
-                #uploaded.appen({"sha1": sha1, "filename": metadata.filename})
-            uploaded = None
+            #uploaded = {"filename": metadata.filename}
         else:
             uploaded = None
 
