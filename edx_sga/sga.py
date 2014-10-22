@@ -524,6 +524,8 @@ def _get_sha1(file):
     for block in iter(partial(file.read, BLOCK_SIZE), ''):
         sha1.update(block)
     file.seek(0)
+
+    sha1.update(_now().to_deprecated_string)
     return sha1.hexdigest()
 
 
