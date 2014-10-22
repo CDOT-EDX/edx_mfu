@@ -319,7 +319,7 @@ class StaffGradedAssignmentXBlock(XBlock):
     def download_assignment(self, request, suffix=''):
         #temporory: return the first file.
         sha1 = self.uploaded_files.keys()[0]
-        metadata = FileMetaData(self.uploaded_files[sha1])
+        metadata = FileMetaData._make(self.uploaded_files[sha1])
 
         path = _file_storage_path(
             self.location.to_deprecated_string(),
