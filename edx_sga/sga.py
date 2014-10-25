@@ -421,6 +421,21 @@ class StaffGradedAssignmentXBlock(XBlock):
             state['annotated_filename']
         )
 
+    @XBlock.handler
+    def delete_assignment(self, request, suffix=''):
+        if suffix in self.uploaded_files:
+            metadata = FileMetaData._make(self.uploaded_files[suffix])
+
+            path = _file_storage_path(
+                module.module_state_key.to_deprecated_string(),
+                suffix
+                metadata.filename
+            )
+
+            default_storage.delete(path)
+            del self.uploaded_files[suffix]
+
+
     def download(self, path, mimetype, filename):
         BLOCK_SIZE = 2**10 * 8  # 8kb
         file = default_storage.open(path)

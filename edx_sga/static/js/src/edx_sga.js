@@ -10,6 +10,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         var staffUploadUrl = runtime.handlerUrl(element, 'staff_upload_annotated');
         var enterGradeUrl = runtime.handlerUrl(element, 'enter_grade');
         var removeGradeUrl = runtime.handlerUrl(element, 'remove_grade');
+        var deleteUrl = runtime.handlerUrl(element, 'delete_assignment')
         var template = _.template($(element).find("#sga-tmpl").text());
         var gradingTemplate;
 

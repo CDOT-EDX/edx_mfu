@@ -5,11 +5,14 @@
   <script type="text/template" id="sga-tmpl">
     <% if (uploaded.length > 0) { %>
       <p><b>File uploaded</b> 
-        <ul>
-        <% for (var i = 0; i < uploaded.length; i++) { %>
-        <li><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></li>
-        <% } %>
-        </ul>
+        <table>
+          <% for (var i = 0; i < uploaded.length; i++) { %>
+            <tr>
+            <td><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></td>
+            <td><a href="<%= deleteUrl + '/' + uploaded[i].sha1 %>">delete</a></td>
+            </tr>
+          <% } %>
+        </table>
       </p>
     <% } else { %>
       <p>No file has been uploaded.</p>
