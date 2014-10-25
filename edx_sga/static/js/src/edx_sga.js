@@ -88,10 +88,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }
             });
 
-            for (var i = 0; i < data.uploaded[i].length; i++)
+            for (var i = 0; i < state.uploaded[i].length; i++)
             {
-                $(content).find(".delete_" + data.uploaded[i]).fileupload({
-                    url: uploadUrl + '/' + data.uploaded[i],
+                $(content).find(".delete_" + state.uploaded[i]).fileupload({
+                    url: uploadUrl + '/' + state.uploaded[i],
                     fail: function(e, data) {
                         state.error = "There was an error deleteing the file.";
 
