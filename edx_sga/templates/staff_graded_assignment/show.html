@@ -68,7 +68,7 @@
           <td>
             <% if (assignment.uploaded.length > 0) { %>
               <% for (int i = 0; i < assignment.uploaded[i].length; i++) { %>
-                <a href="<%= downloadUrl + '/' + assignment.uploaded.sha1 %>?module_id=<%= assignment.module_id %>">
+                <a href="<%= downloadUrl + '/' + assignment.uploaded[i].sha1 %>?module_id=<%= assignment.module_id %>">
                   <%= assignment.uploaded[i].filename %>
                 </a>
               <% } %>
