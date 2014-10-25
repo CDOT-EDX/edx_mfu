@@ -435,6 +435,8 @@ class StaffGradedAssignmentXBlock(XBlock):
             default_storage.delete(path)
             del self.uploaded_files[suffix]
 
+        return Response(json_body=self.student_state())
+
 
     def download(self, path, mimetype, filename):
         BLOCK_SIZE = 2**10 * 8  # 8kb
