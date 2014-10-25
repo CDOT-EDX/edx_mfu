@@ -66,13 +66,15 @@
           <td><%= assignment.username %></td>
           <td><%= assignment.fullname %></td>
           <td>
-            <% if (assignment.uploaded.length > 0) { %>
-              <% for (var i = 0; i < assignment.uploaded.length; i++) { %>
-                <a href="<%= downloadUrl + '/' + assignment.uploaded[i].sha1 %>?module_id=<%= assignment.module_id %>">
-                  <%= assignment.uploaded[i].filename %>
-                </a>
+            <ul>
+              <% if (assignment.uploaded.length > 0) { %>
+                <% for (var i = 0; i < assignment.uploaded.length; i++) { %>
+                  <li><a href="<%= downloadUrl + '/' + assignment.uploaded[i].sha1 %>?module_id=<%= assignment.module_id %>">
+                    <%= assignment.uploaded[i].filename %>
+                  </a></li>
+                <% } %>
               <% } %>
-            <% } %>
+            </ul>
           </td>
           <td><%= assignment.timestamp %></td>
           <td>
