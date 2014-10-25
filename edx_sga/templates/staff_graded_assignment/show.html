@@ -60,7 +60,6 @@
         <th>Instructors comments</th>
         <th>Annotated</th>
       </tr>
-      <% if (false) { %>
       <% for (var i = 0; i < assignments.length; i++) { %>
       <%     var assignment = assignments[i]; %>
         <tr id="row-<%= assignment.module_id %>">
@@ -68,7 +67,7 @@
           <td><%= assignment.fullname %></td>
           <td>
             <% if (assignment.uploaded.length > 0) { %>
-              <% for (int i = 0; i < assignment.uploaded.length; i++) { %>
+              <% for (var i = 0; i < assignment.uploaded.length; i++) { %>
                 <a href="<%= downloadUrl + '/' + assignment.uploaded[i].sha1 %>?module_id=<%= assignment.module_id %>">
                   <%= assignment.uploaded[i].filename %>
                 </a>
@@ -111,7 +110,6 @@
             </div>
           </td>
         </tr>
-      <% } %>
       <% } %>
     </table>
   </script>
