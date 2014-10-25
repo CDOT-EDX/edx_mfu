@@ -428,7 +428,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
             path = _file_storage_path(
                 module.module_state_key.to_deprecated_string(),
-                suffix
+                suffix,
                 metadata.filename
             )
 
