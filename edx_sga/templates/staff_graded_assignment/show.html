@@ -66,6 +66,7 @@
           <td><%= assignment.username %></td>
           <td><%= assignment.fullname %></td>
           <td>
+           <!-- 
             <% if (assignment.uploaded.length > 0) { %>
               <% for (int i = 0; i < assignment.uploaded.length; i++) { %>
                 <a href="<%= downloadUrl + '/' + assignment.uploaded[i].sha1 %>?module_id=<%= assignment.module_id %>">
@@ -73,6 +74,7 @@
                 </a>
               <% } %>
             <% } %>
+            -->
           </td>
           <td><%= assignment.timestamp %></td>
           <td>
