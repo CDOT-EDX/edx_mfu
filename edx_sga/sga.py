@@ -427,7 +427,7 @@ class StaffGradedAssignmentXBlock(XBlock):
             metadata = FileMetaData._make(self.uploaded_files[suffix])
 
             path = _file_storage_path(
-                module.module_state_key.to_deprecated_string(),
+                self.location.to_deprecated_string(),
                 suffix,
                 metadata.filename
             )
