@@ -60,6 +60,7 @@
         <th>Username</th>
         <th>Name</th>
         <th>Filename</th>
+        <th>Download All</th>
         <th>Uploaded</th>
         <th>Grade</th>
         <th>Instructors comments</th>
@@ -80,6 +81,11 @@
                 <% } %>
               <% } %>
             </ul>
+          </td>
+          <td>
+            <a href="<%= staffDownloadZippedUrl %>?module_id=<%= assignment.module_id %>">
+              download
+            </a>
           </td>
           <td><%= assignment.timestamp %></td>
           <td>
