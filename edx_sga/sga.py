@@ -31,6 +31,7 @@ from collections import namedtuple
 
 from zipfile import ZipFile
 #from tempfile import NamedTemporaryFile
+import StringIO
 
 log = logging.getLogger(__name__)
 
