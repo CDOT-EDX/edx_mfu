@@ -404,7 +404,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         assignment.close()
 
-        sha1 = _get_sha1(assignment_file)
+        #sha1 = _get_sha1(assignment_file)
 
         response = Response()
         response.mimetype = mimetypes.guess_type(assignment)
