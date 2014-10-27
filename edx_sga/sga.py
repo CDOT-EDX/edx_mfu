@@ -401,9 +401,7 @@ class StaffGradedAssignmentXBlock(XBlock):
             afile = default_storage.open(path)
 
             assingment_zip.writestr(metadata.filename, afile.read())
-
-        assignment.close()
-
+            
         #sha1 = _get_sha1(assignment_file)
 
         response = Response()
