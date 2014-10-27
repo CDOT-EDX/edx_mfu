@@ -435,6 +435,7 @@ class StaffGradedAssignmentXBlock(XBlock):
             default_storage.delete(path)
             del self.uploaded_files[suffix]
 
+        res = Response();
         res.status = 204
         return res
 
