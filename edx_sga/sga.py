@@ -29,7 +29,7 @@ from xmodule.util.duedate import get_extended_due_date
 
 from collections import namedtuple
 
-import zipfile
+from zipfile import ZipFile
 from tempfile import NamedTemporaryFile
 
 log = logging.getLogger(__name__)
