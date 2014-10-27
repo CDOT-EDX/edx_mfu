@@ -30,7 +30,7 @@ from xmodule.util.duedate import get_extended_due_date
 from collections import namedtuple
 
 import zipfile
-
+from tempfile import NamedTemporaryFile
 
 log = logging.getLogger(__name__)
 
@@ -410,6 +410,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         response.mimetype = mimetypes.guess_type(assignment)
         response.body = assignment.read()
 
+        assignment.close()
         return response
 
 
