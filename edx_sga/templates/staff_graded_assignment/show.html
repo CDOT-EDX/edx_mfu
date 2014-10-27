@@ -8,11 +8,9 @@
         <table>
           <% for (var i = 0; i < uploaded.length; i++) { %>
             <tr>
-            <td><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></td>
-            <td>
-              <div class="delete">
-                <button class="delete_<%= uploaded[i].sha1 %>" type="button" name="delete">delete</button>
-              </div>
+              <td><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></td>
+              <td>
+                <button class="filedelete" value="<%= uploaded[i].sha1 %>" type="button" name="delete">delete</button>
               </td>
             </tr>
           <% } %>
