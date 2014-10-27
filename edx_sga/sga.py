@@ -29,6 +29,8 @@ from xmodule.util.duedate import get_extended_due_date
 
 from collections import namedtuple
 
+import zipfile
+
 
 log = logging.getLogger(__name__)
 
@@ -369,6 +371,48 @@ class StaffGradedAssignmentXBlock(XBlock):
             metadata.filename
         )
 
+    #For downloading the entire assingment for one student.
+    @XBlock.handler
+    def staff_download_zipped(self, request, suffix=''):
+        assert self.is_course_staff()
+        module = StudentModule.objects.get(pk=request.params['module_id'])
+        state = json.loads(module.state)
+
+        metadatalist = state['uploaded_files']
+
+        if (len(metadatalista) == 0):
+            res = Response()
+            res.status = 204
+            return res
+
+        #file to be returned
+        assignment = NamedTemporaryFile()
+        assignment.name = 'assignment.zip'
+        assingment_zip = ZipFile(assignment, w)
+
+        for sha1, metadata in metadatalist.iteritems():
+            metadata = FileMetaData._make(metadata)
+            path = _file_storage_path(
+                self.location.to_deprecated_string(),
+                sha1,
+                filename
+            )
+
+            afile = default_storage.open(path)
+
+            assingment_zip.writestr(metadata.filename, afile.read())
+
+        assignment.close()
+
+        sha1 = _get_sha1(assignment_file)
+
+        response = Response()
+        response.mimetype = mimetypes.guess_type(assignment)
+        response.body = assignment.read()
+
+        return response
+
+
     @XBlock.handler
     def staff_upload_annotated(self, request, suffix=''):
         assert self.is_course_staff()
@@ -435,7 +479,7 @@ class StaffGradedAssignmentXBlock(XBlock):
             default_storage.delete(path)
             del self.uploaded_files[suffix]
 
-        res = Response();
+        res = Response()
         res.status = 204
         return res
 
