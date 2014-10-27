@@ -435,7 +435,8 @@ class StaffGradedAssignmentXBlock(XBlock):
             default_storage.delete(path)
             del self.uploaded_files[suffix]
 
-        return Response(json_body=self.student_state())
+        res.status = 204
+        return res
 
 
     def download(self, path, mimetype, filename):
