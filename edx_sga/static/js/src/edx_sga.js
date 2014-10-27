@@ -88,25 +88,12 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }
             });
 
-            for (var i = 0; i < state.uploaded[i].length; i++)
+            $(content).find(".filedelete").click(function(e, data)
             {
-                $(content).find(".delete_" + state.uploaded[i]).fileupload({
-                    url: uploadUrl + '/' + state.uploaded[i],
-                    fail: function(e, data) {
-                        state.error = "There was an error deleteing the file.";
+                var url = deleteUrl + '/' + e.value;
+                $.get(url).success(render(data.result))
 
-                        // Dump some information to the console to help someone
-                        // debug.
-                        console.log("There was an error with file upload.");
-                        console.log("event: ", e);
-                        console.log("data: ", data);
-                        render(state);
-                    },
-                    done: function(e, data) { 
-                        render(data.result); 
-                    }
-                });
-            }
+            });
         }
 
         function renderStaffGrading(data) {
