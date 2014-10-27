@@ -6,6 +6,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         var annotatedUrl = runtime.handlerUrl(element, 'download_annotated');
         var getStaffGradingUrl = runtime.handlerUrl(element, 'get_staff_grading_data');
         var staffDownloadUrl = runtime.handlerUrl(element, 'staff_download');
+        var staffDownloadZippedUrl = runtime.handlerUrl(element, 'staff_download_zipped');
         var staffAnnotatedUrl = runtime.handlerUrl(element, 'staff_download_annotated');
         var staffUploadUrl = runtime.handlerUrl(element, 'staff_upload_annotated');
         var enterGradeUrl = runtime.handlerUrl(element, 'enter_grade');
