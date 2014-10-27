@@ -88,10 +88,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }
             });
 
-            $(content).find(".filedelete").click(function(e, data)
+            $(content).find(".filedelete").click(function(e)
             {
                 var url = deleteUrl + '/' + e.value;
-                $.get(url).success(render(data.result))
+                $.get(url).success(render(state))
 
             });
         }
