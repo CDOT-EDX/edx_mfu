@@ -403,7 +403,7 @@ class StaffGradedAssignmentXBlock(XBlock):
             assignment_zip.writestr(metadata.filename, afile.read())
 
         #sha1 = _get_sha1(assignment_file)
-        assignment_zip.save()
+        #assignment_zip.save()
         assignment_zip.close()
 
         response = Response()
