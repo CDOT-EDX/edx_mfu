@@ -19,7 +19,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             // Add download urls to template context
             state.downloadUrl = downloadUrl;
             state.annotatedUrl = annotatedUrl;
-            state.staffDownloadZippedUrl = staffDownloadZippedUrl;
             state.error = state.error ? state.error : false;
 
             // Render template
@@ -111,6 +110,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             // Add download urls to template context
             data.downloadUrl = staffDownloadUrl;
             data.annotatedUrl = staffAnnotatedUrl;
+            data.staffDownloadZippedUrl = staffDownloadZippedUrl;
+
 
             // Render template
             $(element).find("#grade-info")
