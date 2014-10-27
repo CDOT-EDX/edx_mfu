@@ -10,7 +10,7 @@
             <tr>
               <td><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></td>
               <td>
-                <button class="filedelete" value="<%= uploaded[i].sha1 %>" type="button" name="delete">delete</button>
+                <button class="filedelete" value="<%= i %>" type="button" name="delete">delete</button>
               </td>
             </tr>
           <% } %>

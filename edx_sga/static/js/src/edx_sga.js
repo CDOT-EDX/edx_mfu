@@ -90,7 +90,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
             $(content).find(".filedelete").click(function(e)
             {
-                var url = deleteUrl + '/' + this.value;
+                var url = deleteUrl + '/' + state.uploaded[this.value];
                 $.get(url).success(function () {
                     delete state.uploaded[this.value];
                     render(state);
