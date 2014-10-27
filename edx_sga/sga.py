@@ -380,7 +380,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         metadatalist = state['uploaded_files']
 
-        if (len(metadatalista) == 0):
+        if (len(metadatalist) == 0):
             res = Response()
             res.status = 204
             return res
