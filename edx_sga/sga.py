@@ -401,12 +401,13 @@ class StaffGradedAssignmentXBlock(XBlock):
             afile = default_storage.open(path)
 
             assingment_zip.writestr(metadata.filename, afile.read())
-            
+
         #sha1 = _get_sha1(assignment_file)
 
         response = Response()
         response.mimetype = 'application/zip'
         response.body = assignment.read()
+        response.content_disposition = 'attachment; filename=assignment.zip'
 
         assignment.close()
         return response
