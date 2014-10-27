@@ -30,7 +30,7 @@ from xmodule.util.duedate import get_extended_due_date
 from collections import namedtuple
 
 from zipfile import ZipFile
-from tempfile import NamedTemporaryFile
+#from tempfile import NamedTemporaryFile
 
 log = logging.getLogger(__name__)
 
@@ -386,9 +386,9 @@ class StaffGradedAssignmentXBlock(XBlock):
             return res
 
         #file to be returned
-        assignment = NamedTemporaryFile()
+        buff = StringIO.StringIO()
         #assignment.name = 'assignment.zip'
-        assignment_zip = ZipFile(assignment, 'w')
+        assignment_zip = ZipFile(buff, mode='w')
 
         for sha1, metadata in metadatalist.iteritems():
             metadata = FileMetaData._make(metadata)
@@ -405,10 +405,11 @@ class StaffGradedAssignmentXBlock(XBlock):
         #sha1 = _get_sha1(assignment_file)
         #assignment_zip.save()
         assignment_zip.close()
+        buff.seek(0)
 
         response = Response()
         response.mimetype = 'application/zip'
-        response.body = assignment.read()
+        response.body = buff.read()
         response.content_disposition = 'attachment; filename=assignment.zip'
 
         assignment.close()
