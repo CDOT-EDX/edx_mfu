@@ -388,7 +388,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         #file to be returned
         assignment = NamedTemporaryFile()
         #assignment.name = 'assignment.zip'
-        assingment_zip = ZipFile(assignment, 'w')
+        assignment_zip = ZipFile(assignment, 'w')
 
         for sha1, metadata in metadatalist.iteritems():
             metadata = FileMetaData._make(metadata)
@@ -400,7 +400,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
             afile = default_storage.open(path)
 
-            assingment_zip.writestr(metadata.filename, afile.read())
+            assignment_zip.writestr(metadata.filename, afile.read())
 
         #sha1 = _get_sha1(assignment_file)
         assignment_zip.save()
