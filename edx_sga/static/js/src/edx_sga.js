@@ -92,8 +92,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             {
                 var url = deleteUrl + '/' + state.uploaded[this.value].sha1;
                 $.get(url).success(
-                    (function (value) {
-                        delete state.uploaded[value];
+                    (function (i) {
+                        if (i < state.uploaded.length)
+                        {
+                            state.uploaded = state.uploaded.splice(i, 1);
+                        }
                     })(this.value)
                 );
                 render(state);
