@@ -91,10 +91,12 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(content).find(".filedelete").click(function(e)
             {
                 var url = deleteUrl + '/' + state.uploaded[this.value];
-                $.get(url).success(function (value) {
-                    delete state.uploaded[value];
-                    render(state);
-                })(this.value);
+                $.get(url).success(
+                    (function (value) {
+                        delete state.uploaded[value];
+                        render(state);
+                    })(this.value)
+                );
             });
         }
 
