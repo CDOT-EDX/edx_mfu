@@ -413,7 +413,6 @@ class StaffGradedAssignmentXBlock(XBlock):
         response.body = buff.read()
         response.content_disposition = 'attachment; filename=assignment.zip'
 
-        assignment.close()
         return response
 
 
