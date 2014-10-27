@@ -95,7 +95,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     (function (i) {
                         if (i < state.uploaded.length)
                         {
-                            state.uploaded = state.uploaded.splice(i, 1);
+                            state.uploaded.splice(i, 1);
                         }
                     })(this.value)
                 );
