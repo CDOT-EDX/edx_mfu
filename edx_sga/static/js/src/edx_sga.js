@@ -94,9 +94,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 $.get(url).success(
                     (function (value) {
                         delete state.uploaded[value];
-                        render(state);
                     })(this.value)
                 );
+                render(state);
             });
         }
 
