@@ -558,14 +558,57 @@ class StaffGradedAssignmentXBlock(XBlock):
     def upload_allowed(self):
         return not self.past_due() and self.score is None
 
+    def _create_zip_file(self, filelist, location):
+        buff = StringIO.StringIO()
+        assignment_zip = ZipFile(buff, mode='w')
 
+        for sha1, metadata in metadatalist.iteritems():
+            metadata = FileMetaData._make(metadata)
+            path = _file_storage_path(
+                self, location.to_deprecated_string(),
+                sha1,
+                metadata.filename
+            )
+
+            afile = default_storage.open(path)
+
+            assignment_zip.writestr(metadata.filename, afile.read())
+
+        assignment_zip.close()
+        buff.seek(0)
+
+        return buff
+
+    def _file_path(self, filelist, hash):
+        filemetadata = _wrap_file_by_hash(filelist, hash)
+
+        if filemetadata == None:
+            return None
+        else:
+            path = _file_storage_path(
+                self,location.to_deprecated_string(),
+                sha1,
+                metadata.filename
+            )
+
+    def _file_path_list(self, filelist):
+        pass    
+
+
+def _wrap_file_list(fileList):
+    return {sha1: FileMetaData.__make(metadata) for (sha1, metadata) in fileList.iteritems()}
+
+def _wrap_file_by_hash(fileList, hash):
+    if hash not in fileList:
+        return None
+    else:
+        return FileMetaData.__make(fileList[hash])
 
 def _file_storage_path(url, sha1, filename):
     assert url.startswith("i4x://")
     path = url[6:] + '/' + sha1
     path += os.path.splitext(filename)[1]
     return path
-
 
 def _get_sha1(file):
     BLOCK_SIZE = 2**10 * 8  # 8kb
