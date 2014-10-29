@@ -542,7 +542,7 @@ def _get_file_metadata(filelist, hash = None):
             ret[sha1] = FileMetaData.__make(make)
         #return {sha1: FileMetaData.__make(metadata) for (sha1, metadata) in filelist.iteritems()}
     else:
-        if hash not in fileList:
+        if hash not in filelist:
             return None
         else:
             return FileMetaData.__make(filelist[hash])
