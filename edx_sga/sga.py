@@ -352,10 +352,6 @@ class StaffGradedAssignmentXBlock(XBlock):
         file = default_storage.open(path)
         app_iter = iter(partial(file.read, BLOCK_SIZE), '')
 
-        if file is None:
-            log.error("error retriving file")
-            return Response(status = 500)
-
         return Response(
             app_iter =             app_iter,
             content_type =         metadata.mimetype,

@@ -8,7 +8,7 @@
       <p>
         <table>
 
-          <% if (!upload_allowed) { %>
+          <% if (upload_allowed) { %>
             <% for (var i = 0; i < uploaded.length; i++) { %>
               <tr>
                 <td><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></td>
