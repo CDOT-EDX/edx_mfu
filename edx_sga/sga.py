@@ -207,6 +207,8 @@ class StaffGradedAssignmentXBlock(XBlock):
             instructor = self.is_instructor()
             score = state.get('score')
             approved = state.get('score_approved')
+            submitted = state.get('is_submitted')
+            submission_time = state.get('submission_time')
 
             uploaded = []
 
@@ -233,8 +235,8 @@ class StaffGradedAssignmentXBlock(XBlock):
                 'may_grade':       instructor or not approved,
                 'comment':         state.get("comment", ''),
 
-                'submitted':       is_submitted,
-                'submission_time': submission_time
+                'submitted':       state.get('is_submitted'),
+                'submission_time': state.get('submission_time')
             }
 
         query = StudentModule.objects.filter(

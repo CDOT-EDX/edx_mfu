@@ -4,45 +4,82 @@
      data-staff="{{ is_course_staff }}">
   <script type="text/template" id="sga-tmpl">
     <% if (uploaded.length > 0) { %>
-      <p><b>File uploaded</b> 
+      <b>Uploaded Files</b>
+      <p>
         <table>
-          <% for (var i = 0; i < uploaded.length; i++) { %>
-            <tr>
-              <td><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></td>
-              <td>
-                <% if (!uploaded.submitted) { %>
-                <button class="filedelete" value="<%= i %>" type="button" name="delete">delete</button>
-                <% } %>
-              </td>
-            </tr>
+
+          <% if (!upload_allowed) { %>
+            <% for (var i = 0; i < uploaded.length; i++) { %>
+              <tr>
+                <td><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></td>
+                <td>
+                  <button class="filedelete" value="<%= i %>" type="button" name="delete">delete</button>
+                </td>
+              </tr>
+            <% } %>
+
+          <% } else { %>
+
+            <% for (var i = 0; i < uploaded.length; i++) { %>
+              <tr>
+                <td><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></td>
+              </tr>
+            <% } %>
           <% } %>
+
         </table>
       </p>
+
+      <p><a href="<%= downloadZippedUrl %>">Download All</a></p>
+
+      <% if (!uploaded.submitted) { %>
+        <button class="assingmentSubmit" type="button" name="submit">submit</button>
+      <% } else { %>
+        <p>Submitted on: <%= uploaded.submission_time %></p>
+      <% } %>
+
     <% } else { %>
       <p>No file has been uploaded.</p>
     <% } %>
-    <% if (graded) { %>
-      <p>Your score is <%= graded.score %> / <%= max_score %><br/>
-        <% if (graded.comment) { %>
-          <b>Instructor comment</b> <%= graded.comment %>
+
+    <% if (uploaded.submitted) { %>
+
+      <% if (graded) { %>
+        <p>Your score is <%= graded.score %> / <%= max_score %><br/>
+          <% if (graded.comment) { %>
+            <b>Instructor comment</b> <%= graded.comment %>
+          <% } %>
+        </p>
+      <% } else if (uploaded) { %>
+        {% trans "This assignment has not yet been graded." %}
+      <% } %>
+
+      <p>Submitted on: <%= uploaded.submission_time %></p>
+
+    <% } else { %>
+      <p>
+        <% if (upload_allowed) { %>
+          <button class="assingmentSubmit" type="button" name="submit">submit</button>
+        <% } else { %>
+          Assignment is passed due date.
         <% } %>
       </p>
-    <% } else if (uploaded) { %>
-      {% trans "This assignment has not yet been graded." %}
     <% } %>
+
     <% if (upload_allowed) { %>
-    <p>
-      <% if (uploaded) { %>
-        {% trans "Upload a different file" %}
-      <% } else { %>
-        {% trans "Upload your assignment" %}
-      <% } %>
-      <div class="upload">
-        <input class="fileupload" type="file" name="assignment"/>
-        <button>Select a file</button>
-      </div>
-    </p>
+      <p>
+        <% if (uploaded) { %>
+          {% trans "Upload a different file" %}
+        <% } else { %>
+          {% trans "Upload your assignment" %}
+        <% } %>
+        <div class="upload">
+          <input class="fileupload" type="file" name="assignment"/>
+          <button>Select a file</button>
+        </div>
+      </p>
     <% } %>
+
     <% if (error) { %>
       <p class="error"><%= error %></p>
     <% } %>
