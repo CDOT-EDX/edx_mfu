@@ -536,11 +536,13 @@ class StaffGradedAssignmentXBlock(XBlock):
         return buff
 
 def _get_file_metadata(filelist, hash = None):
+    global FileMetaData
     if hash is None:
-        ret = {}
-        for sha1, metadata in filelist.iteritems():
-            ret[sha1] = FileMetaData.__make(make)
-        #return {sha1: FileMetaData.__make(metadata) for (sha1, metadata) in filelist.iteritems()}
+        return {sha1: FileMetaData.__make(metadata) 
+            for (sha1, metadata) in filelist.iteritems()}
+        #ret = {}
+        #for sha1, metadata in filelist.iteritems():
+        #    ret[sha1] = FileMetaData.__make(make)
     else:
         if hash not in filelist:
             return None
