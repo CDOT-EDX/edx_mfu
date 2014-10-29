@@ -30,7 +30,6 @@ from xmodule.util.duedate import get_extended_due_date
 from collections import namedtuple
 
 from zipfile import ZipFile
-#from tempfile import NamedTemporaryFile
 import StringIO
 
 log = logging.getLogger(__name__)
@@ -112,33 +111,19 @@ class StaffGradedAssignmentXBlock(XBlock):
         help="The time and date the student last uploaded a file."
     )
 
-    annotated_sha1 = String(
-        display_name="Annotated SHA1",
+    is_submitted = Boolean(
+        display_name="Is Submitted",
         scope=Scope.user_state,
-        default=dict(),
-        help=("sha1 of the annotated file uploaded by the instructor for "
-              "this assignment.")
+        default=False,
+        help="Whether the student has submitted their work or not."
     )
 
-    annotated_filename = String(
-        display_name="Annotated file name",
+    submission_time = String(
+        display_name="Submission Time",
         scope=Scope.user_state,
         default=None,
-        help="The name of the annotated file uploaded for this assignment."
+        help="The time the user submitted the assignment for grading."
     )
-
-    annotated_mimetype = String(
-        display_name="Mime type of annotated file",
-        scope=Scope.user_state,
-        default=None,
-        help="The mimetype of the annotated file uploaded for this assignment."
-    )
-
-    annotated_timestamp = DateTime(
-        display_name="Timestamp",
-        scope=Scope.user_state,
-        default=None,
-        help="When the annotated file was uploaded")
 
     def max_score(self):
         return self.points
@@ -199,23 +184,21 @@ class StaffGradedAssignmentXBlock(XBlock):
             metadata = FileMetaData._make(metadata)
             uploaded.append({"sha1": sha1, "filename": metadata.filename})
 
-        if self.annotated_sha1:
-            annotated = {"filename": self.annotated_filename}
-        else:
-            annotated = None
-
         if self.score is not None and self.score_approved:
             graded = {'score': self.score, 'comment': self.comment}
         else:
             graded = None
 
         return {
-            "uploaded": uploaded,
-            "annotated": annotated,
-            "graded": graded,
-            "max_score": self.max_score(),
-            "published": self.score_published,
-            "upload_allowed": self.upload_allowed(),
+            "uploaded":        uploaded,
+
+            "graded":          graded,
+            "max_score":       self.max_score(),
+            "published":       self.score_published,
+
+            "upload_allowed":  self.upload_allowed(),
+            "submitted":       is_submitted,
+            "submission_time": submission_time
         }
 
     def staff_grading_data(self):
@@ -225,33 +208,32 @@ class StaffGradedAssignmentXBlock(XBlock):
             score = state.get('score')
             approved = state.get('score_approved')
 
-            metadatalist = state.get("uploaded_files")
-
             uploaded = []
-            for sha1, metadata in metadatalist.iteritems():
-                metadata = FileMetaData._make(metadata)
+            for sha1, metadata in _get_file_metadata(state.get("uploaded_files")).iteritems():
                 uploaded.append({
-                    "sha1": sha1, 
-                    "filename": metadata.filename,
+                    "sha1":      sha1, 
+                    "filename":  metadata.filename,
                     "timestamp": metadata.timestamp
                 })
 
 
             return {
-                'module_id': module.id,
-                'username': module.student.username,
-                'fullname': module.student.profile.name,
-                'uploaded': uploaded,
-                #'filename': state.get("uploaded_filename"),
-                'timestamp': state.get("uploaded_files_last_timestamp"),
-                'published': state.get("score_published"),
-                'score': score,
-                'approved': approved,
-                'needs_approval': instructor and score is not None
-                                  and not approved,
-                'may_grade': instructor or not approved,
-                'annotated': state.get("annotated_filename"),
-                'comment': state.get("comment", ''),
+                'module_id':       module.id,
+                'username':        module.student.username,
+                'fullname':        module.student.profile.name,
+                'uploaded':        uploaded,
+                'timestamp':       state.get("uploaded_files_last_timestamp"),
+                'published':       state.get("score_published"),
+                'score':           score,
+                'approved':        approved,
+                'needs_approval':  instructor and score is not None
+                                   and not approved,
+                'may_grade':       instructor or not approved,
+                'annotated':       state.get("annotated_filename"),
+                'comment':         state.get("comment", ''),
+
+                'submitted':       is_submitted,
+                'submission_time': submission_time
             }
 
         query = StudentModule.objects.filter(
@@ -329,8 +311,6 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     @XBlock.handler
     def download_assignment(self, request, suffix=''):
-        #temporory: return the first file.
-
         if (suffix not in self.uploaded_files):
             log.error("File download failure: No matching file belongs to this student.", exc_info=True)
             raise
@@ -359,7 +339,7 @@ class StaffGradedAssignmentXBlock(XBlock):
             log.error("File download failure: No matching file belongs to this student.", exc_info=True)
             raise
 
-        metadata = FileMetaData._make(state['uploaded_files'][suffix])
+        metadata = _get_file_metadata(state['uploaded_files'], suffix)
 
         path = _file_storage_path(
             module.module_state_key.to_deprecated_string(),
@@ -379,113 +359,57 @@ class StaffGradedAssignmentXBlock(XBlock):
         module = StudentModule.objects.get(pk=request.params['module_id'])
         state = json.loads(module.state)
 
-        metadatalist = state['uploaded_files']
+        #metadatalist = _get_file_metadata(state['uploaded_files'])
+        #TODO: assignment name with student, course and assignemnt name.
+        return download_zipped(self.uploaded_files, assignment)
 
-        if (len(metadatalist) == 0):
-            res = Response()
-            res.status = 204
-            return res
+    @XBlock.handler
+    def student_download_zipped(self, request, suffix=''):
+        #TODO: assignment name with course and assignemnt name.
+        return download_zipped(self.uploaded_files, assignment)
 
-        #file to be returned
+    #TODO: Filename based on requestor and submittor
+    def download_zipped(self, filelist, filename="assignment"):
+        if (len(filelist) == 0):
+            return Response(status = 404)
+
         buff = StringIO.StringIO()
-        #assignment.name = 'assignment.zip'
         assignment_zip = ZipFile(buff, mode='w')
 
-        for sha1, metadata in metadatalist.iteritems():
-            metadata = FileMetaData._make(metadata)
+        for sha1, metadata in _get_file_metadata(filelist).iteritems():
             path = _file_storage_path(
                 self.location.to_deprecated_string(),
                 sha1,
                 metadata.filename
             )
-
             afile = default_storage.open(path)
 
             assignment_zip.writestr(metadata.filename, afile.read())
 
-        #sha1 = _get_sha1(assignment_file)
-        #assignment_zip.save()
         assignment_zip.close()
         buff.seek(0)
 
-        response = Response()
-        response.mimetype = 'application/zip'
-        response.body = buff.read()
-        response.content_disposition = 'attachment; filename=assignment.zip'
-
-        return response
-
-
-    @XBlock.handler
-    def staff_upload_annotated(self, request, suffix=''):
-        assert self.is_course_staff()
-        upload = request.params['annotated']
-        module = StudentModule.objects.get(pk=request.params['module_id'])
-        state = json.loads(module.state)
-        state['annotated_sha1'] = sha1 = _get_sha1(upload.file)
-        state['annotated_filename'] = filename = upload.file.name
-        state['annotated_mimetype'] = mimetypes.guess_type(upload.file.name)[0]
-        state['annotated_timestamp'] = _now().strftime(
-            DateTime.DATETIME_FORMAT
-        )
-        path = _file_storage_path(
-            self.location.to_deprecated_string(),
-            sha1,
-            filename
-        )
-        if not default_storage.exists(path):
-            default_storage.save(path, File(upload.file))
-        module.state = json.dumps(state)
-        module.save()
-        return Response(json_body=self.staff_grading_data())
-
-    @XBlock.handler
-    def download_annotated(self, request, suffix=''):
-        path = _file_storage_path(
-            self.location.to_deprecated_string(),
-            self.annotated_sha1,
-            self.annotated_filename
-        )
-        return self.download(
-            path,
-            self.annotated_mimetype,
-            self.annotated_filename
-        )
-
-    @XBlock.handler
-    def staff_download_annotated(self, request, suffix=''):
-        assert self.is_course_staff()
-        module = StudentModule.objects.get(pk=request.params['module_id'])
-        state = json.loads(module.state)
-        path = _file_storage_path(
-            module.module_state_key.to_deprecated_string(),
-            state['annotated_sha1'],
-            state['annotated_filename']
-        )
-        return self.download(
-            path,
-            state['annotated_mimetype'],
-            state['annotated_filename']
+        return Response(
+            body =                buff.read(),
+            mimetype =            'application/zip',
+            content_disposition = 'attachment; filename=assignment' + '.zip'
         )
 
     @XBlock.handler
     def delete_assignment(self, request, suffix=''):
         if suffix in self.uploaded_files:
-            metadata = FileMetaData._make(self.uploaded_files[suffix])
+            metadata = _get_file_metadata(self.uploaded_files, suffix)
 
-            path = _file_storage_path(
-                self.location.to_deprecated_string(),
-                suffix,
-                metadata.filename
-            )
+        path = _file_storage_path(
+            self.location.to_deprecated_string(),
+            suffix,
+            metadata.filename
+        )
 
-            default_storage.delete(path)
-            del self.uploaded_files[suffix]
+        default_storage.delete(path)
+        del self.uploaded_files[suffix]
 
-        res = Response()
-        res.status = 204
-        return res
-
+        return Response(status = 204)
 
     def download(self, path, mimetype, filename):
         BLOCK_SIZE = 2**10 * 8  # 8kb
@@ -495,6 +419,14 @@ class StaffGradedAssignmentXBlock(XBlock):
             app_iter=app_iter,
             content_type=mimetype,
             content_disposition="attachment; filename=" + filename)
+
+    @XBlock.handler
+    def submit(self, request, suffix=''):
+        if not is_submitted:
+            is_submitted = True
+            submission_time = str(_now)
+
+        return Response(status=204)
 
     @XBlock.handler
     def get_staff_grading_data(self, request, suffix=''):
@@ -531,10 +463,6 @@ class StaffGradedAssignmentXBlock(XBlock):
         state['comment'] = ''
         state['score_published'] = False    # see student_view
         state['score_approved'] = False
-        state['annotated_sha1'] = None
-        state['annotated_filename'] = None
-        state['annotated_mimetype'] = None
-        state['annotated_timestamp'] = None
         module.state = json.dumps(state)
         module.save()
         return Response(json_body=self.staff_grading_data())
@@ -556,20 +484,20 @@ class StaffGradedAssignmentXBlock(XBlock):
         return False
 
     def upload_allowed(self):
-        return not self.past_due() and self.score is None
+        return not self.past_due() 
+               and self.score is None 
+               and not is_submitted 
 
-    def _create_zip_file(self, filelist, location):
+    def create_zip_file(self, filelist):
         buff = StringIO.StringIO()
         assignment_zip = ZipFile(buff, mode='w')
 
-        for sha1, metadata in metadatalist.iteritems():
-            metadata = FileMetaData._make(metadata)
+        for sha1, metadata in _get_file_metadata(filelist).iteritems():
             path = _file_storage_path(
-                self, location.to_deprecated_string(),
+                self.location.to_deprecated_string(),
                 sha1,
                 metadata.filename
             )
-
             afile = default_storage.open(path)
 
             assignment_zip.writestr(metadata.filename, afile.read())
@@ -579,30 +507,15 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         return buff
 
-    def _file_path(self, filelist, hash):
-        filemetadata = _wrap_file_by_hash(filelist, hash)
+def _get_file_metadata(fileList, hash = None):
+    if hash not None:
+        return {sha1: FileMetaData.__make(metadata) for (sha1, metadata) in fileList.iteritems()}
 
-        if filemetadata == None:
+    else:
+        if hash not in fileList:
             return None
         else:
-            path = _file_storage_path(
-                self,location.to_deprecated_string(),
-                sha1,
-                metadata.filename
-            )
-
-    def _file_path_list(self, filelist):
-        pass    
-
-
-def _wrap_file_list(fileList):
-    return {sha1: FileMetaData.__make(metadata) for (sha1, metadata) in fileList.iteritems()}
-
-def _wrap_file_by_hash(fileList, hash):
-    if hash not in fileList:
-        return None
-    else:
-        return FileMetaData.__make(fileList[hash])
+            return FileMetaData.__make(fileList[hash])
 
 def _file_storage_path(url, sha1, filename):
     assert url.startswith("i4x://")
