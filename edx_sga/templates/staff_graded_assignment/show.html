@@ -50,7 +50,7 @@
       </p>
     <% } %>
 
-    <% if (uploaded.submitted) { %>
+    <% if (submitted) { %>
 
       <% if (graded) { %>
         <p>Your score is <%= graded.score %> / <%= max_score %><br/>
@@ -58,16 +58,16 @@
             <b>Instructor comment</b> <%= graded.comment %>
           <% } %>
         </p>
-      <% } else if (uploaded) { %>
+      <% } else { %>
         {% trans "This assignment has not yet been graded." %}
       <% } %>
 
-      <p>Submitted on: <%= uploaded.submission_time %></p>
+      <p>Submitted on: <%= submission_time %></p>
 
     <% } else { %>
       <p>
         <% if (upload_allowed) { %>
-          <button class="assingmentSubmit" type="button" name="submit">submit</button>
+          <button class="assingmentsubmit" type="button" name="submit">submit</button>
         <% } else { %>
           Assignment is passed due date.
         <% } %>
