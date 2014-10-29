@@ -32,12 +32,6 @@
 
       <p><a href="<%= downloadZippedUrl %>">Download All</a></p>
 
-      <% if (!uploaded.submitted) { %>
-        <button class="assingmentSubmit" type="button" name="submit">submit</button>
-      <% } else { %>
-        <p>Submitted on: <%= uploaded.submission_time %></p>
-      <% } %>
-
     <% } else { %>
       <p>No file has been uploaded.</p>
     <% } %>
