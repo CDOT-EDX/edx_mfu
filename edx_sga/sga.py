@@ -344,8 +344,10 @@ class StaffGradedAssignmentXBlock(XBlock):
         )
 
         if metadata is None:
-            log.error("Attempt to download non-existant file.")
+            log.error("Attempt to download non-existant file at " + path)
             return Response(status = 404)
+
+        log.error(path)
 
         #set up download
         BLOCK_SIZE = 2**10 * 8  # 8kb
