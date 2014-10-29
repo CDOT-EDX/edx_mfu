@@ -352,9 +352,15 @@ class StaffGradedAssignmentXBlock(XBlock):
         foundFile = default_storage.open(path)
         app_iter = iter(partial(foundFile.read, BLOCK_SIZE), '')
 
+        # return Response(
+        #     app_iter =             app_iter,
+        #     content_type =         metadata.mimetype,
+        #     content_disposition = "attachment; filename=" + metadata.filename
+        # )
+
         return Response(
-            app_iter =             app_iter,
-            content_type =         metadata.mimetype,
+            body =                foundFile.read(),
+            content_type =        metadata.mimetype,
             content_disposition = "attachment; filename=" + metadata.filename
         )
 
