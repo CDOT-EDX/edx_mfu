@@ -106,9 +106,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(content).find(".assignmentSubmit").click(function(e)
             {
                 $.get(submitUrl).success(
-                    state.submitted = true;
+                    function (i) {
+                        state.submitted = true;
+                        render(state);
+                    })
                 );
-                render(state);
             });
         }
 
