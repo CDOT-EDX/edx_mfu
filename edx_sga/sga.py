@@ -400,7 +400,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         return Response(
             body =                buff.read(),
-            mimetype =            'application/zip',
+            content_type =            'application/zip',
             content_disposition = 'attachment; filename=assignment' + '.zip'
         )
 
