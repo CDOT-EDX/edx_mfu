@@ -349,8 +349,8 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         #set up download
         BLOCK_SIZE = 2**10 * 8  # 8kb
-        file = default_storage.open(path)
-        app_iter = iter(partial(file.read, BLOCK_SIZE), '')
+        foundFile = default_storage.open(path)
+        app_iter = iter(partial(foundFile.read, BLOCK_SIZE), '')
 
         return Response(
             app_iter =             app_iter,
@@ -400,7 +400,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         return Response(
             body =                buff.read(),
-            content_type =            'application/zip',
+            content_type =        'application/zip',
             content_disposition = 'attachment; filename=assignment' + '.zip'
         )
 
