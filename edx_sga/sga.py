@@ -532,7 +532,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         return buff
 
 def _get_file_metadata(fileList, hash = None):
-    if hash not None:
+    if hash is not None:
         return {sha1: FileMetaData.__make(metadata) 
                 for (sha1, metadata) in fileList.iteritems()}
 
