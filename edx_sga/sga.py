@@ -343,6 +343,10 @@ class StaffGradedAssignmentXBlock(XBlock):
             metadata.filename
         )
 
+        if metadata is None:
+            log.error("Attempt to download non-existant file.")
+            return Response(status = 404)
+
         #set up download
         BLOCK_SIZE = 2**10 * 8  # 8kb
         file = default_storage.open(path)
