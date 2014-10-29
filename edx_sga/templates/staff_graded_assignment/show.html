@@ -10,7 +10,9 @@
             <tr>
               <td><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></td>
               <td>
+                <% if (!uploaded.submitted) { %>
                 <button class="filedelete" value="<%= i %>" type="button" name="delete">delete</button>
+                <% } %>
               </td>
             </tr>
           <% } %>
@@ -23,10 +25,6 @@
       <p>Your score is <%= graded.score %> / <%= max_score %><br/>
         <% if (graded.comment) { %>
           <b>Instructor comment</b> <%= graded.comment %>
-        <% } %>
-        <% if (annotated) { %><br/>
-          <b>Annotated file from instructor</b>
-          <a href="<%= annotatedUrl %>"><%= annotated.filename %></a>
         <% } %>
       </p>
     <% } else if (uploaded) { %>
@@ -61,7 +59,6 @@
         <th>Name</th>
         <th>Filename</th>
         <th>Download All</th>
-        <th>Uploaded</th>
         <th>Grade</th>
         <th>Instructors comments</th>
       </tr>
@@ -97,13 +94,6 @@
             <% } %>
           </td>
           <td><%= assignment.comment %></td>
-          <td>
-            <% if (assignment.annotated) { %>
-              <a href="<%= annotatedUrl %>?module_id=<%= assignment.module_id %>">
-                <%= assignment.annotated %>
-              </a>
-            <% } %>
-          </td>
           <td>
             <% if (assignment.may_grade) { %>
               <a class="enter-grade-button" href="#{{ id }}-enter-grade">

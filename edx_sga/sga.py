@@ -386,6 +386,14 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     @XBlock.handler
     def delete_file(self, request, suffix=''):
+        """Removes an uploaded file from the assignemtn
+
+        Keywor arguments:
+        request: not used.
+        suffix:  holds the sha1 hash of the file to be deleted.
+        """
+        assert self.upload_allowed()
+
         if suffix in self.uploaded_files:
             metadata = _get_file_metadata(self.uploaded_files, suffix)
 
