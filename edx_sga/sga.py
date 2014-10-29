@@ -210,8 +210,13 @@ class StaffGradedAssignmentXBlock(XBlock):
             submitted = state.get('is_submitted')
             submission_time = state.get('submission_time')
 
-            uploaded = []
+            #can a grade be entered
+            due = state.get('due')
+            may_grade = (instructor or not approved) 
+            if due is not None:
+                may_grade = may_grade and (submitted or due > _now()) 
 
+            uploaded = []
             if (state.get('is_submitted')):
                 for sha1, metadata in _get_file_metadata(state.get("uploaded_files")).iteritems():
                     uploaded.append({
@@ -219,7 +224,6 @@ class StaffGradedAssignmentXBlock(XBlock):
                         "filename":  metadata.filename,
                         "timestamp": metadata.timestamp
                     })
-
 
             return {
                 'module_id':       module.id,
@@ -232,11 +236,11 @@ class StaffGradedAssignmentXBlock(XBlock):
                 'approved':        approved,
                 'needs_approval':  instructor and score is not None
                                    and not approved,
-                'may_grade':       instructor or not approved,
+                'may_grade':       may_grade,
                 'comment':         state.get("comment", ''),
 
-                'submitted':       state.get('is_submitted'),
-                'submission_time': state.get('submission_time')
+                'submitted':       submitted,
+                'submission_time': submission_time
             }
 
         query = StudentModule.objects.filter(
