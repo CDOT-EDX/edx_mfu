@@ -468,14 +468,18 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     def past_due(self):
         due = get_extended_due_date(self)
+
         if due is not None:
             return _now() > due
-        return False
+        else:
+            return False
 
     def upload_allowed(self):
-        return not self.past_due() 
+        return (
+            not self.past_due() 
                and self.score is None 
-               and not is_submitted 
+               and not is_submitted
+        )
 
     def create_zip_file(self, filelist):
         buff = StringIO.StringIO()
@@ -498,7 +502,8 @@ class StaffGradedAssignmentXBlock(XBlock):
 
 def _get_file_metadata(fileList, hash = None):
     if hash not None:
-        return {sha1: FileMetaData.__make(metadata) for (sha1, metadata) in fileList.iteritems()}
+        return {sha1: FileMetaData.__make(metadata) 
+                for (sha1, metadata) in fileList.iteritems()}
 
     else:
         if hash not in fileList:

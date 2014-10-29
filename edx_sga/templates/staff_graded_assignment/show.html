@@ -64,7 +64,6 @@
         <th>Uploaded</th>
         <th>Grade</th>
         <th>Instructors comments</th>
-        <th>Annotated</th>
       </tr>
       <% for (var i = 0; i < assignments.length; i++) { %>
       <%     var assignment = assignments[i]; %>
@@ -115,12 +114,6 @@
                 <% } %>
               </a>
             <% } %>
-          </td>
-          <td>
-            <div class="upload">
-              <input class="fileupload" type="file" name="annotated"/>
-              <button>Upload annotated file</button>
-            </div>
           </td>
         </tr>
       <% } %>
