@@ -34,7 +34,7 @@ import StringIO
 
 log = logging.getLogger(__name__)
 
-#FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
+FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
 class StaffGradedAssignmentXBlock(XBlock):
     """
@@ -181,7 +181,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         uploaded = []
         for sha1, metadata in self.uploaded_files.iteritems():
-            metadata = FileMetaData._make(metadata)
+            metadata = FileMetaData.__make(metadata)
             uploaded.append({"sha1": sha1, "filename": metadata.filename})
 
         if self.score is not None and self.score_approved:
@@ -536,7 +536,6 @@ class StaffGradedAssignmentXBlock(XBlock):
         return buff
 
 def _get_file_metadata(filelist, hash = None):
-    FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
     if hash is None:
         return {sha1: FileMetaData.__make(metadata) 
             for (sha1, metadata) in filelist.iteritems()}
