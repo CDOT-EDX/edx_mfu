@@ -352,6 +352,10 @@ class StaffGradedAssignmentXBlock(XBlock):
         file = default_storage.open(path)
         app_iter = iter(partial(file.read, BLOCK_SIZE), '')
 
+        if file is None:
+            log.error("error retriving file")
+            return Response(status = 500)
+
         return Response(
             app_iter =             app_iter,
             content_type =         metadata.mimetype,
@@ -547,7 +551,7 @@ def _get_file_metadata(filelist, hash = None):
         #for sha1, metadata in filelist.iteritems():
         #    ret[sha1] = FileMetaData.__make(make)
     else:
-        if hash in filelist:
+        if hash not in filelist:
             return None
         else:
             return FileMetaData._make(filelist[hash])
