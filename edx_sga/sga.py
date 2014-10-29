@@ -339,7 +339,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         metadata = _get_file_metadata(filelist, sha1)
         path = _file_storage_path(
             self.location.to_deprecated_string(),
-            suffix,
+            sha1,
             metadata.filename
         )
 
