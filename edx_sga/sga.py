@@ -329,6 +329,8 @@ class StaffGradedAssignmentXBlock(XBlock):
         self.download_file(state['uploaded_files'], suffix)
 
     def download_file(self, filelist, sha1):
+        assert filelist is not None
+
         if sha1 not in filelist:
             log.error("File download failure: No matching file belongs to this student.", exc_info=True)
             raise
@@ -371,7 +373,9 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     #TODO: Filename based on requestor and submittor
     def download_zipped(self, filelist, filename="assignment"):
-        if (len(filelist) == 0):
+        assert filelist is not None 
+
+        if (len(filelist) == 0 or filelist is None):
             return Response(status = 404)
 
         buff = StringIO.StringIO()
