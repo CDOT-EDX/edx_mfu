@@ -362,12 +362,12 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         #metadatalist = _get_file_metadata(state['uploaded_files'])
         #TODO: assignment name with student, course and assignemnt name.
-        return self. download_zipped(self.uploaded_files, assignment)
+        return self. download_zipped(self.uploaded_files, 'assignment')
 
     @XBlock.handler
     def student_download_zipped(self, request, suffix=''):
         #TODO: assignment name with course and assignemnt name.
-        return self.download_zipped(self.uploaded_files, assignment)
+        return self.download_zipped(self.uploaded_files, 'assignment')
 
     #TODO: Filename based on requestor and submittor
     def download_zipped(self, filelist, filename="assignment"):
