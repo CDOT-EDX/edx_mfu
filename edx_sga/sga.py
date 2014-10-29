@@ -318,7 +318,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     @XBlock.handler
     def student_download_file(self, request, suffix=''):
-        download_file(self.uploaded_files, suffix)
+        self.download_file(self.uploaded_files, suffix)
 
     @XBlock.handler
     def staff_download_file(self, request, suffix=''):
@@ -326,7 +326,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         module = StudentModule.objects.get(pk=request.params['module_id'])
         state = json.loads(module.state)
 
-        download_file(state['uploaded_files'], suffix)
+        self.download_file(state['uploaded_files'], suffix)
 
     def download_file(self, filelist, sha1):
         if sha1 not in filelist:
@@ -362,12 +362,12 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         #metadatalist = _get_file_metadata(state['uploaded_files'])
         #TODO: assignment name with student, course and assignemnt name.
-        return download_zipped(self.uploaded_files, assignment)
+        return self. download_zipped(self.uploaded_files, assignment)
 
     @XBlock.handler
     def student_download_zipped(self, request, suffix=''):
         #TODO: assignment name with course and assignemnt name.
-        return download_zipped(self.uploaded_files, assignment)
+        return self.download_zipped(self.uploaded_files, assignment)
 
     #TODO: Filename based on requestor and submittor
     def download_zipped(self, filelist, filename="assignment"):
