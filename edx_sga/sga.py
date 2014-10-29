@@ -535,16 +535,14 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         return buff
 
-def _get_file_metadata(fileList, hash = None):
+def _get_file_metadata(filelist, hash = None):
     if hash is not None:
-        return {sha1: FileMetaData.__make(metadata) 
-                for (sha1, metadata) in fileList.iteritems()}
-
+        return {sha1: FileMetaData.__make(metadata) for (sha1, metadata) in filelist.iteritems()}
     else:
         if hash not in fileList:
             return None
         else:
-            return FileMetaData.__make(fileList[hash])
+            return FileMetaData.__make(filelist[hash])
 
 def _file_storage_path(url, sha1, filename):
     assert url.startswith("i4x://")
