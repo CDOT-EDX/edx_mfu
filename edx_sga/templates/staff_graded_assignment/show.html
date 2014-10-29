@@ -89,32 +89,33 @@
         <th>Username</th>
         <th>Name</th>
         <th>Filename</th>
-        <th>Download All</th>
+        <th>Submission Date</th>
         <th>Grade</th>
         <th>Instructors comments</th>
       </tr>
       <% for (var i = 0; i < assignments.length; i++) { %>
       <%     var assignment = assignments[i]; %>
         <tr id="row-<%= assignment.module_id %>">
+        
           <td><%= assignment.username %></td>
+
           <td><%= assignment.fullname %></td>
+
           <td>
-            <ul>
-              <% if (assignment.uploaded.length > 0) { %>
+            <% if (assignment.uploaded.length > 0) { %>
+              <ul>
                 <% for (var i = 0; i < assignment.uploaded.length; i++) { %>
                   <li><a href="<%= downloadUrl + '/' + assignment.uploaded[i].sha1 %>?module_id=<%= assignment.module_id %>">
                     <%= assignment.uploaded[i].filename %>
                   </a></li>
-                <% } %>
-              <% } %>
-            </ul>
+                  <p><a href="<%= downloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a>
+                <% } %></p>
+              </ul>
+            <% } %>
           </td>
-          <td>
-            <a href="<%= downloadZippedUrl %>?module_id=<%= assignment.module_id %>">
-              download
-            </a>
-          </td>
+
           <td><%= assignment.timestamp %></td>
+
           <td>
             <% if (assignment.score !== null) { %>
               <%= assignment.score %> /
@@ -124,7 +125,9 @@
               <% } %>
             <% } %>
           </td>
+
           <td><%= assignment.comment %></td>
+
           <td>
             <% if (assignment.may_grade) { %>
               <a class="enter-grade-button" href="#{{ id }}-enter-grade">
@@ -136,6 +139,7 @@
               </a>
             <% } %>
           </td>
+
         </tr>
       <% } %>
     </table>
