@@ -329,7 +329,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         download_file(state['uploaded_files'], suffix)
 
     def download_file(self, filelist, sha1):
-        if (sha1 not in filelist:
+        if sha1 not in filelist:
             log.error("File download failure: No matching file belongs to this student.", exc_info=True)
             raise
 
