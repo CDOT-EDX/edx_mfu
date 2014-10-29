@@ -125,37 +125,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 .leanModal({closeButton: "#enter-grade-cancel"})
                 .on("click", handleGradeEntry);
 
-            // Set up annotated file upload
-            $(element).find("#grade-info .fileupload").each(function() {
-                var row = $(this).parents("tr");
-                var url = staffUploadUrl + "?module_id=" + row.data("module_id");
-                $(this).fileupload({
-                    url: url,
-                    /*
-                    add: function(e, data) {
-                        var upload = $(this).parents(".upload").html('');
-                        $('<button/>')
-                            .text('Upload ' + data.files[0].name)
-                            .appendTo(upload)
-                            .click(function() {
-                                upload.text("Uploading...");
-                                data.submit();
-                            });
-                    },
-                    */
-                    progressall: function(e, data) {
-                        var percent = parseInt(data.loaded / data.total * 100, 10);
-                        row.find(".upload").text("Uploading... " + percent + "%");
-                    },
-                    done: function(e, data) { 
-                        // Add a time delay so user will notice upload finishing
-                        // for small files
-                        setTimeout(
-                            function() { renderStaffGrading(data.result); }, 
-                            3000)
-                    }
-                });
-            });
         }
 
         /* Click event handler for "enter grade" */
