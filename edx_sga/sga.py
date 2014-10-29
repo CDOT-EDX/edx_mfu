@@ -181,7 +181,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         uploaded = []
         for sha1, metadata in self.uploaded_files.iteritems():
-            metadata = FileMetaData.__make(metadata)
+            metadata = FileMetaData._make(metadata)
             uploaded.append({"sha1": sha1, "filename": metadata.filename})
 
         if self.score is not None and self.score_approved:
@@ -537,7 +537,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
 def _get_file_metadata(filelist, hash = None):
     if hash is None:
-        return {sha1: FileMetaData.__make(metadata) 
+        return {sha1: FileMetaData._make(metadata) 
             for (sha1, metadata) in filelist.iteritems()}
         #ret = {}
         #for sha1, metadata in filelist.iteritems():
@@ -546,7 +546,7 @@ def _get_file_metadata(filelist, hash = None):
         if hash not in filelist:
             return None
         else:
-            return FileMetaData.__make(filelist[hash])
+            return FileMetaData._make(filelist[hash])
 
 def _file_storage_path(url, sha1, filename):
     assert url.startswith("i4x://")
