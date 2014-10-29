@@ -197,8 +197,8 @@ class StaffGradedAssignmentXBlock(XBlock):
             "published":       self.score_published,
 
             "upload_allowed":  self.upload_allowed(),
-            "submitted":       is_submitted,
-            "submission_time": submission_time
+            "submitted":       self.is_submitted,
+            "submission_time": self.submission_time
         }
 
     def staff_grading_data(self):
@@ -431,8 +431,8 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     @XBlock.handler
     def submit(self, request, suffix=''):
-        if not is_submitted:
-            is_submitted = True
+        if not self.is_submitted:
+            self.is_submitted = True
             submission_time = str(_now)
 
         return Response(status=204)
