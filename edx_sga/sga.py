@@ -347,8 +347,6 @@ class StaffGradedAssignmentXBlock(XBlock):
             log.error("Attempt to download non-existant file at " + path)
             return Response(status = 404)
 
-        log.error(path)
-
         #set up download
         BLOCK_SIZE = 2**10 * 8  # 8kb
         file = default_storage.open(path)
@@ -549,10 +547,11 @@ def _get_file_metadata(filelist, hash = None):
         #for sha1, metadata in filelist.iteritems():
         #    ret[sha1] = FileMetaData.__make(make)
     else:
-        if hash not in filelist:
-            return None
-        else:
-            return FileMetaData._make(filelist[hash])
+        return FileMetaData._make(filelist[hash])
+        # if hash not in filelist:
+        #     return None
+        # else:
+        #     return FileMetaData._make(filelist[hash])
 
 def _file_storage_path(url, sha1, filename):
     assert url.startswith("i4x://")
