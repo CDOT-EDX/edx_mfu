@@ -105,8 +105,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
             $(content).find(".assignmentSubmit").click(function(e)
             {
-                var url = submitUrl;
-                $.get(url).success(
+                $.get(submitUrl).success(
                     state.submitted = true;
                 );
                 render(state);
