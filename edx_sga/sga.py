@@ -338,7 +338,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         #get file info
         metadata = _get_file_metadata(filelist, sha1)
         path = _file_storage_path(
-            module.module_state_key.to_deprecated_string(),
+            self.location.to_deprecated_string(),
             suffix,
             metadata.filename
         )
