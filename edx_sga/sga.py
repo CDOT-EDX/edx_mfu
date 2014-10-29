@@ -285,7 +285,7 @@ class StaffGradedAssignmentXBlock(XBlock):
             setattr(self, name, data.get(name, getattr(self, name)))
 
     @XBlock.handler
-    def upload_assignment(self, request, suffix=''):
+    def upload_file(self, request, suffix=''):
         assert self.upload_allowed()
         upload = request.params['assignment']
 
@@ -312,18 +312,18 @@ class StaffGradedAssignmentXBlock(XBlock):
         return Response(json_body=self.student_state())
 
     @XBlock.handler
-    def student_download_assignment(self, request, suffix=''):
+    def student_download_file(self, request, suffix=''):
         download_assignment(self.uploaded_files, suffix)
 
     @XBlock.handler
-    def staff_download_assignment(self, request, suffix=''):
+    def staff_download_file(self, request, suffix=''):
         assert self.is_course_staff()
         module = StudentModule.objects.get(pk=request.params['module_id'])
         state = json.loads(module.state)
 
         download_assignment(state['uploaded_files'], suffix)
 
-    def download_assignment(self, filelist, sha1):
+    def download_file(self, filelist, sha1):
         if (sha1 not in filelist:
             log.error("File download failure: No matching file belongs to this student.", exc_info=True)
             raise
@@ -385,7 +385,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         )
 
     @XBlock.handler
-    def delete_assignment(self, request, suffix=''):
+    def delete_file(self, request, suffix=''):
         if suffix in self.uploaded_files:
             metadata = _get_file_metadata(self.uploaded_files, suffix)
 
@@ -457,9 +457,11 @@ class StaffGradedAssignmentXBlock(XBlock):
         return Response(json_body=self.staff_grading_data())
 
     def is_course_staff(self):
+        """Returns True if requestor is part of the course staff"""
         return getattr(self.xmodule_runtime, 'user_is_staff', False)
 
     def is_instructor(self):
+        """Returns True if the requestor is the course instructor"""
         return self.xmodule_runtime.get_user_role() == 'instructor'
 
     def show_staff_grading_interface(self):
@@ -467,6 +469,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         return self.is_course_staff() and not in_studio_preview
 
     def past_due(self):
+        """Returns True if the assignment is past due"""
         due = get_extended_due_date(self)
 
         if due is not None:
@@ -475,13 +478,21 @@ class StaffGradedAssignmentXBlock(XBlock):
             return False
 
     def upload_allowed(self):
-        return (
-            not self.past_due() 
-               and self.score is None 
-               and not is_submitted
-        )
+        """Returns True if a student is allowed to upload a file.
+
+        In order to upload a file: the assignment must not be overdue
+        and the student must not have already submitted an
+        attempt.
+        """
+        return not self.past_due() and not is_submitted
 
     def create_zip_file(self, filelist):
+        """Return a zip file containing all files a student has submitted
+        for this assignement.
+
+        Keyword arguments:
+        filelist: a list of all files for this students submission.
+        """
         buff = StringIO.StringIO()
         assignment_zip = ZipFile(buff, mode='w')
 
