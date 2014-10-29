@@ -352,17 +352,17 @@ class StaffGradedAssignmentXBlock(XBlock):
         foundFile = default_storage.open(path)
         app_iter = iter(partial(foundFile.read, BLOCK_SIZE), '')
 
-        # return Response(
-        #     app_iter =             app_iter,
-        #     content_type =         metadata.mimetype,
-        #     content_disposition = "attachment; filename=" + metadata.filename
-        # )
-
         return Response(
-            body =                foundFile.read(),
-            content_type =        metadata.mimetype,
+            app_iter =             app_iter,
+            content_type =         metadata.mimetype,
             content_disposition = "attachment; filename=" + metadata.filename
         )
+
+        # return Response(
+        #     body =                foundFile.read(),
+        #     content_type =        metadata.mimetype,
+        #     content_disposition = "attachment; filename=" + metadata.filename
+        # )
 
     
     #For downloading the entire assingment for one student.
@@ -374,7 +374,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         #metadatalist = _get_file_metadata(state['uploaded_files'])
         #TODO: assignment name with student, course and assignemnt name.
-        return self. download_zipped(self.uploaded_files, 'assignment')
+        return self.download_zipped(self.uploaded_files, 'assignment')
 
     @XBlock.handler
     def student_download_zipped(self, request, suffix=''):
