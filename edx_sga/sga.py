@@ -504,7 +504,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         and the student must not have already submitted an
         attempt.
         """
-        return not self.past_due() and not is_submitted
+        return not self.past_due() and not self.is_submitted
 
     def create_zip_file(self, filelist):
         """Return a zip file containing all files a student has submitted
