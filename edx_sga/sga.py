@@ -357,13 +357,6 @@ class StaffGradedAssignmentXBlock(XBlock):
             content_type =         metadata.mimetype,
             content_disposition = "attachment; filename=" + metadata.filename
         )
-
-        # return Response(
-        #     body =                foundFile.read(),
-        #     content_type =        metadata.mimetype,
-        #     content_disposition = "attachment; filename=" + metadata.filename
-        # )
-
     
     #For downloading the entire assingment for one student.
     @XBlock.handler
@@ -383,6 +376,13 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     #TODO: Filename based on requestor and submittor
     def download_zipped(self, filelist, filename="assignment"):
+        """Return a response containg all files for this submission in
+        a zip file.
+
+        Keyword arguments:
+        filelist: a list of all files for this students submission.
+        filename: the name of the zip file.
+        """
         assert filelist is not None 
 
         if (len(filelist) == 0 or filelist is None):
@@ -433,15 +433,6 @@ class StaffGradedAssignmentXBlock(XBlock):
         del self.uploaded_files[suffix]
 
         return Response(status = 204)
-
-    # def download(self, path, mimetype, filename):
-    #     BLOCK_SIZE = 2**10 * 8  # 8kb
-    #     file = default_storage.open(path)
-    #     app_iter = iter(partial(file.read, BLOCK_SIZE), '')
-    #     return Response(
-    #         app_iter=app_iter,
-    #         content_type=mimetype,
-    #         content_disposition="attachment; filename=" + filename)
 
     @XBlock.handler
     def submit(self, request, suffix=''):
@@ -519,31 +510,6 @@ class StaffGradedAssignmentXBlock(XBlock):
         attempt.
         """
         return not self.past_due() and not self.is_submitted
-
-    def create_zip_file(self, filelist):
-        """Return a zip file containing all files a student has submitted
-        for this assignement.
-
-        Keyword arguments:
-        filelist: a list of all files for this students submission.
-        """
-        buff = StringIO.StringIO()
-        assignment_zip = ZipFile(buff, mode='w')
-
-        for sha1, metadata in _get_file_metadata(filelist).iteritems():
-            path = _file_storage_path(
-                self.location.to_deprecated_string(),
-                sha1,
-                metadata.filename
-            )
-            afile = default_storage.open(path)
-
-            assignment_zip.writestr(metadata.filename, afile.read())
-
-        assignment_zip.close()
-        buff.seek(0)
-
-        return buff
 
 def _get_file_metadata(filelist, hash = None):
     if hash is None:

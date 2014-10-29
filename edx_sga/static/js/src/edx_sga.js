@@ -5,6 +5,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         var studentDownloadUrl = runtime.handlerUrl(element, 'student_download_file');
         var studentDownloadZippedUrl = runtime.handlerUrl(element, 'student_download_zipped')
         var getStaffGradingUrl = runtime.handlerUrl(element, 'get_staff_grading_data');
+        var submitUrl = runtime.handlerUrl(element, 'submit')
+
         var staffDownloadUrl = runtime.handlerUrl(element, 'staff_download_file');
         var staffDownloadZippedUrl = runtime.handlerUrl(element, 'staff_download_zipped');
         var enterGradeUrl = runtime.handlerUrl(element, 'enter_grade');
@@ -97,6 +99,15 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             state.uploaded.splice(i, 1);
                         }
                     })(this.value)
+                );
+                render(state);
+            });
+
+            $(content).find(".assignmentSubmit").click(function(e)
+            {
+                var url = submitUrl;
+                $.get(url).success(
+                    state.submitted = true;
                 );
                 render(state);
             });

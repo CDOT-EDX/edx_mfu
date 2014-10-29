@@ -36,6 +36,20 @@
       <p>No file has been uploaded.</p>
     <% } %>
 
+    <% if (upload_allowed) { %>
+      <p>
+        <% if (uploaded) { %>
+          {% trans "Upload another file." %}
+        <% } else { %>
+          {% trans "Upload a file." %}
+        <% } %>
+        <div class="upload">
+          <input class="fileupload" type="file" name="assignment"/>
+          <button>Select a file</button>
+        </div>
+      </p>
+    <% } %>
+
     <% if (uploaded.submitted) { %>
 
       <% if (graded) { %>
@@ -57,20 +71,6 @@
         <% } else { %>
           Assignment is passed due date.
         <% } %>
-      </p>
-    <% } %>
-
-    <% if (upload_allowed) { %>
-      <p>
-        <% if (uploaded) { %>
-          {% trans "Upload a different file" %}
-        <% } else { %>
-          {% trans "Upload your assignment" %}
-        <% } %>
-        <div class="upload">
-          <input class="fileupload" type="file" name="assignment"/>
-          <button>Select a file</button>
-        </div>
       </p>
     <% } %>
 
