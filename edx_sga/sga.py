@@ -209,12 +209,14 @@ class StaffGradedAssignmentXBlock(XBlock):
             approved = state.get('score_approved')
 
             uploaded = []
-            for sha1, metadata in _get_file_metadata(state.get("uploaded_files")).iteritems():
-                uploaded.append({
-                    "sha1":      sha1, 
-                    "filename":  metadata.filename,
-                    "timestamp": metadata.timestamp
-                })
+
+            if (state.get('is_submitted')):
+                for sha1, metadata in _get_file_metadata(state.get("uploaded_files")).iteritems():
+                    uploaded.append({
+                        "sha1":      sha1, 
+                        "filename":  metadata.filename,
+                        "timestamp": metadata.timestamp
+                    })
 
 
             return {
@@ -310,36 +312,23 @@ class StaffGradedAssignmentXBlock(XBlock):
         return Response(json_body=self.student_state())
 
     @XBlock.handler
-    def download_assignment(self, request, suffix=''):
-        if (suffix not in self.uploaded_files):
-            log.error("File download failure: No matching file belongs to this student.", exc_info=True)
-            raise
-
-        metadata = FileMetaData._make(self.uploaded_files[suffix])
-
-        path = _file_storage_path(
-            self.location.to_deprecated_string(),
-            suffix, 
-            metadata.filename
-        )
-
-        return self.download(
-            path,
-            metadata.mimetype,
-            metadata.filename
-        )
+    def student_download_assignment(self, request, suffix=''):
+        download_assignment(self.uploaded_files, suffix)
 
     @XBlock.handler
-    def staff_download(self, request, suffix=''):
+    def staff_download_assignment(self, request, suffix=''):
         assert self.is_course_staff()
         module = StudentModule.objects.get(pk=request.params['module_id'])
         state = json.loads(module.state)
 
-        if (suffix not in state['uploaded_files']):
+        download_assignment(state['uploaded_files'], suffix)
+
+    def download_assignment(self, filelist, sha1):
+        if (sha1 not in filelist:
             log.error("File download failure: No matching file belongs to this student.", exc_info=True)
             raise
 
-        metadata = _get_file_metadata(state['uploaded_files'], suffix)
+        metadata = _get_file_metadata(filelist, sha1)
 
         path = _file_storage_path(
             module.module_state_key.to_deprecated_string(),
@@ -351,7 +340,7 @@ class StaffGradedAssignmentXBlock(XBlock):
             metadata.mimetype,
             metadata.filename
         )
-
+    
     #For downloading the entire assingment for one student.
     @XBlock.handler
     def staff_download_zipped(self, request, suffix=''):
