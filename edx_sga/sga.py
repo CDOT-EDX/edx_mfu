@@ -318,7 +318,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     @XBlock.handler
     def student_download_file(self, request, suffix=''):
-        self.download_file(self.uploaded_files, suffix)
+        return self.download_file(self.uploaded_files, suffix)
 
     @XBlock.handler
     def staff_download_file(self, request, suffix=''):
@@ -326,7 +326,7 @@ class StaffGradedAssignmentXBlock(XBlock):
         module = StudentModule.objects.get(pk=request.params['module_id'])
         state = json.loads(module.state)
 
-        self.download_file(state['uploaded_files'], suffix)
+        return self.download_file(state['uploaded_files'], suffix)
 
     def download_file(self, filelist, sha1):
         assert filelist is not None
