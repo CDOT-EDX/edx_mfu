@@ -109,8 +109,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     function (i) {
                         state.submitted = true;
                         render(state);
-                    })
-                );
+                });
             });
         }
 
