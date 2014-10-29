@@ -231,7 +231,6 @@ class StaffGradedAssignmentXBlock(XBlock):
                 'needs_approval':  instructor and score is not None
                                    and not approved,
                 'may_grade':       instructor or not approved,
-                'annotated':       state.get("annotated_filename"),
                 'comment':         state.get("comment", ''),
 
                 'submitted':       is_submitted,
@@ -313,7 +312,7 @@ class StaffGradedAssignmentXBlock(XBlock):
 
     @XBlock.handler
     def student_download_file(self, request, suffix=''):
-        download_assignment(self.uploaded_files, suffix)
+        download_file(self.uploaded_files, suffix)
 
     @XBlock.handler
     def staff_download_file(self, request, suffix=''):
@@ -321,25 +320,32 @@ class StaffGradedAssignmentXBlock(XBlock):
         module = StudentModule.objects.get(pk=request.params['module_id'])
         state = json.loads(module.state)
 
-        download_assignment(state['uploaded_files'], suffix)
+        download_file(state['uploaded_files'], suffix)
 
     def download_file(self, filelist, sha1):
         if (sha1 not in filelist:
             log.error("File download failure: No matching file belongs to this student.", exc_info=True)
             raise
 
+        #get file info
         metadata = _get_file_metadata(filelist, sha1)
-
         path = _file_storage_path(
             module.module_state_key.to_deprecated_string(),
             suffix,
             metadata.filename
         )
-        return self.download(
-            path,
-            metadata.mimetype,
-            metadata.filename
+
+        #set up download
+        BLOCK_SIZE = 2**10 * 8  # 8kb
+        file = default_storage.open(path)
+        app_iter = iter(partial(file.read, BLOCK_SIZE), '')
+
+        return Response(
+            app_iter =             app_iter,
+            content_type =         metadata.mimetype,
+            content_disposition = "attachment; filename=" + metadata.filename
         )
+
     
     #For downloading the entire assingment for one student.
     @XBlock.handler
@@ -408,14 +414,14 @@ class StaffGradedAssignmentXBlock(XBlock):
 
         return Response(status = 204)
 
-    def download(self, path, mimetype, filename):
-        BLOCK_SIZE = 2**10 * 8  # 8kb
-        file = default_storage.open(path)
-        app_iter = iter(partial(file.read, BLOCK_SIZE), '')
-        return Response(
-            app_iter=app_iter,
-            content_type=mimetype,
-            content_disposition="attachment; filename=" + filename)
+    # def download(self, path, mimetype, filename):
+    #     BLOCK_SIZE = 2**10 * 8  # 8kb
+    #     file = default_storage.open(path)
+    #     app_iter = iter(partial(file.read, BLOCK_SIZE), '')
+    #     return Response(
+    #         app_iter=app_iter,
+    #         content_type=mimetype,
+    #         content_disposition="attachment; filename=" + filename)
 
     @XBlock.handler
     def submit(self, request, suffix=''):
