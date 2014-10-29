@@ -1,7 +1,7 @@
 /* Javascript for StaffGradedAssignmentXBlock. */
 function StaffGradedAssignmentXBlock(runtime, element) {
     function xblock($, _) {
-        var uploadUrl = runtime.handlerUrl(element, 'upload_assignment');
+        var uploadUrl = runtime.handlerUrl(element, 'upload_file');
         var studentDownloadUrl = runtime.handlerUrl(element, 'student_download_file');
         var studentDownloadZippedUrl = runtime.handlerUrl(element, 'student_download_zipped')
         var getStaffGradingUrl = runtime.handlerUrl(element, 'get_staff_grading_data');
