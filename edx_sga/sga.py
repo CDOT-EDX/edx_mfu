@@ -547,11 +547,10 @@ def _get_file_metadata(filelist, hash = None):
         #for sha1, metadata in filelist.iteritems():
         #    ret[sha1] = FileMetaData.__make(make)
     else:
-        return FileMetaData._make(filelist[hash])
-        # if hash not in filelist:
-        #     return None
-        # else:
-        #     return FileMetaData._make(filelist[hash])
+        if hash in filelist:
+            return None
+        else:
+            return FileMetaData._make(filelist[hash])
 
 def _file_storage_path(url, sha1, filename):
     assert url.startswith("i4x://")
