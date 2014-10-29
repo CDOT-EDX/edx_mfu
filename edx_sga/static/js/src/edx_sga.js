@@ -2,12 +2,11 @@
 function StaffGradedAssignmentXBlock(runtime, element) {
     function xblock($, _) {
         var uploadUrl = runtime.handlerUrl(element, 'upload_assignment');
-        var downloadUrl = runtime.handlerUrl(element, 'download_assignment');
-        var annotatedUrl = runtime.handlerUrl(element, 'download_annotated');
+        var studentDownloadUrl = runtime.handlerUrl(element, 'download_assignment');
+        var studentDownloadZippedUrl = runtime.handlerUrl(element, 'student_download_zipped')
         var getStaffGradingUrl = runtime.handlerUrl(element, 'get_staff_grading_data');
         var staffDownloadUrl = runtime.handlerUrl(element, 'staff_download');
         var staffDownloadZippedUrl = runtime.handlerUrl(element, 'staff_download_zipped');
-        var staffAnnotatedUrl = runtime.handlerUrl(element, 'staff_download_annotated');
         var staffUploadUrl = runtime.handlerUrl(element, 'staff_upload_annotated');
         var enterGradeUrl = runtime.handlerUrl(element, 'enter_grade');
         var removeGradeUrl = runtime.handlerUrl(element, 'remove_grade');
@@ -17,8 +16,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
         function render(state) {
             // Add download urls to template context
-            state.downloadUrl = downloadUrl;
-            state.annotatedUrl = annotatedUrl;
+            state.downloadUrl = studentDownloadUrl;
             state.error = state.error ? state.error : false;
 
             // Render template
@@ -109,8 +107,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
             // Add download urls to template context
             data.downloadUrl = staffDownloadUrl;
-            data.annotatedUrl = staffAnnotatedUrl;
-            data.staffDownloadZippedUrl = staffDownloadZippedUrl;
+            data.downloadZippedUrl = staffDownloadZippedUrl;
 
 
             // Render template
