@@ -339,7 +339,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
     @XBlock.handler 
     def reopen_submission(self, request, suffix=''):
-        state = get_student_state(request.params['module_id'])
+        state = self.get_student_state(request.params['module_id'])
         state['is_submitted'] = False
         module.state = json.dumps(state)
         module.save();
