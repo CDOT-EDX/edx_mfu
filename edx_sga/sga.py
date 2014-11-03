@@ -364,10 +364,10 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
     @XBlock.handler
     def enter_grade(self, request, suffix=''):
-        #state = self.get_student_state(request.params['module_id'])
-        assert self.is_course_staff()
-        module = StudentModule.objects.get(pk=request.params['module_id'])
-        state = json.loads(module.state)
+        state = self.get_student_state(request.params['module_id'])
+        # assert self.is_course_staff()
+        # module = StudentModule.objects.get(pk=request.params['module_id'])
+        # state = json.loads(module.state)
         state['score'] = float(request.params['grade'])
         state['comment'] = request.params.get('comment', '')
         state['score_published'] = False    # see student_view
@@ -401,7 +401,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
     def get_student_state(self, module_id):
         assert self.is_course_staff()
         module = StudentModule.objects.get(pk=module_id)
-        state = json.loads(module.state)
+        return json.loads(module.state)
 
     def is_course_staff(self):
         """Returns True if requestor is part of the course staff"""
