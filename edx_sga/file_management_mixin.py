@@ -158,3 +158,16 @@ def _get_sha1(file):
 
 	sha1.update(str(_now()))
 	return sha1.hexdigest()
+
+def get_file_metadata(filelist, hash = None):
+    if hash is None:
+        return {sha1: FileMetaData._make(metadata) 
+            for (sha1, metadata) in filelist.iteritems()}
+        #ret = {}
+        #for sha1, metadata in filelist.iteritems():
+        #    ret[sha1] = FileMetaData.__make(make)
+    else:
+        if hash not in filelist:
+            return None
+        else:
+            return FileMetaData._make(filelist[hash])
