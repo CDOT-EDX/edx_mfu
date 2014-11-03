@@ -2,6 +2,17 @@
 This mixin defines methods for users to upload and download files,
 as well as track them.
 """
+import datetime
+import hashlib
+import json
+import logging
+import mimetypes
+import os
+import pkg_resources
+import pytz
+
+from xblock.core import XBlock
+
 from webob.response import Response
 
 from django.core.files import File
