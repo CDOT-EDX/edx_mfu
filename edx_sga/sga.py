@@ -29,7 +29,7 @@ from xmodule.util.duedate import get_extended_due_date
 
 log = logging.getLogger(__name__)
 
-FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
+#FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
 class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
     """
