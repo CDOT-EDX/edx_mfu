@@ -389,7 +389,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
     @XBlock.handler
     def remove_grade(self, request, suffix=''):
         self.set_student_state(
-            request.params['module_id']
+            request.params['module_id'],
             score = None,
             comment = '',
             score_published = False,
