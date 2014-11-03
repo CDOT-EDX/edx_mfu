@@ -514,18 +514,18 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         """
         return not self.past_due() and not self.is_submitted
 
-def _get_file_metadata(filelist, hash = None):
-    if hash is None:
-        return {sha1: FileMetaData._make(metadata) 
-            for (sha1, metadata) in filelist.iteritems()}
-        #ret = {}
-        #for sha1, metadata in filelist.iteritems():
-        #    ret[sha1] = FileMetaData.__make(make)
-    else:
-        if hash not in filelist:
-            return None
-        else:
-            return FileMetaData._make(filelist[hash])
+# def _get_file_metadata(filelist, hash = None):
+#     if hash is None:
+#         return {sha1: FileMetaData._make(metadata) 
+#             for (sha1, metadata) in filelist.iteritems()}
+#         #ret = {}
+#         #for sha1, metadata in filelist.iteritems():
+#         #    ret[sha1] = FileMetaData.__make(make)
+#     else:
+#         if hash not in filelist:
+#             return None
+#         else:
+#             return FileMetaData._make(filelist[hash])
 
 # def _file_storage_path(url, sha1, filename):
 #     assert url.startswith("i4x://")
