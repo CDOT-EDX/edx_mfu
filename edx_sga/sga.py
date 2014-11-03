@@ -372,7 +372,6 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         state['comment'] = request.params.get('comment', '')
         state['score_published'] = False    # see student_view
         state['score_approved'] = self.is_instructor()
-        module.state = json.dumps(state)
 
         # This is how we'd like to do it.  See student_view
         # self.runtime.publish(self, 'grade', {
@@ -381,7 +380,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         #     'user_id': module.student.id
         # })
 
-        module.save()
+        self.save_student_state(state, module_id)
         return Response(json_body=self.staff_grading_data())
 
     @XBlock.handler
@@ -394,14 +393,20 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         state['comment'] = ''
         state['score_published'] = False    # see student_view
         state['score_approved'] = False
-        module.state = json.dumps(state)
-        module.save()
+        
+        self.save_student_state(state, module_id)
         return Response(json_body=self.staff_grading_data())
 
     def get_student_state(self, module_id):
         assert self.is_course_staff()
         module = StudentModule.objects.get(pk=module_id)
         return json.loads(module.state)
+
+    def save_student_state(self, state, module_id):
+        assert self.is_course_staff()
+        module = StudentModule.objects.get(pk=module_id)
+        module.state = json.dumps(state)
+        module.save()
 
     def is_course_staff(self):
         """Returns True if requestor is part of the course staff"""
