@@ -11,7 +11,7 @@ import os
 import pkg_resources
 import pytz
 
-import FileManagementMixin
+import file_management_mixin
 
 from courseware.models import StudentModule
 
