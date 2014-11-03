@@ -11,7 +11,7 @@ import os
 import pkg_resources
 import pytz
 
-from file_management_mixin import FileMetaData, FileManagementMixin, _get_file_metadata
+from file_management_mixin import FileMetaData, FileManagementMixin, get_file_metadata
 
 from courseware.models import StudentModule
 
