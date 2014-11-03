@@ -214,7 +214,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
             uploaded = []
             if (state.get('is_submitted')):
-                for sha1, metadata in _get_file_metadata(state.get("uploaded_files")).iteritems():
+                for sha1, metadata in get_file_metadata(state.get("uploaded_files")).iteritems():
                     uploaded.append({
                         "sha1":      sha1, 
                         "filename":  metadata.filename,
