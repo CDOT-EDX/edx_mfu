@@ -329,7 +329,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         uploaded = self.get_student_state(module_id).get('uploaded_files')
 
         newFilelist = self.delete_file(uploaded, suffix)
-        self.set_student_state(module_id, 'uploaded_files': newFilelist)
+        self.set_student_state(module_id, uploaded_files: newFilelist)
 
         return Response(status=204)
 
@@ -343,7 +343,8 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
     @XBlock.handler 
     def reopen_submission(self, request, suffix=''):
-        self.set_student_state('is_submitted' = False)        
+        self.set_student_state(request.params['module_id'],
+            is_submitted: False)        
 
         return Response(status=204)
 
@@ -352,6 +353,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         self.delete_all(state.get('uploaded_files'))
 
         self.set_student_state(
+            request.params['module_id'],
             is_submitted: False,
             score: float(request.params['grade']),
             comment: request.params.get('comment', ''),
@@ -370,10 +372,11 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
     @XBlock.handler
     def enter_grade(self, request, suffix=''):
         self.set_student_state(
-            'score': float(request.params['grade']),
-            'comment': request.params.get('comment', ''),
-            'score_published': False,
-            'score_approved': self.is_instructor()
+            request.params['module_id'],
+            score: float(request.params['grade']),
+            comment: request.params.get('comment', ''),
+            score_published: False,
+            score_approved: self.is_instructor()
         )
 
         return Response(json_body=self.staff_grading_data())
@@ -381,10 +384,11 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
     @XBlock.handler
     def remove_grade(self, request, suffix=''):
         self.set_student_state(
-            'score': None,
-            'comment': '',
-            'score_published': False,
-            'score_approved': False
+            request.params['module_id']
+            score: None,
+            comment: '',
+            score_published: False,
+            score_approved: False
         )
         
         return Response(json_body=self.staff_grading_data())
