@@ -320,14 +320,18 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         suffix:  holds the sha1 hash of the file to be deleted.
         """
         assert self.upload_allowed()
-        self.delete_file(self, self.uploaded_files, suffix)
+        self.delete_file(self.uploaded_files, suffix)
         return Response(status = 204)
 
     @XBlock.handler
     def staff_delete_file(self, request, suffix=''):
-        assert self.is_course_staff()
-        module = StudentModule.objects.get(pk=request.params['module_id'])
-        state = json.loads(module.state)
+        state = self.get_student_state(request.params['module_id'])
+        self.delete_file(state.get('uploaded_files'), suffix)
+
+        self.set_student_state('uploaded_files': dict())
+
+        return Response(status=204)
+
 
     @XBlock.handler
     def submit(self, request, suffix=''):
@@ -339,23 +343,24 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
     @XBlock.handler 
     def reopen_submission(self, request, suffix=''):
-        state = self.get_student_state(request.params['module_id'])
-        state['is_submitted'] = False
-        module.state = json.dumps(state)
-        module.save();
+        self.set_student_state('is_submitted' = False)        
 
         return Response(status=204)
 
     @XBlock.handler
     def remove_submission(self, request, suffix=''):
-        state = self.get_student_state(request.params['module_id'])
-        state['is_submitted'] = False;
-        state['score'] = None
-        state['comment'] = ''
-        state['score_published'] = False    # see student_view
-        state['score_approved'] = False
-        module.state = json.dumps(state)
-        module.save()
+        self.delete_all(state.get('uploaded_files'))
+
+        self.set_student_state(
+            'is_submitted' = False,
+            'score': float(request.params['grade']),
+            'comment': request.params.get('comment', ''),
+            'score_published': False,
+            'score_approved': self.is_instructor(),
+            'uploaded_files': dict()
+        )
+
+        return Response(status=204)
 
     @XBlock.handler
     def get_staff_grading_data(self, request, suffix=''):
@@ -364,49 +369,41 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
     @XBlock.handler
     def enter_grade(self, request, suffix=''):
-        state = self.get_student_state(request.params['module_id'])
-        # assert self.is_course_staff()
-        # module = StudentModule.objects.get(pk=request.params['module_id'])
-        # state = json.loads(module.state)
-        state['score'] = float(request.params['grade'])
-        state['comment'] = request.params.get('comment', '')
-        state['score_published'] = False    # see student_view
-        state['score_approved'] = self.is_instructor()
+        self.set_student_state(
+            'score': float(request.params['grade']),
+            'comment': request.params.get('comment', ''),
+            'score_published': False,
+            'score_approved': self.is_instructor()
+        )
 
-        # This is how we'd like to do it.  See student_view
-        # self.runtime.publish(self, 'grade', {
-        #     'value': state['score'],
-        #     'max_value': self.max_score(),
-        #     'user_id': module.student.id
-        # })
-
-        self.save_student_state(state, module_id)
         return Response(json_body=self.staff_grading_data())
 
     @XBlock.handler
     def remove_grade(self, request, suffix=''):
-        state = self.get_student_state(request.params['module_id'])
-        # assert self.is_course_staff()
-        # module = StudentModule.objects.get(pk=request.params['module_id'])
-        # state = json.loads(module.state)
-        state['score'] = None
-        state['comment'] = ''
-        state['score_published'] = False    # see student_view
-        state['score_approved'] = False
+        self.set_student_state(
+            'score': None,
+            'comment': '',
+            'score_published': False,
+            'score_approved': False
+        )
         
-        self.save_student_state(state, module_id)
         return Response(json_body=self.staff_grading_data())
+
+    def set_student_state(self, module_id, **fields):
+        assert self.is_course_staff()
+        module = StudentModule.objects.get(pk=module_id)
+        state = json.loads(module.state)
+
+        for key, value in fields.iteritems():
+            state[key] = value
+
+        module.state = json.dumps(state)
+        module.save()
 
     def get_student_state(self, module_id):
         assert self.is_course_staff()
         module = StudentModule.objects.get(pk=module_id)
         return json.loads(module.state)
-
-    def save_student_state(self, state, module_id):
-        assert self.is_course_staff()
-        module = StudentModule.objects.get(pk=module_id)
-        module.state = json.dumps(state)
-        module.save()
 
     def is_course_staff(self):
         """Returns True if requestor is part of the course staff"""
