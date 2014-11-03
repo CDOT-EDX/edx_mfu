@@ -82,7 +82,7 @@
   <div id="sga-content">
   </div>
 
-  {% if is_course_staff %}
+{% if is_course_staff %}
   <script type="text/template" id="sga-grading-tmpl">
     <table class="gridtable">
       <tr>
@@ -96,7 +96,7 @@
       <% for (var i = 0; i < assignments.length; i++) { %>
       <%     var assignment = assignments[i]; %>
         <tr id="row-<%= assignment.module_id %>">
-
+        
           <td><%= assignment.username %></td>
 
           <td><%= assignment.fullname %></td>
@@ -108,9 +108,10 @@
                   <li><a href="<%= downloadUrl + '/' + assignment.uploaded[i].sha1 %>?module_id=<%= assignment.module_id %>">
                     <%= assignment.uploaded[i].filename %>
                   </a></li>
-                <% } %>
+                  <p><a href="<%= downloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a>
+                <% } %></p>
               </ul>
-            <p><a href="<%= downloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a></p>
+            <% } %>
           </td>
 
           <td><%= assignment.timestamp %></td>
@@ -143,6 +144,7 @@
       <% } %>
     </table>
   </script>
+
 
   <div aria-hidden="true" class="wrap-instructor-info">
     <a class="instructor-info-action" id="grade-submissions-button"
