@@ -11,7 +11,7 @@ import os
 import pkg_resources
 import pytz
 
-import file_management_mixin
+from file_management_mixin import FileMetaData, namedtuple
 
 from courseware.models import StudentModule
 
