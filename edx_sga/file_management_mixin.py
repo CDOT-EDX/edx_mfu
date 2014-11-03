@@ -61,7 +61,7 @@ class FileManagementMixin:
 			raise
 
 		#get file info
-		metadata = _get_file_metadata(filelist, sha1)
+		metadata = get_file_metadata(filelist, sha1)
 		path = _file_storage_path(
 			self.location.to_deprecated_string(),
 			sha1,
@@ -100,7 +100,7 @@ class FileManagementMixin:
 		buff = StringIO.StringIO()
 		assignment_zip = ZipFile(buff, mode='w')
 
-		for sha1, metadata in _get_file_metadata(filelist).iteritems():
+		for sha1, metadata in get_file_metadata(filelist).iteritems():
 			path = _file_storage_path(
 				self.location.to_deprecated_string(),
 				sha1,
@@ -130,7 +130,7 @@ class FileManagementMixin:
 		assert self.upload_allowed()
 
 		if suffix in self.uploaded_files:
-			metadata = _get_file_metadata(self.uploaded_files, suffix)
+			metadata = get_file_metadata(self.uploaded_files, suffix)
 
 		path = _file_storage_path(
 			self.location.to_deprecated_string(),
