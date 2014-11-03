@@ -123,7 +123,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             // Add download urls to template context
             data.downloadUrl = staffDownloadUrl;
             data.downloadZippedUrl = staffDownloadZippedUrl;
-            data.reopenSubmissionUrl = reopenSubmissionURL;
+            data.reopenSubmissionUrl = reopenSubmissionUrl;
             data.removeSubmissionUrl = removeSubmissionUrl;
 
             // Render template
