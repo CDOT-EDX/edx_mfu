@@ -99,14 +99,6 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         help="Files uploaded by the user. Tuple of filename, mimetype and timestamp"
     )
 
-    #remove
-    # uploaded_files_last_timestamp = String(
-    #     display_name="Submitted",
-    #     scope=Scope.user_state,
-    #     default=None,
-    #     help="The time and date the student last uploaded a file."
-    # )
-
     is_submitted = Boolean(
         display_name="Is Submitted",
         scope=Scope.user_state,
@@ -285,33 +277,6 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         for name in ('display_name', 'points', 'weight'):
             setattr(self, name, data.get(name, getattr(self, name)))
 
-    # @XBlock.handler
-    # def upload_file(self, request, suffix=''):
-    #     assert self.upload_allowed()
-    #     upload = request.params['assignment']
-
-    #     uploaded_sha1 = _get_sha1(upload.file)
-
-    #     metadata = FileMetaData(
-    #         upload.file.name,
-    #         mimetypes.guess_type(upload.file.name)[0],
-    #         str( _now() )
-    #     )
-
-    #     self.uploaded_files_last_timestamp = metadata.timestamp
-
-    #     self.uploaded_files[uploaded_sha1] = metadata
-
-    #     path = _file_storage_path(
-    #         self.location.to_deprecated_string(),
-    #         uploaded_sha1,
-    #         metadata.filename
-    #     )
-
-    #     if not default_storage.exists(path):
-    #         default_storage.save(path, File(upload.file))
-    #     return Response(json_body=self.student_state())
-
     @XBlock.handler
     def upload_file(self, request, suffix=''):
         assert self.upload_allowed()
@@ -330,36 +295,6 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         state = json.loads(module.state)
 
         return self.download_file(state['uploaded_files'], suffix)
-
-    # def download_file(self, filelist, sha1):
-    #     assert filelist is not None
-
-    #     if sha1 not in filelist:
-    #         log.error("File download failure: No matching file belongs to this student.", exc_info=True)
-    #         raise
-
-    #     #get file info
-    #     metadata = _get_file_metadata(filelist, sha1)
-    #     path = _file_storage_path(
-    #         self.location.to_deprecated_string(),
-    #         sha1,
-    #         metadata.filename
-    #     )
-
-    #     if metadata is None:
-    #         log.error("Attempt to download non-existant file at " + path)
-    #         return Response(status = 404)
-
-    #     #set up download
-    #     BLOCK_SIZE = 2**10 * 8  # 8kb
-    #     foundFile = default_storage.open(path)
-    #     app_iter = iter(partial(foundFile.read, BLOCK_SIZE), '')
-
-    #     return Response(
-    #         app_iter =             app_iter,
-    #         content_type =         metadata.mimetype,
-    #         content_disposition = "attachment; filename=" + metadata.filename
-    #     )
     
     #For downloading the entire assingment for one student.
     @XBlock.handler
@@ -368,7 +303,6 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         module = StudentModule.objects.get(pk=request.params['module_id'])
         state = json.loads(module.state)
 
-        #metadatalist = _get_file_metadata(state['uploaded_files'])
         #TODO: assignment name with student, course and assignemnt name.
         return self.download_zipped(self.uploaded_files, 'assignment')
 
@@ -377,65 +311,23 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         #TODO: assignment name with course and assignemnt name.
         return self.download_zipped(self.uploaded_files, 'assignment')
 
-    #TODO: Filename based on requestor and submittor
-    # def download_zipped(self, filelist, filename="assignment"):
-    #     """Return a response containg all files for this submission in
-    #     a zip file.
+    @XBlock.handler
+    def student_delete_file(self, request, suffix=''):
+        """Removes an uploaded file from the assignemtn
 
-    #     Keyword arguments:
-    #     filelist: a list of all files for this students submission.
-    #     filename: the name of the zip file.
-    #     """
-    #     assert filelist is not None 
+        Keyword arguments:
+        request: not used.
+        suffix:  holds the sha1 hash of the file to be deleted.
+        """
+        assert self.upload_allowed()
+        self.delete_file(self, self.uploaded_files, suffix)
+        return Response(status = 204)
 
-    #     if (len(filelist) == 0 or filelist is None):
-    #         return Response(status = 404)
-
-    #     buff = StringIO.StringIO()
-    #     assignment_zip = ZipFile(buff, mode='w')
-
-    #     for sha1, metadata in _get_file_metadata(filelist).iteritems():
-    #         path = _file_storage_path(
-    #             self.location.to_deprecated_string(),
-    #             sha1,
-    #             metadata.filename
-    #         )
-    #         afile = default_storage.open(path)
-
-    #         assignment_zip.writestr(metadata.filename, afile.read())
-
-    #     assignment_zip.close()
-    #     buff.seek(0)
-
-    #     return Response(
-    #         body =                buff.read(),
-    #         content_type =        'application/zip',
-    #         content_disposition = 'attachment; filename=assignment' + '.zip'
-    #     )
-
-    # @XBlock.handler
-    # def delete_file(self, request, suffix=''):
-    #     """Removes an uploaded file from the assignemtn
-
-    #     Keywor arguments:
-    #     request: not used.
-    #     suffix:  holds the sha1 hash of the file to be deleted.
-    #     """
-    #     assert self.upload_allowed()
-
-    #     if suffix in self.uploaded_files:
-    #         metadata = _get_file_metadata(self.uploaded_files, suffix)
-
-    #     path = _file_storage_path(
-    #         self.location.to_deprecated_string(),
-    #         suffix,
-    #         metadata.filename
-    #     )
-
-    #     default_storage.delete(path)
-    #     del self.uploaded_files[suffix]
-
-    #     return Response(status = 204)
+    @XBlock.handler
+    def staff_delete_file(self, request, suffix=''):
+        assert self.is_course_staff()
+        module = StudentModule.objects.get(pk=request.params['module_id'])
+        state = json.loads(module.state)
 
     @XBlock.handler
     def submit(self, request, suffix=''):
@@ -445,6 +337,26 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
         return Response(status=204)
 
+    @XBlock.handler 
+    def reopen_submission(self, request, suffix=''):
+        state = get_student_state(request.params['module_id'])
+        state['is_submitted'] = False
+        module.state = json.dumps(state)
+        module.save();
+
+        return Response(status=204)
+
+    @XBlock.handler
+    def remove_submission(self, request, suffix=''):
+        state = self.get_student_state(request.params['module_id'])
+        state['is_submitted'] = False;
+        state['score'] = None
+        state['comment'] = ''
+        state['score_published'] = False    # see student_view
+        state['score_approved'] = False
+        module.state = json.dumps(state)
+        module.save()
+
     @XBlock.handler
     def get_staff_grading_data(self, request, suffix=''):
         assert self.is_course_staff()
@@ -452,9 +364,10 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
     @XBlock.handler
     def enter_grade(self, request, suffix=''):
-        assert self.is_course_staff()
-        module = StudentModule.objects.get(pk=request.params['module_id'])
-        state = json.loads(module.state)
+        state = self.get_student_state(request.params['module_id'])
+        # assert self.is_course_staff()
+        # module = StudentModule.objects.get(pk=request.params['module_id'])
+        # state = json.loads(module.state)
         state['score'] = float(request.params['grade'])
         state['comment'] = request.params.get('comment', '')
         state['score_published'] = False    # see student_view
@@ -473,9 +386,10 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
     @XBlock.handler
     def remove_grade(self, request, suffix=''):
-        assert self.is_course_staff()
-        module = StudentModule.objects.get(pk=request.params['module_id'])
-        state = json.loads(module.state)
+        state = self.get_student_state(request.params['module_id'])
+        # assert self.is_course_staff()
+        # module = StudentModule.objects.get(pk=request.params['module_id'])
+        # state = json.loads(module.state)
         state['score'] = None
         state['comment'] = ''
         state['score_published'] = False    # see student_view
@@ -483,6 +397,11 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         module.state = json.dumps(state)
         module.save()
         return Response(json_body=self.staff_grading_data())
+
+    def get_student_state(self, module_id):
+        assert self.is_course_staff()
+        module = StudentModule.objects.get(pk=module_id)
+        state = json.loads(module.state)
 
     def is_course_staff(self):
         """Returns True if requestor is part of the course staff"""
@@ -513,36 +432,6 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         attempt.
         """
         return not self.past_due() and not self.is_submitted
-
-# def _get_file_metadata(filelist, hash = None):
-#     if hash is None:
-#         return {sha1: FileMetaData._make(metadata) 
-#             for (sha1, metadata) in filelist.iteritems()}
-#         #ret = {}
-#         #for sha1, metadata in filelist.iteritems():
-#         #    ret[sha1] = FileMetaData.__make(make)
-#     else:
-#         if hash not in filelist:
-#             return None
-#         else:
-#             return FileMetaData._make(filelist[hash])
-
-# def _file_storage_path(url, sha1, filename):
-#     assert url.startswith("i4x://")
-#     path = url[6:] + '/' + sha1
-#     path += os.path.splitext(filename)[1]
-#     return path
-
-# def _get_sha1(file):
-#     BLOCK_SIZE = 2**10 * 8  # 8kb
-#     sha1 = hashlib.sha1()
-#     for block in iter(partial(file.read, BLOCK_SIZE), ''):
-#         sha1.update(block)
-#     file.seek(0)
-
-#     sha1.update(str(_now()))
-#     return sha1.hexdigest()
-
 
 def _resource(path):  # pragma: NO COVER
     """Handy helper for getting resources from our kit."""

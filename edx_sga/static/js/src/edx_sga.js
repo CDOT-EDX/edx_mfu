@@ -11,6 +11,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         var staffDownloadZippedUrl = runtime.handlerUrl(element, 'staff_download_zipped');
         var enterGradeUrl = runtime.handlerUrl(element, 'enter_grade');
         var removeGradeUrl = runtime.handlerUrl(element, 'remove_grade');
+        var reopenSubmissionUrl = runtime.handlerUrl(element, 'reopen_submission');
+        var removeSubmissionUrl = runtime.handlerUrl(element, 'remove_submission')
+
         var deleteUrl = runtime.handlerUrl(element, 'delete_file')
         var template = _.template($(element).find("#sga-tmpl").text());
         var gradingTemplate;
@@ -137,6 +140,18 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(element).find(".enter-grade-button")
                 .leanModal({closeButton: "#enter-grade-cancel"})
                 .on("click", handleGradeEntry);
+
+            $(element).find(".remove-submission-button")
+                .on("click", function(){
+                    var url = removeSubmissionUrl + "?module_id" + $(this).parents("tr").data("module_id");
+                    $.get(url).success(renderStaffGrading);
+                });
+
+            $(element).find(".reopen-submission-button")
+                .on("click", function(){
+                    var url = reopenSubmissionURL + "?module_id" + $(this).parents("tr").data("module_id");
+                    $.get(url).success(renderStaffGrading);
+                });
 
         }
 

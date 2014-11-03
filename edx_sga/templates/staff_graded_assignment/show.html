@@ -88,10 +88,11 @@
       <tr>
         <th>Username</th>
         <th>Name</th>
-        <th>Filename</th>
+        <th>Files</th>
         <th>Submission Date</th>
         <th>Grade</th>
         <th>Instructors comments</th>
+        <th>Options</th>
       </tr>
       <% for (var i = 0; i < assignments.length; i++) { %>
       <%     var assignment = assignments[i]; %>
@@ -134,13 +135,25 @@
 
           <td>
             <% if (assignment.may_grade) { %>
-              <a class="enter-grade-button" href="#{{ id }}-enter-grade">
+              <p><a class="enter-grade-button" href="#{{ id }}-enter-grade">
                 <% if (assignment.needs_approval) { %>
                   {% trans "Approve grade" %}
                 <% } else { %>
                   {% trans "Enter grade" %}
                 <% } %>
-              </a>
+              </a></p>
+            <% } %>
+
+            <% if (assignment.uploaded.length > 0) { %>
+              <p><a class="remove-submission-button" href="#{{ id }}-remove-submission">
+                {% trans "Remove Assignment" %}
+              </a></p>
+            <% } %>
+
+            <% if (assignment.submitted) { %>
+              <p><a class="reopen-submission-button" href="#{{ id }}-reopen-submission">
+                {% trans "Reopen Submission" %}
+              </a></p>
             <% } %>
           </td>
 

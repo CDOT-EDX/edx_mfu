@@ -119,9 +119,8 @@ class FileManagementMixin:
 			content_disposition = 'attachment; filename=assignment' + '.zip'
 		)
 
-	@XBlock.handler
-	def delete_file(self, request, suffix=''):
-		"""Removes an uploaded file from the assignemtn
+	def delete_file(self, filelist, key):
+		"""Removes an uploaded file from the assignment
 
 		Keyword arguments:
 		request: not used.
@@ -129,19 +128,24 @@ class FileManagementMixin:
 		"""
 		assert self.upload_allowed()
 
-		if suffix in self.uploaded_files:
-			metadata = get_file_metadata(self.uploaded_files, suffix)
+		if suffix in filelist:
+			metadata = get_file_metadata(filelist, key)
 
 		path = _file_storage_path(
 			self.location.to_deprecated_string(),
-			suffix,
+			key,
 			metadata.filename
 		)
 
 		default_storage.delete(path)
-		del self.uploaded_files[suffix]
+		del filelist[key]
 
-		return Response(status = 204)
+	def delete_submission(self, filelist):
+		assert self.upload_allowed();
+
+		for sha1 in filelist.keys():
+			self.delete(filelist, sha1)
+
 
 def _file_storage_path(url, sha1, filename):
 	assert url.startswith("i4x://")
