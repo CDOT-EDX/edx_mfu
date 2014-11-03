@@ -123,7 +123,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             // Add download urls to template context
             data.downloadUrl = staffDownloadUrl;
             data.downloadZippedUrl = staffDownloadZippedUrl;
-
+            data.reopenSubmissionUrl = reopenSubmissionURL;
+            data.removeSubmissionUrl = removeSubmissionUrl;
 
             // Render template
             $(element).find("#grade-info")
@@ -143,13 +144,13 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
             $(element).find(".remove-submission-button")
                 .on("click", function(){
-                    var url = removeSubmissionUrl + "?module_id" + $(this).parents("tr").data("module_id");
+                    var url = removeSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
                     $.get(url).success(renderStaffGrading);
                 });
 
             $(element).find(".reopen-submission-button")
                 .on("click", function(){
-                    var url = reopenSubmissionURL + "?module_id" + $(this).parents("tr").data("module_id");
+                    var url = reopenSubmissionURL + "?module_id=" + $(this).parents("tr").data("module_id");
                     $.get(url).success(renderStaffGrading);
                 });
 
