@@ -105,12 +105,16 @@
             <% if (assignment.uploaded.length > 0) { %>
               <ul>
                 <% for (var i = 0; i < assignment.uploaded.length; i++) { %>
-                  <li><a href="<%= downloadUrl + '/' + assignment.uploaded[i].sha1 %>?module_id=<%= assignment.module_id %>">
-                    <%= assignment.uploaded[i].filename %>
-                  </a></li>
-                  <p><a href="<%= downloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a>
+
+                  <li>
+                    <a href="<%= downloadUrl + '/' + assignment.uploaded[i].sha1 %>?module_id=<%= assignment.module_id %>">
+                      <%= assignment.uploaded[i].filename %>
+                    </a>
+                  </li>
+
                 <% } %></p>
               </ul>
+              <p><a href="<%= downloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a>
             <% } %>
           </td>
 
