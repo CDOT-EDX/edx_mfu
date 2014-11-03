@@ -150,7 +150,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
             $(element).find(".reopen-submission-button")
                 .on("click", function(){
-                    var url = reopenSubmissionURL + "?module_id=" + $(this).parents("tr").data("module_id");
+                    var url = reopenSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
                     $.get(url).success(renderStaffGrading);
                 });
 
