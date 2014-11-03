@@ -325,13 +325,13 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
     @XBlock.handler
     def staff_delete_file(self, request, suffix=''):
-        state = self.get_student_state(request.params['module_id'])
-        self.delete_file(state.get('uploaded_files'), suffix)
+        module_id = request.params['module_id']
+        uploaded = self.get_student_state(module_id).get('uploaded_files')
 
-        self.set_student_state('uploaded_files': dict())
+        newFilelist = self.delete_file(uploaded, suffix)
+        self.set_student_state(module_id, 'uploaded_files': newFilelist)
 
         return Response(status=204)
-
 
     @XBlock.handler
     def submit(self, request, suffix=''):
@@ -352,12 +352,12 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         self.delete_all(state.get('uploaded_files'))
 
         self.set_student_state(
-            'is_submitted' = False,
-            'score': float(request.params['grade']),
-            'comment': request.params.get('comment', ''),
-            'score_published': False,
-            'score_approved': self.is_instructor(),
-            'uploaded_files': dict()
+            is_submitted: False,
+            score: float(request.params['grade']),
+            comment: request.params.get('comment', ''),
+            score_published: False,
+            score_approved: self.is_instructor(),
+            uploaded_files: dict()
         )
 
         return Response(status=204)

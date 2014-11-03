@@ -140,7 +140,7 @@ class FileManagementMixin:
 		default_storage.delete(path)
 		del filelist[key]
 
-	def delete_submission(self, filelist):
+	def delete_all(self, filelist):
 		assert self.upload_allowed();
 
 		for sha1 in filelist.keys():
