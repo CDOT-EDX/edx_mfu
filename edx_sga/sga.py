@@ -199,7 +199,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
             submission_time = state.get('submission_time')
 
             #can a grade be entered
-            due = state.get('due')
+            due = get_extended_due_date(self)
             may_grade = (instructor or not approved) 
             if due is not None:
                 may_grade = may_grade and (submitted or (due > _now())) 
