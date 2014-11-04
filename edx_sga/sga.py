@@ -228,7 +228,8 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
                 'comment':         state.get("comment", ''),
 
                 'submitted':       submitted,
-                'submission_time': submission_time
+                'submission_time': submission_time,
+                'due':             due
             }
 
         query = StudentModule.objects.filter(
