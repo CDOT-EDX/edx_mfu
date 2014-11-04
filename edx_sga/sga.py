@@ -229,7 +229,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
                 'submitted':       submitted,
                 'submission_time': submission_time,
-                'due':             due
+                'due':             str(due)
             }
 
         query = StudentModule.objects.filter(
