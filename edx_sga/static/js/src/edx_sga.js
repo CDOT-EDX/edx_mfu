@@ -11,8 +11,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         var staffDownloadZippedUrl = runtime.handlerUrl(element, 'staff_download_zipped');
         var enterGradeUrl = runtime.handlerUrl(element, 'staff_enter_grade');
         var removeGradeUrl = runtime.handlerUrl(element, 'staff_remove_grade');
+        
         var reopenSubmissionUrl = runtime.handlerUrl(element, 'staff_reopen_submission');
         var removeSubmissionUrl = runtime.handlerUrl(element, 'staff_remove_submission')
+        var reopenAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_reopen_all_submissions');
+        var removeAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_remove_all_submissions');
 
         var deleteUrl = runtime.handlerUrl(element, 'delete_file')
         var template = _.template($(element).find("#sga-tmpl").text());
@@ -142,6 +145,25 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 .leanModal({closeButton: "#enter-grade-cancel"})
                 .on("click", handleGradeEntry);
 
+            //all submission control
+            $(element).find(".remove-all-submissions-button")
+                .on("click", function(){
+                    var url = removeAllSubmissionsUrl;
+                    $.get(url, function(data) {
+                        renderStaffGrading(data);
+                    });
+                });
+
+            $(element).find(".reopen-all-submissions-button")
+                .on("click", function(){
+                    var url = reopenAllSubmissionsUrl;
+                    $.get(url, function(data) {
+                        renderStaffGrading(data);
+                    });
+                });
+
+
+            //Individual Submission Control
             $(element).find(".remove-submission-button")
                 .on("click", function(){
                     var url = removeSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
