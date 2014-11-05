@@ -34,7 +34,7 @@ class FileManagementMixin(object):
 	A mixin to handle file management for the SGA XBlock.
 	"""
 	def upload_file(self, filelist, upload):
-		upload_sha1 = _get_sha1(upload)
+		upload_sha1 = _get_sha1(upload.file)
 
 		metadata = FileMetaData(
 			upload.file.name,
