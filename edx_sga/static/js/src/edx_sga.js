@@ -4,15 +4,15 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         var uploadUrl = runtime.handlerUrl(element, 'upload_file');
         var studentDownloadUrl = runtime.handlerUrl(element, 'student_download_file');
         var studentDownloadZippedUrl = runtime.handlerUrl(element, 'student_download_zipped')
-        var submitUrl = runtime.handlerUrl(element, 'submit');
+        var submitUrl = runtime.handlerUrl(element, 'student_submit');
 
         var getStaffGradingUrl = runtime.handlerUrl(element, 'get_staff_grading_data');
         var staffDownloadUrl = runtime.handlerUrl(element, 'staff_download_file');
         var staffDownloadZippedUrl = runtime.handlerUrl(element, 'staff_download_zipped');
-        var enterGradeUrl = runtime.handlerUrl(element, 'enter_grade');
-        var removeGradeUrl = runtime.handlerUrl(element, 'remove_grade');
-        var reopenSubmissionUrl = runtime.handlerUrl(element, 'reopen_submission');
-        var removeSubmissionUrl = runtime.handlerUrl(element, 'remove_submission')
+        var enterGradeUrl = runtime.handlerUrl(element, 'staff_enter_grade');
+        var removeGradeUrl = runtime.handlerUrl(element, 'staff_remove_grade');
+        var reopenSubmissionUrl = runtime.handlerUrl(element, 'staff_reopen_submission');
+        var removeSubmissionUrl = runtime.handlerUrl(element, 'staff_remove_submission')
 
         var deleteUrl = runtime.handlerUrl(element, 'delete_file')
         var template = _.template($(element).find("#sga-tmpl").text());
@@ -151,7 +151,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(element).find(".reopen-submission-button")
                 .on("click", function(){
                     var url = reopenSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
-                    $.get(url).success(renderStaffGrading);
+                    $.get(url, function(data) {
+                        renderStaffGrading(data);
+                    });
                 });
 
         }

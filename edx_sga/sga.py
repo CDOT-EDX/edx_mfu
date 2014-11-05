@@ -228,8 +228,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
                 'comment':         state.get("comment", ''),
 
                 'submitted':       submitted,
-                'submission_time': submission_time,
-                'due':             str(due)
+                'submission_time': submission_time
             }
 
         query = StudentModule.objects.filter(
@@ -338,7 +337,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         return Response(status=204)
 
     @XBlock.handler
-    def submit(self, request, suffix=''):
+    def student_submit(self, request, suffix=''):
         if not self.is_submitted:
             self.is_submitted = True
             submission_time = str(_now)
@@ -346,29 +345,49 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         return Response(status=204)
 
     @XBlock.handler 
-    def reopen_submission(self, request, suffix=''):
+    def staff_reopen_submission(self, request, suffix=''):
+        assert self.is_course_staff()
         self.set_student_state(
             request.params['module_id'],
             is_submitted = False
         )        
 
-        return Response(status=204)
+        return Response(json_body=self.staff_grading_data())
 
     @XBlock.handler
-    def remove_submission(self, request, suffix=''):
-        self.delete_all(state.get('uploaded_files'))
-
-        self.set_student_state(
-            request.params['module_id'],
-            is_submitted = False,
-            score = float(request.params['grade']),
-            comment = request.params.get('comment', ''),
-            score_published = False,
-            score_approved = self.is_instructor(),
-            uploaded_files = dict()
+    def staff_reopen_all_submissions(self, request, suffix=''):
+        assert self.is_course_staff()
+        query = StudentModule.objects.filter(
+            course_id=self.xmodule_runtime.course_id,
+            module_state_key=self.location
         )
 
-        return Response(status=204)
+        for module in query:
+            self.set_student_state(
+                module.id,
+                is_submitted = False
+            )   
+
+        return Response(json_body=self.staff_grading_data())       
+
+    @XBlock.handler
+    def staff_remove_submission(self, request, suffix=''):
+        self.remove_submission(request.params['module_id'])
+
+        return Response(json_body=self.staff_grading_data())
+
+    @XBlock.handler
+    def staff_remove_all_submissions(self, request, suffix=''):
+        assert self.is_course_staff()
+        query = StudentModule.objects.filter(
+            course_id=self.xmodule_runtime.course_id,
+            module_state_key=self.location
+        )
+
+        for module in query:
+            self.remove_submission(module.id)
+
+        return Response(json_body=self.staff_grading_data())
 
     @XBlock.handler
     def get_staff_grading_data(self, request, suffix=''):
@@ -376,7 +395,22 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         return Response(json_body=self.staff_grading_data())
 
     @XBlock.handler
-    def enter_grade(self, request, suffix=''):
+    def staff_enter_grade(self, request, suffix=''):
+        self.enter_grade(
+            request.params['module_id'],
+            request.params['grade'],
+            request.params.get('comment', '')
+        )
+
+        return Response(json_body=self.staff_grading_data())
+
+    @XBlock.handler
+    def staff_remove_grade(self, request, suffix=''):
+        self.remove_grade(module_id)
+        
+        return Response(json_body=self.staff_grading_data())
+
+    def enter_grade(self, module_id, grade, comment=''):
         self.set_student_state(
             request.params['module_id'],
             score = float(request.params['grade']),
@@ -385,10 +419,7 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
             score_approved = self.is_instructor()
         )
 
-        return Response(json_body=self.staff_grading_data())
-
-    @XBlock.handler
-    def remove_grade(self, request, suffix=''):
+    def remove_grade(self, module_id):
         self.set_student_state(
             request.params['module_id'],
             score = None,
@@ -396,8 +427,21 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
             score_published = False,
             score_approved = False
         )
-        
-        return Response(json_body=self.staff_grading_data())
+
+    def remove_submission(self, module_id):
+        state = self.get_student_state(module_id)
+
+        self.delete_all(state.get('uploaded_files'))
+        self.remove_grade(module_id)
+        self.set_student_state(
+            module_id,
+            is_submitted = False,
+            score = None,
+            comment = request.params.get('comment', ''),
+            score_published = False,
+            score_approved = self.is_instructor(),
+            uploaded_files = dict()
+        )
 
     def set_student_state(self, module_id, **fields):
         assert self.is_course_staff()
