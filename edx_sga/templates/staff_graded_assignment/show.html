@@ -94,6 +94,23 @@
         <th>Instructors comments</th>
         <th>Options</th>
       </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+          <a class="remove-all-submissions-button" href="#command-remove-submission">
+                {% trans "Remove All Submissions" %}
+          </a>
+        </td>
+        <td>
+          <a class="reopen-all-submissions-button" href="#command-reopen-submission">
+                {% trans "Reopen All Submissions" %}
+          </a>
+        </td>
+      </tr>
       <% for (var i = 0; i < assignments.length; i++) { %>
       <%     var assignment = assignments[i]; %>
         <tr id="row-<%= assignment.module_id %>">
@@ -146,7 +163,7 @@
 
             <% if (assignment.uploaded.length > 0) { %>
               <p><a class="remove-submission-button" href="#{{ id }}-remove-submission">
-                {% trans "Remove Assignment" %}
+                {% trans "Remove Submission" %}
               </a></p>
             <% } %>
 

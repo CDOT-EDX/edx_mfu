@@ -145,7 +145,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(element).find(".remove-submission-button")
                 .on("click", function(){
                     var url = removeSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
-                    $.get(url).success(renderStaffGrading);
+                    $.get(url, function(data) {
+                        renderStaffGrading(data);
+                    });
                 });
 
             $(element).find(".reopen-submission-button")
