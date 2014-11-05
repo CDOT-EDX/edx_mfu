@@ -278,11 +278,12 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
             setattr(self, name, data.get(name, getattr(self, name)))
 
     @XBlock.handler
-    def upload_file(self, request, suffix=''):
+    def student_upload_file(self, request, suffix=''):
         assert self.upload_allowed()
         upload = request.params['assignment']
 
-        return upload_file(uploaded_files, upload.file)
+        #return upload_file(uploaded_files, upload.file)
+        return Response(status=501)
 
     @XBlock.handler
     def student_download_file(self, request, suffix=''):
