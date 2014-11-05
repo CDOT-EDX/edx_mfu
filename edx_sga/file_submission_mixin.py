@@ -20,11 +20,6 @@ from django.core.files import File
 from django.core.files.storage import default_storage
 from django.template import Context, Template
 
-from functools import partial
-
-from zipfile import ZipFile
-import StringIO
-
 class FileSubmissionMixin(XBlockMixin):
 	"""
 	"""
@@ -39,9 +34,11 @@ class FileSubmissionMixin(XBlockMixin):
     @XBlock.handler
     def student_upload_file(self, request, suffix=''):
         assert self.upload_allowed()
-        upload = request.params['assignment']
 
-        return self.upload_file(self.uploaded_files, upload)
+        return self.upload_file(
+        	self.uploaded_files, 
+        	request.params['assignment']
+        )
         
     @XBlock.handler
     def student_download_file(self, request, suffix=''):
@@ -49,26 +46,27 @@ class FileSubmissionMixin(XBlockMixin):
 
     @XBlock.handler
     def staff_download_file(self, request, suffix=''):
-        assert self.is_course_staff()
-        module = StudentModule.objects.get(pk=request.params['module_id'])
-        state = json.loads(module.state)
-
-        return self.download_file(state['uploaded_files'], suffix)
+        return self.download_file(
+        	self.uploaded_file_list(request.params['moudule_id']),
+         	suffix
+         )
     
     #For downloading the entire assingment for one student.
     @XBlock.handler
     def staff_download_zipped(self, request, suffix=''):
-        assert self.is_course_staff()
-        module = StudentModule.objects.get(pk=request.params['module_id'])
-        state = json.loads(module.state)
-
         #TODO: assignment name with student, course and assignemnt name.
-        return self.download_zipped(self.uploaded_files, 'assignment')
+        return self.download_zipped(
+        	self.uploaded_file_list(request.params['moudule_id']), 
+        	display_name + "-" + module.student.username + ".zip";
+        )
 
     @XBlock.handler
     def student_download_zipped(self, request, suffix=''):
         #TODO: assignment name with course and assignemnt name.
-        return self.download_zipped(self.uploaded_files, 'assignment')
+        return self.download_zipped(
+        	self.uploaded_files, 
+        	display_name + "-" + username + ".zip";
+        )
 
     @XBlock.handler
     def student_delete_file(self, request, suffix=''):
@@ -76,7 +74,7 @@ class FileSubmissionMixin(XBlockMixin):
 
         Keyword arguments:
         request: not used.
-        suffix:  holds the sha1 hash of the file to be deleted.
+        suffix:  holds the key hash of the file to be deleted.
         """
         assert self.upload_allowed()
         self.delete_file(self.uploaded_files, suffix)
@@ -95,55 +93,8 @@ class FileSubmissionMixin(XBlockMixin):
 
         return Response(status=204)
 
-    @XBlock.handler
-    def student_submit(self, request, suffix=''):
-        if not self.is_submitted:
-            self.is_submitted = True
-            submission_time = str(_now)
+    def uploaded_file_list(self, module_id):
+    	return get_student_state(module_id)['uploaded_files']
 
-        return Response(status=204)
-
-    @XBlock.handler 
-    def staff_reopen_submission(self, request, suffix=''):
-        assert self.is_course_staff()
-        self.set_student_state(
-            request.params['module_id'],
-            is_submitted = False
-        )        
-
-        return Response(json_body=self.staff_grading_data())
-
-    @XBlock.handler
-    def staff_reopen_all_submissions(self, request, suffix=''):
-        assert self.is_course_staff()
-        query = StudentModule.objects.filter(
-            course_id=self.xmodule_runtime.course_id,
-            module_state_key=self.location
-        )
-
-        for module in query:
-            self.set_student_state(
-                module.id,
-                is_submitted = False
-            )   
-
-        return Response(json_body=self.staff_grading_data())       
-
-    @XBlock.handler
-    def staff_remove_submission(self, request, suffix=''):
-        self.remove_submission(request.params['module_id'])
-
-        return Response(json_body=self.staff_grading_data())
-
-    @XBlock.handler
-    def staff_remove_all_submissions(self, request, suffix=''):
-        assert self.is_course_staff()
-        query = StudentModule.objects.filter(
-            course_id=self.xmodule_runtime.course_id,
-            module_state_key=self.location
-        )
-
-        for module in query:
-            self.remove_submission(module.id)
-
-        return Response(json_body=self.staff_grading_data())
+def _now():
+    return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)

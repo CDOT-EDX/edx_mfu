@@ -34,7 +34,7 @@ class FileManagementMixin(object):
 	A mixin to handle file management for the SGA XBlock.
 	"""
 	def upload_file(self, filelist, upload):
-		upload_sha1 = _get_sha1(upload.file)
+		upload_key = _get_key(upload.file)
 
 		metadata = FileMetaData(
 			upload.file.name,
@@ -42,11 +42,11 @@ class FileManagementMixin(object):
 			str( _now() )
 		)
 
-		filelist[upload_sha1] = metadata
+		filelist[upload_key] = metadata
 
 		path = _file_storage_path(
 			self.location.to_deprecated_string(),
-			upload_sha1,
+			upload_key,
 			upload.file.name
 		)
 
@@ -54,20 +54,20 @@ class FileManagementMixin(object):
 			default_storage.save(path, File(upload.file))
 		return Response(json_body=self.student_state())
 
-	def download_file(self, filelist, sha1):
+	def download_file(self, filelist, key):
 		"""Returns a file s
 		"""
 		assert filelist is not None
 
-		if sha1 not in filelist:
+		if key not in filelist:
 			log.error("File download failure: No matching file belongs to this student.", exc_info=True)
 			raise
 
 		#get file info
-		metadata = get_file_metadata(filelist, sha1)
+		metadata = get_file_metadata(filelist, key)
 		path = _file_storage_path(
 			self.location.to_deprecated_string(),
-			sha1,
+			key,
 			metadata.filename
 		)
 
@@ -103,10 +103,10 @@ class FileManagementMixin(object):
 		buff = StringIO.StringIO()
 		assignment_zip = ZipFile(buff, mode='w')
 
-		for sha1, metadata in get_file_metadata(filelist).iteritems():
+		for key, metadata in get_file_metadata(filelist).iteritems():
 			path = _file_storage_path(
 				self.location.to_deprecated_string(),
-				sha1,
+				key,
 				metadata.filename
 			)
 			afile = default_storage.open(path)
@@ -127,7 +127,7 @@ class FileManagementMixin(object):
 
 		Keyword arguments:
 		request: not used.
-		suffix:  holds the sha1 hash of the file to be deleted.
+		suffix:  holds the key hash of the file to be deleted.
 		"""
 		assert self.upload_allowed()
 
@@ -148,17 +148,17 @@ class FileManagementMixin(object):
 	def delete_all(self, filelist):
 		assert self.upload_allowed();
 
-		for sha1 in filelist.keys():
-			self.delete(filelist, sha1)
+		for key in filelist.keys():
+			self.delete(filelist, key)
 
 
-def _file_storage_path(url, sha1, filename):
+def _file_storage_path(url, key, filename):
 	assert url.startswith("i4x://")
-	path = url[6:] + '/' + sha1
+	path = url[6:] + '/' + key
 	path += os.path.splitext(filename)[1]
 	return path
 
-def _get_sha1(file):
+def _get_key(file):
 	BLOCK_SIZE = 2**10 * 8  # 8kb
 	sha1 = hashlib.sha1()
 	for block in iter(partial(file.read, BLOCK_SIZE), ''):
@@ -170,11 +170,11 @@ def _get_sha1(file):
 
 def get_file_metadata(filelist, hash = None):
     if hash is None:
-        return {sha1: FileMetaData._make(metadata) 
-            for (sha1, metadata) in filelist.iteritems()}
+        return {key: FileMetaData._make(metadata) 
+            for (key, metadata) in filelist.iteritems()}
         #ret = {}
-        #for sha1, metadata in filelist.iteritems():
-        #    ret[sha1] = FileMetaData.__make(make)
+        #for key, metadata in filelist.iteritems():
+        #    ret[key] = FileMetaData.__make(make)
     else:
         if hash not in filelist:
             return None

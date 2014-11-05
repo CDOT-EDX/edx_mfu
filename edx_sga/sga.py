@@ -31,7 +31,9 @@ log = logging.getLogger(__name__)
 
 #FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
-class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
+class StaffGradedAssignmentXBlock(XBlock, 
+    FileManagementMixin, FileSubmissionMixin,
+    FileAnnotationMixin):
     """
     This block defines a Staff Graded Assignment.  Students are shown a rubric
     and invited to upload a file which is then graded by staff.
@@ -90,13 +92,6 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         default='',
         scope=Scope.user_state,
         help="Feedback given to student by instructor."
-    )
-
-    uploaded_files = Dict(
-        display_name="Uploaded Files",
-        scope=Scope.user_state,
-        default=dict(),
-        help="Files uploaded by the user. Tuple of filename, mimetype and timestamp"
     )
 
     is_submitted = Boolean(
@@ -277,64 +272,27 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         for name in ('display_name', 'points', 'weight'):
             setattr(self, name, data.get(name, getattr(self, name)))
 
-    @XBlock.handler
-    def student_upload_file(self, request, suffix=''):
-        assert self.upload_allowed()
-        upload = request.params['assignment']
-
-        return self.upload_file(self.uploaded_files, upload)
-        
-    @XBlock.handler
-    def student_download_file(self, request, suffix=''):
-        return self.download_file(self.uploaded_files, suffix)
 
     @XBlock.handler
-    def staff_download_file(self, request, suffix=''):
+    def get_staff_grading_data(self, request, suffix=''):
         assert self.is_course_staff()
-        module = StudentModule.objects.get(pk=request.params['module_id'])
-        state = json.loads(module.state)
-
-        return self.download_file(state['uploaded_files'], suffix)
-    
-    #For downloading the entire assingment for one student.
-    @XBlock.handler
-    def staff_download_zipped(self, request, suffix=''):
-        assert self.is_course_staff()
-        module = StudentModule.objects.get(pk=request.params['module_id'])
-        state = json.loads(module.state)
-
-        #TODO: assignment name with student, course and assignemnt name.
-        return self.download_zipped(self.uploaded_files, 'assignment')
+        return Response(json_body=self.staff_grading_data())
 
     @XBlock.handler
-    def student_download_zipped(self, request, suffix=''):
-        #TODO: assignment name with course and assignemnt name.
-        return self.download_zipped(self.uploaded_files, 'assignment')
-
-    @XBlock.handler
-    def student_delete_file(self, request, suffix=''):
-        """Removes an uploaded file from the assignemtn
-
-        Keyword arguments:
-        request: not used.
-        suffix:  holds the sha1 hash of the file to be deleted.
-        """
-        assert self.upload_allowed()
-        self.delete_file(self.uploaded_files, suffix)
-        return Response(status = 204)
-
-    @XBlock.handler
-    def staff_delete_file(self, request, suffix=''):
-        module_id = request.params['module_id']
-        uploaded = self.get_student_state(module_id).get('uploaded_files')
-
-        newFilelist = self.delete_file(uploaded, suffix)
-        self.set_student_state(
-            module_id, 
-            uploaded_files = newFilelist
+    def staff_enter_grade(self, request, suffix=''):
+        self.enter_grade(
+            request.params['module_id'],
+            request.params['grade'],
+            request.params.get('comment', '')
         )
 
-        return Response(status=204)
+        return Response(json_body=self.staff_grading_data())
+
+    @XBlock.handler
+    def staff_remove_grade(self, request, suffix=''):
+        self.remove_grade(module_id)
+        
+        return Response(json_body=self.staff_grading_data())
 
     @XBlock.handler
     def student_submit(self, request, suffix=''):
@@ -389,27 +347,6 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
 
         return Response(json_body=self.staff_grading_data())
 
-    @XBlock.handler
-    def get_staff_grading_data(self, request, suffix=''):
-        assert self.is_course_staff()
-        return Response(json_body=self.staff_grading_data())
-
-    @XBlock.handler
-    def staff_enter_grade(self, request, suffix=''):
-        self.enter_grade(
-            request.params['module_id'],
-            request.params['grade'],
-            request.params.get('comment', '')
-        )
-
-        return Response(json_body=self.staff_grading_data())
-
-    @XBlock.handler
-    def staff_remove_grade(self, request, suffix=''):
-        self.remove_grade(module_id)
-        
-        return Response(json_body=self.staff_grading_data())
-
     def enter_grade(self, module_id, grade, comment=''):
         self.set_student_state(
             request.params['module_id'],
@@ -454,23 +391,6 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         module.state = json.dumps(state)
         module.save()
 
-    def get_student_state(self, module_id):
-        assert self.is_course_staff()
-        module = StudentModule.objects.get(pk=module_id)
-        return json.loads(module.state)
-
-    def is_course_staff(self):
-        """Returns True if requestor is part of the course staff"""
-        return getattr(self.xmodule_runtime, 'user_is_staff', False)
-
-    def is_instructor(self):
-        """Returns True if the requestor is the course instructor"""
-        return self.xmodule_runtime.get_user_role() == 'instructor'
-
-    def show_staff_grading_interface(self):
-        in_studio_preview = self.scope_ids.user_id is None
-        return self.is_course_staff() and not in_studio_preview
-
     def past_due(self):
         """Returns True if the assignment is past due"""
         due = get_extended_due_date(self)
@@ -488,6 +408,24 @@ class StaffGradedAssignmentXBlock(XBlock, FileManagementMixin):
         attempt.
         """
         return not self.past_due() and not self.is_submitted
+
+    def get_student_state(self, module_id):
+        assert self.is_course_staff()
+        module = StudentModule.objects.get(pk=module_id)
+        return json.loads(module.state)
+
+    def is_course_staff(self):
+        """Returns True if requestor is part of the course staff"""
+        return getattr(self.xmodule_runtime, 'user_is_staff', False)
+
+    def is_instructor(self):
+        """Returns True if the requestor is the course instructor"""
+        return self.xmodule_runtime.get_user_role() == 'instructor'
+
+    def show_staff_grading_interface(self):
+        in_studio_preview = self.scope_ids.user_id is None
+        return self.is_course_staff() and not in_studio_preview
+
 
 def _resource(path):  # pragma: NO COVER
     """Handy helper for getting resources from our kit."""
