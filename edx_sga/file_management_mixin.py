@@ -38,7 +38,7 @@ class FileManagementMixin(object):
 
 		metadata = FileMetaData(
 			upload.file.name,
-			mimetypes.guess_type(upload)[0],
+			mimetypes.guess_type(upload.file)[0],
 			str( _now() )
 		)
 
