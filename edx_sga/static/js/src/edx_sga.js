@@ -17,7 +17,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         var reopenAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_reopen_all_submissions');
         var removeAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_remove_all_submissions');
 
-        var deleteUrl = runtime.handlerUrl(element, 'delete_file')
+        var deleteUrl = runtime.handlerUrl(element, 'staff_delete_file')
         var template = _.template($(element).find("#sga-tmpl").text());
         var gradingTemplate;
 

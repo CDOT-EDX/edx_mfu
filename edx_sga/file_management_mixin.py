@@ -12,6 +12,7 @@ import pkg_resources
 import pytz
 
 from xblock.core import XBlock
+from xblock.fields import XBlockMixin
 
 from webob.response import Response
 
@@ -28,9 +29,9 @@ from collections import namedtuple
 
 FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
-class FileManagementMixin:
+class FileManagementMixin(XBlockMixin):
 	"""
-	A mixin to handle uploading and downloading files.
+	A mixin to handle file management for the SGA XBlock.
 	"""
 	def upload_file(self, filelist, upload):
 		upload_sha1 = _get_sha1(upload)
@@ -54,6 +55,8 @@ class FileManagementMixin:
 		return Response(json_body=self.student_state())
 
 	def download_file(self, filelist, sha1):
+		"""Returns a file s
+		"""
 		assert filelist is not None
 
 		if sha1 not in filelist:
@@ -139,6 +142,8 @@ class FileManagementMixin:
 
 		default_storage.delete(path)
 		del filelist[key]
+
+		return filelist
 
 	def delete_all(self, filelist):
 		assert self.upload_allowed();
