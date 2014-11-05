@@ -180,3 +180,6 @@ def get_file_metadata(filelist, hash = None):
             return None
         else:
             return FileMetaData._make(filelist[hash])
+
+def _now():
+    return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
