@@ -131,7 +131,7 @@ class FileManagementMixin(object):
 		"""
 		assert self.upload_allowed()
 
-		if suffix in filelist:
+		if key in filelist:
 			metadata = get_file_metadata(filelist, key)
 
 		path = _file_storage_path(
