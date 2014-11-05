@@ -29,7 +29,7 @@ from collections import namedtuple
 
 FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
-class FileManagementMixin(XBlockMixin):
+class FileManagementMixin(object):
 	"""
 	A mixin to handle file management for the SGA XBlock.
 	"""
