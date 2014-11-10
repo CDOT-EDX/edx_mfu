@@ -298,7 +298,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     function ( data ) {
                         renderStaffGrading(data);                    
                 });
-            }(annotated[filenum].sha1));
+            }(annotated[this.value].sha1));
 
             form.find("#manage-annotated-exit").on("click", function() {
                 setTimeout(function() {
