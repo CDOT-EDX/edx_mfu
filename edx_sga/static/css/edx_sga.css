@@ -44,7 +44,8 @@
     z-index: 1;
 }
 
-.sga-block .upload .fileupload .uploadAnnotated .fileuploadAnnotated {
+.sga-block .upload .fileupload,
+.sga-block .uploadAnnotated .fileuploadAnnotated {
     position: relative;
 	-moz-opacity:0 ;
 	filter:alpha(opacity: 0);
