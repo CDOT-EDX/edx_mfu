@@ -254,13 +254,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             var form = $(element).find("#manage-annotations-form");
             var row = $(this).parents("tr");
             $(element).find("#student-name-annotations").text(row.data("fullname"));
-
-            var fileTable = form.find("annotated-file-list")
-
+            
             var fileContent;
             if (annotated.length > 0)
             {
-/*                fileContent = "<table>";
+                fileContent = "<table>";
                 for (var i = 0; i < annotated.length; i++)
                 {
                     fileContent += '<tr> <td>'
@@ -273,13 +271,13 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         + '</button>'
                         + '</td> </tr>';
                 }
-                fileContent += "</table>";*/
+                fileContent += "</table>";
             }
             else
             {
                 fileContent = "<p>No annotations available for this student.</p>";
             }
-            form.find("annotated-file-list").append(fileContent);
+            form.find("#annotated-file-list").append(fileContent);
 
             fileTable.append(function(elemnum, html){
                 for (var i = 0; i < annotated.length; i++)
