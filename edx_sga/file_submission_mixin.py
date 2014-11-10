@@ -54,7 +54,6 @@ class FileSubmissionMixin(XBlockMixin):
 	#For downloading the entire assingment for one student.
 	@XBlock.handler
 	def staff_download_zipped(self, request, suffix=''):
-		#TODO: assignment name with student, course and assignemnt name.
 		return self.download_zipped(
 			self.uploaded_file_list(request.params['moudule_id']), 
 			display_name + "-" + module.student.username + ".zip";
@@ -62,7 +61,6 @@ class FileSubmissionMixin(XBlockMixin):
 
 	@XBlock.handler
 	def student_download_zipped(self, request, suffix=''):
-		#TODO: assignment name with course and assignemnt name.
 		return self.download_zipped(
 			self.uploaded_files, 
 			display_name + "-" + username + ".zip";
