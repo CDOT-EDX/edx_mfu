@@ -40,7 +40,7 @@ class FileAnnotationMixin(XBlockMixin):
 			self.get_student_state(request.params['module_id'], 
 			request.params['assignment']
 		)
-		
+
 	@XBlock.handler
 	def student_download_annotation(self, request, suffix=''):
 		return self.download_file(self.annotated_files, suffix)
