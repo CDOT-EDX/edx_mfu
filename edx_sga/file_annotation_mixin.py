@@ -23,7 +23,6 @@ from django.template import Context, Template
 class FileAnnotationMixin(XBlockMixin):
 	"""Mixin for handling annotations.
 	"""
-
     annotated_files = Dict(
         display_name="Uploaded Files",
         scope=Scope.user_state,
