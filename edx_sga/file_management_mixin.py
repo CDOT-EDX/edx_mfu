@@ -171,7 +171,7 @@ def _get_key(file):
 def get_file_metadata(filelist, hash = None):
 	if filelist is None:
 		return dict()
-    elif hash is None:
+	elif hash is None:
         return {key: FileMetaData._make(metadata) 
             for (key, metadata) in filelist.iteritems()}
     else:
