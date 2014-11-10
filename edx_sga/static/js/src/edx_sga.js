@@ -278,17 +278,53 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             {
                 fileContent = "<p>No annotations available for this student.</p>";
             }
-            form.find("#annotated-file-list").append(fileContent);
+            form.find("#annotated-file-list").html(fileContent);
 
             form.find("#annotated-download-all").attr(
                 "href", staffDownloadZippedUrl + "?module_id=" + row.data("module_id"));
 
             form.find("#annotated-file-upload").on("click", function() {
-                var url = annotationUploadUrl + '?module_id=' + row.data("module_id");
-                $.get(url).success(
-                    function ( data ) {
-                        renderStaffGrading(data);
-                });
+                url: annotatedUploadUrl,
+                add: function(e, data) {
+                    var do_upload = $(content).find(".uploadAnnotated").html('');
+                    $('<button/>')
+                        .text('Upload ' + data.files[0].name)
+                        .appendTo(do_upload)
+                        .click(function() {
+                            do_upload.text("Uploading...");
+                            data.submit();
+                        });
+                },
+                progressall: function(e, data) {
+                    var percent = parseInt(data.loaded / data.total * 100, 10);
+                    $(content).find(".uploadAnnotated").text(
+                        "Uploading... " + percent + "%");
+                },
+                fail: function(e, data) {
+                    if (data.jqXHR.status == 413) {
+                        state.error = "The file you are trying to upload is too large."
+                    }
+                    else {
+                        // Suitably vague
+                        state.error = "There was an error uploading your file.";
+
+                        console.log("There was an error with file upload.");
+                        console.log("event: ", e);
+                        console.log("data: ", data);
+                    }
+                    handleManageAnnotated();
+                },
+                done: function(e, data) { 
+                    if (data.result.success !== undefined) {
+                        // Actually, this is an error
+                        state.error = data.result.success;
+                        render(state);
+                    }
+                    else {
+                        // The happy path, no errors
+                        render(data.result); 
+                    }
+                }
             });
 
             form.find("#annotated-file-delete").on("click", function(filehash) {
