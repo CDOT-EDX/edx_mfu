@@ -255,7 +255,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             var row = $(this).parents("tr");
             $(element).find("#student-name-annotations").text(row.data("fullname"));
 
-            form.find("#annotated-download-all").setAttribute(
+            form.find("#annotated-download-all").attr(
                 "href", staffDownloadZippedUrl + "?module_id" + row.data("module_id"));
 
             form.find("#annotated-file-upload").on("click", function() {
