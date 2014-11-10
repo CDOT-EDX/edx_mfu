@@ -286,7 +286,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             form.find(".fileuploadAnnotated").fileupload({
                 url: annotatedUploadUrl,
                 add: function(e, data) {
-                    var do_upload = $(form).find(".uploadAnnotated").html('');
+                    var do_upload = form.find(".uploadAnnotated").html('');
                     $('<button/>')
                         .text('Upload ' + data.files[0].name)
                         .appendTo(do_upload)
@@ -297,7 +297,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 },
                 progressall: function(e, data) {
                     var percent = parseInt(data.loaded / data.total * 100, 10);
-                    $(form).find(".uploadAnnotated").text(
+                    form.find(".uploadAnnotated").text(
                         "Uploading... " + percent + "%");
                 },
                 fail: function(e, data) {
