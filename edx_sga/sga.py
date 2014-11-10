@@ -171,6 +171,7 @@ class StaffGradedAssignmentXBlock(
             metadata = FileMetaData._make(metadata)
             uploaded.append({"sha1": sha1, "filename": metadata.filename})
 
+        annotated = []
         for sha1, metadata in self.annotated_files.iteritems():
             metadata = FileMetaData._make(metadata)
             annotated.append({"sha1": sha1, "filename": metadata.filename})
