@@ -169,12 +169,11 @@ def _get_key(file):
 	return sha1.hexdigest()
 
 def get_file_metadata(filelist, hash = None):
-    if hash is None:
+	if filelist is None:
+		return dict()
+    elif hash is None:
         return {key: FileMetaData._make(metadata) 
             for (key, metadata) in filelist.iteritems()}
-        #ret = {}
-        #for key, metadata in filelist.iteritems():
-        #    ret[key] = FileMetaData.__make(make)
     else:
         if hash not in filelist:
             return None
