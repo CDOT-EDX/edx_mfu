@@ -273,11 +273,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         + '</button>'
                         + "</td> </tr>";
                 }
-                fileContent += "</table>"
+                fileContent += "</table>";
             }
             else
             {
-                fileContent = "<p>No annotations available for this student.</p>"
+                fileContent = "<p>No annotations available for this student.</p>";
             }
             form.find("annotated-file-list").append(fileContent);
 
