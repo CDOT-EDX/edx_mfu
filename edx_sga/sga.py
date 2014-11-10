@@ -12,6 +12,8 @@ import pkg_resources
 import pytz
 
 from file_management_mixin import FileMetaData, FileManagementMixin, get_file_metadata
+from file_submission_mixin import FileSubmissionMixin
+from file_annotation_mixin import FileAnnotationMixin
 
 from courseware.models import StudentModule
 
@@ -31,8 +33,10 @@ log = logging.getLogger(__name__)
 
 #FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
-class StaffGradedAssignmentXBlock(XBlock, 
-    FileManagementMixin, FileSubmissionMixin,
+class StaffGradedAssignmentXBlock(
+    XBlock, 
+    FileManagementMixin, 
+    FileSubmissionMixin,
     FileAnnotationMixin):
     """
     This block defines a Staff Graded Assignment.  Students are shown a rubric
