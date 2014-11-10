@@ -256,7 +256,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(element).find("#student-name-annotations").text(row.data("fullname"));
 
             form.find("annotated-file-list").append(function(elemnum, html){
-                for (var i = 0; i < annotated.lenght; i++)
+                for (var i = 0; i < annotated.length; i++)
                 {
                     html += "<tr> <td>"
                         + '<a href="' 
@@ -269,6 +269,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         +   'delete'
                         + '</button>'
                         + "</td> </tr>";
+
+                    return html;
                 }
             });
 
