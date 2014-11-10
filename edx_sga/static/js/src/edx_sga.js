@@ -10,7 +10,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         var staffDownloadUrl = runtime.handlerUrl(element, 'staff_download_file');
         var staffDownloadZippedUrl = runtime.handlerUrl(element, 'staff_download_zipped');
 
-        var annotationUploadUrl = runtime.handlerUrl(element, 'staff_upload_annotated');
+        var annotatedUploadUrl = runtime.handlerUrl(element, 'staff_upload_annotated');
         var studentAnnotationDownloadUrl = runtime.handlerUrl(element, 'student_download_annotated');
         var studentAnootationDownloadZippedUrl = runtime.handlerUrl(element, 'student_download_annotated_zipped');
         var deleteAnnotationFileUrl = runtime.handlerUrl(element, 'staff_delete_annotated');
