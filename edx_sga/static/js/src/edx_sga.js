@@ -254,7 +254,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             var form = $(element).find("#manage-annotations-form");
             var row = $(this).parents("tr");
             $(element).find("#student-name-annotations").text(row.data("fullname"));
-            
+
             var fileContent;
             if (annotated.length > 0)
             {
@@ -278,25 +278,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 fileContent = "<p>No annotations available for this student.</p>";
             }
             form.find("#annotated-file-list").append(fileContent);
-
-            fileTable.append(function(elemnum, html){
-                for (var i = 0; i < annotated.length; i++)
-                {
-                    html += "<tr> <td>"
-                        + '<a href="' 
-                        + downloadUrl + '/' + annotated[i].sha1 
-                        + "\">"
-                        + annotated[i].filename + "</a>"
-                        + "</td><td>"
-                        + '<button id="annotated-file-delete"'
-                        +   'value="' + i '" type="button" name="deleteannotated">'
-                        +   'delete'
-                        + '</button>'
-                        + "</td> </tr>";
-
-                    return html;
-                }
-            });
 
             form.find("#annotated-download-all").attr(
                 "href", staffDownloadZippedUrl + "?module_id=" + row.data("module_id"));
