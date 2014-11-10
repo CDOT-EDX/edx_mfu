@@ -312,9 +312,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         console.log("event: ", e);
                         console.log("data: ", data);
                     }
+                    renderStaffGrading(data);
                     handleManageAnnotated();
                 },
                 done: function(e, data) { 
+                    renderStaffGrading(data);
                     if (data.result.success !== undefined) {
                         // Actually, this is an error
                         state.error = data.result.success;
