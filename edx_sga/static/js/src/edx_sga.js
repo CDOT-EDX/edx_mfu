@@ -254,6 +254,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             var form = $(element).find("#manage-annotations-form");
             var row = $(this).parents("tr");
             $(element).find("#student-name-annotations").text(row.data("fullname"));
+            var annotated = row.data("annotated");
 
             var fileContent;
             if (annotated.length > 0)
