@@ -62,6 +62,15 @@
         {% trans "This assignment has not yet been graded." %}
       <% } %>
 
+      <% if(annotated.length > 0)  { %>
+        <p>Annotated Files </p>
+        <% for (var i = 0; i < annotated.length; i++) { %>
+          <ul>
+            <li><a href="<%= downloadUrl + '/' + annotated[i].sha1 %>"><%= annotated[i].filename %></a></li>
+          </ul>
+        <% } %>
+      <% } %>
+
       <p>Submitted on: <%= submission_time %></p>
 
     <% } else { %>
@@ -92,6 +101,7 @@
         <th>Submission Date</th>
         <th>Grade</th>
         <th>Instructors comments</th>
+        <th>Annotations</th>
         <th>Options</th>
       </tr>
       <tr>
@@ -149,6 +159,26 @@
           </td>
 
           <td><%= assignment.comment %></td>
+
+          <td>
+            <% if (assignment.uploaded.length > 0) { %>
+              <ul>
+                <% for (var i = 0; i < assignment.uploaded.length; i++) { %>
+
+                  <li>
+                    <a href="<%= annotatedDownloadUrl + '/' + assignment.annotated[i].sha1 %>?module_id=<%= assignment.module_id %>">
+                      <%= assignment.uploaded[i].filename %>
+                    </a>
+                  </li>
+
+                <% } %>
+              </ul>
+              <p><a href="<%= annotatedDownloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a>
+            <% } %>
+            <p><a class="manage-annotated-button" href="#{{ id }}-manage-annotated">
+              {% trans "Manage" %}
+            </a></p>
+          </td>
 
           <td>
             <% if (assignment.may_grade) { %>
@@ -245,6 +275,44 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  </section>
+
+  <section aria-hidden="true" class="modal annotated-modal" id="{{ id }}-manage-annotated">
+    <div class="inner-wrapper" style="color: black">
+      <header><h2>
+        {% trans "Manage Annotated Files" %}
+      </h2></header>
+      <br/>
+      <div style="display: block;">
+        <div>Files for <span id="student-name"/></div>
+
+        <table>
+        <% if (assignment.annotated.length > 0) { %>
+            <% for (var i = 0; i < assignment.annotated.length; i++) { %>
+
+              <tr>
+                <td><a href="<%= downloadUrl + '/' + annotated[i].sha1 %>"><%= annotated[i].filename %></a></td>
+                <td>
+                  <button id="annotated-file-delete" value="<%= i %>" type="button" name="deleteannotated">delete</button>
+                </td>
+              </tr>
+
+            <% } %>
+          </table>
+          <p><a href="<%= annotatedDownloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a>
+        <% } else { %>
+          <p>{% trans "No annotations for this student." %}</p>
+        <% } %>
+        <div class="uploadAnnotated">
+          <input id="annotated-file-upload" type="file" name="assignment"/>
+          <button>Select a file</button>
+        </div>
+        <button type="button" id="manage-annotated-exit">
+          {% trans "Exit" %}
+        </button>
+
       </div>
     </div>
   </section>

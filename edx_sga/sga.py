@@ -167,6 +167,10 @@ class StaffGradedAssignmentXBlock(XBlock,
             metadata = FileMetaData._make(metadata)
             uploaded.append({"sha1": sha1, "filename": metadata.filename})
 
+        for sha1, metadata in self.annotated_files.iteritems():
+            metadata = FileMetaData._make(metadata)
+            annotated.append({"sha1": sha1, "filename": metadata.filename})
+
         if self.score is not None and self.score_approved:
             graded = {'score': self.score, 'comment': self.comment}
         else:
@@ -174,6 +178,7 @@ class StaffGradedAssignmentXBlock(XBlock,
 
         return {
             "uploaded":        uploaded,
+            "annotated":       annotated,
 
             "graded":          graded,
             "max_score":       self.max_score(),
@@ -208,11 +213,20 @@ class StaffGradedAssignmentXBlock(XBlock,
                         "timestamp": metadata.timestamp
                     })
 
+            annotated = []
+            for sha1, metadata in get_file_metadata(state.get("annotated_files")).iteritems():
+                annotated.append({
+                    "sha1":      sha1, 
+                    "filename":  metadata.filename,
+                    "timestamp": metadata.timestamp
+                })
+
             return {
                 'module_id':       module.id,
                 'username':        module.student.username,
                 'fullname':        module.student.profile.name,
                 'uploaded':        uploaded,
+                'annotated':       annotated_files.
                 'timestamp':       state.get("uploaded_files_last_timestamp"),
                 'published':       state.get("score_published"),
                 'score':           score,

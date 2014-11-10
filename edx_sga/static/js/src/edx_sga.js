@@ -5,10 +5,20 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         var studentDownloadUrl = runtime.handlerUrl(element, 'student_download_file');
         var studentDownloadZippedUrl = runtime.handlerUrl(element, 'student_download_zipped')
         var submitUrl = runtime.handlerUrl(element, 'student_submit');
+        var deleteSubmissionFileUrl = runtime.handlerUrl(element, 'student_delete_file')
 
-        var getStaffGradingUrl = runtime.handlerUrl(element, 'get_staff_grading_data');
         var staffDownloadUrl = runtime.handlerUrl(element, 'staff_download_file');
         var staffDownloadZippedUrl = runtime.handlerUrl(element, 'staff_download_zipped');
+
+        var annotationUploadUrl = runtime.handlerUrl(element, 'staff_upload_annotation');
+        var studentAnnotationDownloadUrl = runtime.handlerUrl(element, 'student_download_annotation');
+        var studentAnootationDownloadZippedUrl = runtime.handlerUrl(element, 'student_download_annotation_zipped');
+        var deleteAnnotationFileUrl = runtime.handlerUrl(element, 'staff_delete_annotation');
+
+        var staffDownloadAnnotatedUrl = runtime.handlerUrl(element, 'staff_download_annotation');
+        var staffDownloadAnnotatedZippedUrl = runtime.handlerUrl(element, 'staff_download_annotation_zipped');
+
+        var getStaffGradingUrl = runtime.handlerUrl(element, 'get_staff_grading_data');
         var enterGradeUrl = runtime.handlerUrl(element, 'staff_enter_grade');
         var removeGradeUrl = runtime.handlerUrl(element, 'staff_remove_grade');
         
@@ -17,7 +27,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         var reopenAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_reopen_all_submissions');
         var removeAllSubmissionsUrl = runtime.handlerUrl(element, 'staff_remove_all_submissions');
 
-        var deleteUrl = runtime.handlerUrl(element, 'student_delete_file')
         
         var template = _.template($(element).find("#sga-tmpl").text());
         var gradingTemplate;
@@ -98,7 +107,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
             $(content).find(".filedelete").click(function(e)
             {
-                var url = deleteUrl + '/' + state.uploaded[this.value].sha1;
+                var url = deleteSubmissionFileUrl + '/' + state.uploaded[this.value].sha1;
                 $.get(url).success(
                     (function (i) {
                         if (i < state.uploaded.length)
@@ -113,7 +122,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(content).find(".assingmentsubmit").click(function(e)
             {
                 $.get(submitUrl).success(
-                    function (i) {
+                    function () {
                         state.submitted = true;
                         state.upload_allowed = false;
                         render(state);
@@ -145,6 +154,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(element).find(".enter-grade-button")
                 .leanModal({closeButton: "#enter-grade-cancel"})
                 .on("click", handleGradeEntry);
+
+            //set up annotated file submision modal
+            $(element).find(".manage-annotated-button")
+                .leanModal({closeButton: "#manage-annotated-exit"})
+                .on("click", handleManageAnnotated);
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
@@ -229,6 +243,35 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                  *
                  * See: https://github.com/mitodl/edx-sga/issues/13
                  */
+                setTimeout(function() {
+                    $("#grade-submissions-button").click(); 
+                }, 225);
+            });
+        }
+
+        function handleManageAnnotated() {
+            form.find("#annotated-file-delete").on("click"), function(filenum) {
+
+            }(this.value));
+
+            form.find("#annotated-file-upload").on("click"), function() {
+                var url = annotationUploadUrl + '?module_id=' + row.data("module_id");
+                $.get(url).success(
+                    function ( data ) {
+                        renderStaffGrading(data);
+                });
+            });
+
+            form.find("#annotated-file-delete").on("click"), function() {
+                var url = deleteAnnotationFileUrl + "/" + state.annotated[this.value].sha1 
+                +'?module_id=' + row.data("module_id");
+                $.get(url).success(
+                    function ( data ) {
+                        renderStaffGrading(data);                    
+                });
+            });
+
+            form.find("#manage-annotated-exit").on("click", function() {
                 setTimeout(function() {
                     $("#grade-submissions-button").click(); 
                 }, 225);
