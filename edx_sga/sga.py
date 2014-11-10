@@ -423,6 +423,10 @@ class StaffGradedAssignmentXBlock(XBlock,
         """
         return not self.past_due() and not self.is_submitted
 
+    def get_module(self, module_id):
+        assert self.is_course_staff()
+        return StudentModule.objects.get(pk=module_id)
+
     def get_student_state(self, module_id):
         assert self.is_course_staff()
         module = StudentModule.objects.get(pk=module_id)
