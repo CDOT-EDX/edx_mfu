@@ -268,7 +268,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         + annotated[i].filename + "</a>"
                         + "</td><td>"
                         + '<button id="annotated-file-delete"'
-                        +   'value="' + i '" type="button" name="deleteannotated">'
+                        +   'value="' + i + '" type="button" name="deleteannotated">'
                         +   'delete'
                         + '</button>'
                         + "</td> </tr>";
