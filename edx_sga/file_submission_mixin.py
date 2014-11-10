@@ -66,7 +66,7 @@ class FileSubmissionMixin(XBlockMixin):
 		module = self.get_module(request.params['module_id'])
 		return self.download_zipped(
 			self.uploaded_files, 
-			self.display_name + "-" + module.student.username + ".zip"
+			self.display_name + "-" + self.username + ".zip"
 		)
 
 	@XBlock.handler
