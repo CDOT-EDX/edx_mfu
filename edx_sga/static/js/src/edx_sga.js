@@ -249,11 +249,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             });
         }
 
-        function handleManageAnnotated() {
-            form.find("#annotated-file-delete").on("click"), function(filenum) {
-
-            }(this.value));
-
+        function handleManageAnnotated() 
+        {
             form.find("#annotated-file-upload").on("click", function() {
                 var url = annotationUploadUrl + '?module_id=' + row.data("module_id");
                 $.get(url).success(
