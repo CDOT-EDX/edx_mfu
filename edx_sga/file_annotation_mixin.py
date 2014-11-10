@@ -21,7 +21,8 @@ from django.core.files.storage import default_storage
 from django.template import Context, Template
 
 class FileAnnotationMixin(XBlockMixin):
-	"""Mixin for handling annotations.
+	"""
+    Mixin for handling annotations.
 	"""
     annotated_files = Dict(
         display_name="Uploaded Files",
