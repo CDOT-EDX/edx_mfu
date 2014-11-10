@@ -291,7 +291,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             });
 
             form.find("#annotated-file-delete").on("click", function(filenum) {
-                var url = deleteAnnotationFileUrl + "/" + state.annotated[filenum].sha1 
+                var url = deleteAnnotationFileUrl + "/" + annotated[filenum].sha1 
                 +'?module_id=' + row.data("module_id");
                 $.get(url).success(
                     function ( data ) {
