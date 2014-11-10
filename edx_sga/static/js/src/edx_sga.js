@@ -255,7 +255,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             var row = $(this).parents("tr");
             $(element).find("#student-name-annotations").text(row.data("fullname"));
 
-/*            var fileContent;
+            var fileContent;
             if (annotated.length > 0)
             {
                 fileContent = "<table>";
@@ -278,7 +278,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 fileContent = "<p>No annotations available for this student.</p>";
             }
             form.find("#annotated-file-list").append(fileContent);
-*/
+
             form.find("#annotated-download-all").attr(
                 "href", staffDownloadZippedUrl + "?module_id=" + row.data("module_id"));
 
