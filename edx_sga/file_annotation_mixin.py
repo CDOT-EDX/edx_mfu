@@ -12,7 +12,7 @@ import pkg_resources
 import pytz
 
 from xblock.core import XBlock
-from xblock.fields import XBlockMixin
+from xblock.fields import XBlockMixin, Dict
 
 from webob.response import Response
 
