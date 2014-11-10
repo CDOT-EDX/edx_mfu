@@ -172,13 +172,13 @@ def get_file_metadata(filelist, hash = None):
 	if filelist is None:
 		return dict()
 	elif hash is None:
-        return {key: FileMetaData._make(metadata) 
-            for (key, metadata) in filelist.iteritems()}
-    else:
-        if hash not in filelist:
-            return None
-        else:
-            return FileMetaData._make(filelist[hash])
+		return {key: FileMetaData._make(metadata) 
+			for (key, metadata) in filelist.iteritems()}
+	else:
+		if hash not in filelist:
+			return None
+		else:
+			return FileMetaData._make(filelist[hash])
 
 def _now():
-    return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+	return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
