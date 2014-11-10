@@ -260,10 +260,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             var fileContent;
             if (annotated.length > 0)
             {
-                fileContent = "<table>";
+/*                fileContent = "<table>";
                 for (var i = 0; i < annotated.length; i++)
                 {
-                    fileContent += "<tr> <td>"
+                    fileContent += '<tr> <td>'
                         + '<a href="' + downloadUrl + '/' + annotated[i].sha1 + '">'
                         + annotated[i].filename + "</a>"
                         + "</td><td>"
@@ -271,9 +271,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         +   'value="' + i + '" type="button" name="deleteannotated">'
                         +   'delete'
                         + '</button>'
-                        + "</td> </tr>";
+                        + '</td> </tr>';
                 }
-                fileContent += "</table>";
+                fileContent += "</table>";*/
             }
             else
             {
