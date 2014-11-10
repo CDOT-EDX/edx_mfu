@@ -266,7 +266,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         + '<a href="' + downloadUrl + '/' + annotated[i].sha1 + '">'
                         + annotated[i].filename + "</a>"
                         + "</td><td>"
-                        + '<button id="annotated-file-delete"'
+                        + '<button class="annotatedFileDelete"'
                         +   'value="' + i + '" type="button" name="deleteannotated">'
                         +   'delete'
                         + '</button>'
@@ -327,9 +327,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }
             });
 
-            form.find("#annotated-file-delete").on("click", function(metadata) {
+            form.find(".annotatedFileDelete").on("click", function(metadata) {
                 var url = deleteAnnotationFileUrl + "/" + metadata.sha1
-                +'?module_id=' + row.data("module_id");
+                    + '?module_id=' + row.data("module_id");
                 $.get(url).success(
                     function ( data ) {
                         renderStaffGrading(data);                    
