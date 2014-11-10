@@ -37,7 +37,7 @@ class FileAnnotationMixin(XBlockMixin):
 		upload = request.params['assignment']
 
 		return self.upload_file(
-			self.get_student_state(request.params['module_id'], 
+			self.get_student_state(request.params['module_id']), 
 			request.params['assignment']
 		)
 
