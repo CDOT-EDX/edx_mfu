@@ -289,23 +289,10 @@
         <form id="manage-annotations-form">
         <div>Files for <span id="student-name-annotations"/></div>
 
-          <table>
-          <% if (assignment.annotated.length > 0) { %>
-              <% for (var i = 0; i < assignment.annotated.length; i++) { %>
+          <table id="annotated-file-list">
 
-                <tr>
-                  <td><a href="<%= downloadUrl + '/' + annotated[i].sha1 %>"><%= annotated[i].filename %></a></td>
-                  <td>
-                    <button id="annotated-file-delete" value="<%= i %>" type="button" name="deleteannotated">delete</button>
-                  </td>
-                </tr>
-
-              <% } %>
-            </table>
-            <p><<a id="annotated-download-all"> Download All </a></p>
-          <% } else { %>
-            <p>{% trans "No annotations for this student." %}</p>
-          <% } %>
+          </table>
+          <p><a id="annotated-download-all"> Download All </a></p>
           <div class="uploadAnnotated">
             <input id="annotated-file-upload" type="file" name="assignment"/>
             <button>Select a file</button>

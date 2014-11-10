@@ -255,8 +255,25 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             var row = $(this).parents("tr");
             $(element).find("#student-name-annotations").text(row.data("fullname"));
 
+            form.find("annotated-file-list").append(function(elemnum, html){
+                for (var i = 0; i < annotated.lenght; i++)
+                {
+                    html += "<tr> <td>"
+                        + '<a href="' 
+                        + downloadUrl + '/' + annotated[i].sha1 
+                        + "\">"
+                        + annotated[i].filename + "</a>"
+                        + "</td><td>"
+                        + '<button id="annotated-file-delete"'
+                        +   'value="' + i '" type="button" name="deleteannotated">'
+                        +   'delete'
+                        + '</button>'
+                        + "</td> </tr>";
+                }
+            });
+
             form.find("#annotated-download-all").attr(
-                "href", staffDownloadZippedUrl + "?module_id" + row.data("module_id"));
+                "href", staffDownloadZippedUrl + "?module_id=" + row.data("module_id"));
 
             form.find("#annotated-file-upload").on("click", function() {
                 var url = annotationUploadUrl + '?module_id=' + row.data("module_id");
