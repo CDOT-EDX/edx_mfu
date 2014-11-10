@@ -226,7 +226,7 @@ class StaffGradedAssignmentXBlock(XBlock,
                 'username':        module.student.username,
                 'fullname':        module.student.profile.name,
                 'uploaded':        uploaded,
-                'annotated':       annotated_files.
+                'annotated':       annotated_files,
                 'timestamp':       state.get("uploaded_files_last_timestamp"),
                 'published':       state.get("score_published"),
                 'score':           score,
