@@ -46,6 +46,7 @@ class FileSubmissionMixin(XBlockMixin):
 
 	@XBlock.handler
 	def staff_download_file(self, request, suffix=''):
+		assert self.is_course_staff()
 		return self.download_file(
 			self.uploaded_file_list(request.params['moudule_id']),
 			suffix
@@ -54,16 +55,18 @@ class FileSubmissionMixin(XBlockMixin):
 	#For downloading the entire assingment for one student.
 	@XBlock.handler
 	def staff_download_zipped(self, request, suffix=''):
+		module = self.get_module(request.params['module_id'])
 		return self.download_zipped(
 			self.uploaded_file_list(request.params['moudule_id']), 
-			display_name + "-" + module.student.username + ".zip";
+			self.display_name + "-" + module.student.username + ".zip";
 		)
 
 	@XBlock.handler
 	def student_download_zipped(self, request, suffix=''):
+		module = self.get_module(request.params['module_id'])
 		return self.download_zipped(
 			self.uploaded_files, 
-			display_name + "-" + username + ".zip";
+			self.display_name + "-" + module.student.username + ".zip";
 		)
 
 	@XBlock.handler
@@ -92,6 +95,7 @@ class FileSubmissionMixin(XBlockMixin):
 		return Response(status=204)
 
 	def uploaded_file_list(self, module_id):
+		assert self.is_course_staff()
 		return get_student_state(module_id)['uploaded_files']
 
 def _now():
