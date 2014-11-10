@@ -251,6 +251,13 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
         function handleManageAnnotated() 
         {
+            var form = $(element).find("#manage-annotations-form");
+            var row = $(this).parents("tr");
+            $(element).find("#student-name-annotations").text(row.data("fullname"));
+
+            form.find("#annotated-download-all").val(
+                staffDownloadZippedUrl + "?module_id" + row.data("module_id"));
+
             form.find("#annotated-file-upload").on("click", function() {
                 var url = annotationUploadUrl + '?module_id=' + row.data("module_id");
                 $.get(url).success(

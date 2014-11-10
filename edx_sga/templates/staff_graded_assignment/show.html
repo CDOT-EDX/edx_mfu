@@ -286,33 +286,35 @@
       </h2></header>
       <br/>
       <div style="display: block;">
-        <div>Files for <span id="student-name"/></div>
+        <form id="manage-annotations-form">
+        <div>Files for <span id="student-name-annotations"/></div>
 
-        <table>
-        <% if (assignment.annotated.length > 0) { %>
-            <% for (var i = 0; i < assignment.annotated.length; i++) { %>
+          <table>
+          <% if (assignment.annotated.length > 0) { %>
+              <% for (var i = 0; i < assignment.annotated.length; i++) { %>
 
-              <tr>
-                <td><a href="<%= downloadUrl + '/' + annotated[i].sha1 %>"><%= annotated[i].filename %></a></td>
-                <td>
-                  <button id="annotated-file-delete" value="<%= i %>" type="button" name="deleteannotated">delete</button>
-                </td>
-              </tr>
+                <tr>
+                  <td><a href="<%= downloadUrl + '/' + annotated[i].sha1 %>"><%= annotated[i].filename %></a></td>
+                  <td>
+                    <button id="annotated-file-delete" value="<%= i %>" type="button" name="deleteannotated">delete</button>
+                  </td>
+                </tr>
 
-            <% } %>
-          </table>
-          <p><a href="<%= annotatedDownloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a>
-        <% } else { %>
-          <p>{% trans "No annotations for this student." %}</p>
-        <% } %>
-        <div class="uploadAnnotated">
-          <input id="annotated-file-upload" type="file" name="assignment"/>
-          <button>Select a file</button>
-        </div>
-        <button type="button" id="manage-annotated-exit">
-          {% trans "Exit" %}
-        </button>
+              <% } %>
+            </table>
+            <p><<a href="<span id="annotated-download-all"/>"<"<%= annotatedDownloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a></p>
+          <% } else { %>
+            <p>{% trans "No annotations for this student." %}</p>
+          <% } %>
+          <div class="uploadAnnotated">
+            <input id="annotated-file-upload" type="file" name="assignment"/>
+            <button>Select a file</button>
+          </div>
+          <button type="button" id="manage-annotated-exit">
+            {% trans "Exit" %}
+          </button>
 
+          </form>
       </div>
     </div>
   </section>
