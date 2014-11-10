@@ -11,6 +11,8 @@ import os
 import pkg_resources
 import pytz
 
+from courseware.models import StudentModule
+
 from xblock.core import XBlock
 from xblock.fields import XBlockMixin, Dict
 
@@ -19,6 +21,8 @@ from webob.response import Response
 from django.core.files import File
 from django.core.files.storage import default_storage
 from django.template import Context, Template
+
+log = logging.getLogger(__name__)
 
 class FileSubmissionMixin(XBlockMixin):
 	"""
