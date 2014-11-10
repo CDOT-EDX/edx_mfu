@@ -21,7 +21,8 @@ from django.core.files.storage import default_storage
 from django.template import Context, Template
 
 class FileSubmissionMixin(XBlockMixin):
-	"""Mixin for handling file submissions.
+	"""
+	Mixin for handling file submissions.
 	"""
     uploaded_files = Dict(
         display_name="Uploaded Files",
