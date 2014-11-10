@@ -254,7 +254,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
             }(this.value));
 
-            form.find("#annotated-file-upload").on("click"), function() {
+            form.find("#annotated-file-upload").on("click", function() {
                 var url = annotationUploadUrl + '?module_id=' + row.data("module_id");
                 $.get(url).success(
                     function ( data ) {
@@ -262,7 +262,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 });
             });
 
-            form.find("#annotated-file-delete").on("click"), function() {
+            form.find("#annotated-file-delete").on("click", function() {
                 var url = deleteAnnotationFileUrl + "/" + state.annotated[this.value].sha1 
                 +'?module_id=' + row.data("module_id");
                 $.get(url).success(
