@@ -282,7 +282,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             form.find("#annotated-file-list").html(fileContent);
 
             form.find("#annotated-download-all").attr(
-                "href", staffDownloadZippedUrl + "?module_id=" + row.data("module_id"));
+                "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + row.data("module_id"));
 
             form.find(".fileuploadAnnotated").fileupload({
                 url: annotatedUploadUrl + "?module_id=" + row.data("module_id"),
