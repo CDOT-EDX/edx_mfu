@@ -158,7 +158,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             //set up annotated file submision modal
             $(element).find(".manage-annotated-button")
                 .leanModal({closeButton: "#manage-annotated-exit"})
-                .on("click", handleManageAnnotated);
+                .on("click", handleManageAnnotated(state));
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
@@ -249,7 +249,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             });
         }
 
-        function handleManageAnnotated() 
+        function handleManageAnnotated(state) 
         {
             var form = $(element).find("#manage-annotations-form");
             var row = $(this).parents("tr");
@@ -312,19 +312,19 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         console.log("event: ", e);
                         console.log("data: ", data);
                     }
-                    renderStaffGrading(data);
-                    handleManageAnnotated();
+                    renderStaffGrading(state);
+                    handleManageAnnotated(state);
                 },
                 done: function(e, data) { 
-                    renderStaffGrading(data);
+                    renderStaffGrading(state);
                     if (data.result.success !== undefined) {
                         // Actually, this is an error
                         state.error = data.result.success;
-                        render(state);
+                        handleManageAnnotated(state);
                     }
                     else {
                         // The happy path, no errors
-                        render(data.result); 
+                        handleManageAnnotated(data.result); 
                     }
                 }
             });
