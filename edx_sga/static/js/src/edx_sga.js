@@ -158,7 +158,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             //set up annotated file submision modal
             $(element).find(".manage-annotated-button")
                 .leanModal({closeButton: "#manage-annotated-exit"})
-                .on("click", handleManageAnnotated(data));
+                .on("click", handleManageAnnotated);
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
@@ -249,7 +249,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             });
         }
 
-        function handleManageAnnotated(state) 
+        function handleManageAnnotated() 
         {
             var form = $(element).find("#manage-annotations-form");
             var row = $(this).parents("tr");
