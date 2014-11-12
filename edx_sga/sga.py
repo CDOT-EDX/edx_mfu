@@ -377,7 +377,7 @@ class StaffGradedAssignmentXBlock(
 
     def remove_grade(self, module_id):
         self.set_student_state(
-            request.params['module_id'],
+            module_id,
             score = None,
             comment = '',
             score_published = False,
