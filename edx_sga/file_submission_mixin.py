@@ -39,10 +39,10 @@ class FileSubmissionMixin(XBlockMixin):
 	def student_upload_file(self, request, suffix=''):
 		assert self.upload_allowed()
 
-		# self.upload_file(
-		# 	self.uploaded_files, 
-		# 	request.params['assignment']
-		# )
+		self.upload_file(
+			self.uploaded_files, 
+			request.params['assignment']
+		)
 
 		return Response(json_body=self.student_state())
 		
