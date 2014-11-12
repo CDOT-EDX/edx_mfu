@@ -124,7 +124,7 @@ class FileManagementMixin(object):
 		return Response(
 			body =                buff.read(),
 			content_type =        'application/zip',
-			content_disposition = 'attachment; filename=' assignment + '.zip'
+			content_disposition = 'attachment; filename=' + assignment + '.zip'
 		)
 
 	def delete_file(self, filelist, key):
