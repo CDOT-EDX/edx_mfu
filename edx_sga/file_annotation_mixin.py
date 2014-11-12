@@ -95,6 +95,7 @@ class FileAnnotationMixin(XBlockMixin):
 		return Response(status=204)
 
 	def annotated_file_list(self, module_id):
+		assert self.is_course_staff()
 		filelist = self.get_student_state(module_id).get('annotated_files')
 		if filelist is None:
 			return dict()

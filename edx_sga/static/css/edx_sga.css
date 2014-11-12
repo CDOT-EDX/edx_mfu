@@ -33,6 +33,9 @@
     background-color: #ffffff;
 }
 
+/*These impact the function of the upload methods.
+  No clue why.
+*/
 .sga-block .upload,
 .sga-block .uploadAnnotated {
     position: relative;
