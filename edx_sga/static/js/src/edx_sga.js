@@ -266,7 +266,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 for (var i = 0; i < annotated.length; i++)
                 {
                     fileContent += '<tr> <td>'
-                        + '<a href="' + staffDownloadAnnotatedUrl + '/' + annotated[i].sha1 + '">'
+                        + '<a href="' + staffDownloadAnnotatedUrl + '/' + annotated[i].sha1 + "?module_id=" + row.data("module_id") + '">'
                         + annotated[i].filename + "</a>"
                         + "</td><td>"
                         + '<button class="annotatedFileDelete"'
