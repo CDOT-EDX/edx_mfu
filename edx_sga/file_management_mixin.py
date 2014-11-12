@@ -153,7 +153,7 @@ class FileManagementMixin(object):
 
 	def delete_all(self, filelist):
 		for key in filelist.keys():
-			self.delete(filelist, key)
+			self.delete_file(filelist, key)
 
 
 def _file_storage_path(url, key, filename):

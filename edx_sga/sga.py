@@ -388,6 +388,7 @@ class StaffGradedAssignmentXBlock(
         state = self.get_student_state(module_id)
 
         self.delete_all(state.get('uploaded_files'))
+        self.delete_all(state.get('annotated_files'))
         self.remove_grade(module_id)
         self.set_student_state(
             module_id,
@@ -396,7 +397,8 @@ class StaffGradedAssignmentXBlock(
             comment = request.params.get('comment', ''),
             score_published = False,
             score_approved = self.is_instructor(),
-            uploaded_files = dict()
+            uploaded_files = dict(),
+            annotated_files = dict()
         )
 
     def set_student_state(self, module_id, **fields):
