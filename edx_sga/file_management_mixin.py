@@ -29,6 +29,8 @@ from collections import namedtuple
 
 FileMetaData = namedtuple('FileMetaData', 'filename mimetype timestamp')
 
+log = logging.getLogger(__name__)
+
 class FileManagementMixin(object):
 	"""
 	A mixin to handle file management for the SGA XBlock.
@@ -186,9 +188,9 @@ def get_file_metadata(filelist, hash = None):
 		return {key: FileMetaData._make(metadata) 
 			for (key, metadata) in filelist.iteritems()}
 	else:
-		if hash not in filelist: #return one file.
+		if hash not in filelist: #no matching file
 			return None
-		else:
+		else: #return one file.
 			return FileMetaData._make(filelist[hash])
 
 def _now():
