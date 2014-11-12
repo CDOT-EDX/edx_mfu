@@ -81,12 +81,12 @@ class FileAnnotationMixin(XBlockMixin):
 	@XBlock.handler
 	def staff_delete_annotated(self, request, suffix=''):
 		module_id = request.params['module_id']
-		uploaded = self.get_student_state(module_id)
+		filelist = self.annotated_file_list(module_id)
 		newFilelist = self.delete_file(uploaded, suffix)
-		
+
 		self.set_student_state(
 			module_id, 
-			annotated_files = newFilelist
+			annotated_files=newFilelist
 		)
 
 		return Response(json_body=self.staff_grading_data())
