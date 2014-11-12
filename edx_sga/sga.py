@@ -402,6 +402,11 @@ class StaffGradedAssignmentXBlock(
         )
 
     def set_student_state(self, module_id, **fields):
+        """Used for staff handlers that alter the fields of a student.
+        Users cannot access the fields of another user, even staff.
+        In order to change a students marks are upload an annotation,
+        we must do so by grabbing the student module.
+        """
         assert self.is_course_staff()
         module = StudentModule.objects.get(pk=module_id)
         state = json.loads(module.state)

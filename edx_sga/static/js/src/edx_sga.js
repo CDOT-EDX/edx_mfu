@@ -333,14 +333,14 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }
             });
 
-/*            form.find(".annotatedFileDelete").on("click", function(metadata) {
+            form.find(".annotatedFileDelete").on("click", function(metadata) {
                 var url = deleteAnnotationFileUrl + "/" + metadata.sha1
                     + '?module_id=' + row.data("module_id");
                 $.get(url).success(
                     function ( data ) {
                         renderStaffGrading(data);                    
                 });
-            }(annotated[this.value]));*/
+            }(annotated[this.value]));
 
             form.find("#manage-annotated-exit").on("click", function() {
                 setTimeout(function() {
