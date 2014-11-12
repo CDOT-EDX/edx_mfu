@@ -68,7 +68,7 @@ class FileManagementMixin(object):
 
 		if key not in filelist:
 			log.error("File download failure: No matching file belongs to this student.", exc_info=True)
-			raise
+			return Response(status=404)
 
 		#get file info
 		metadata = get_file_metadata(filelist, key)
