@@ -135,7 +135,9 @@ class FileManagementMixin(object):
 		request: not used.
 		suffix:  holds the key hash of the file to be deleted.
 		"""
-		if key in filelist:
+		if key not in filelist:
+			return filelist
+		else:
 			metadata = get_file_metadata(filelist, key)
 
 		path = _file_storage_path(
