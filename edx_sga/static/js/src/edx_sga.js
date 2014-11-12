@@ -35,6 +35,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             // Add download urls to template context
             state.downloadUrl = studentDownloadUrl;
             state.downloadZippedUrl = studentDownloadZippedUrl;
+            state.downloadAnnotatedUrl = studentAnnotationDownloadUrl;
+            state.downloadAnnotatedZippedUrl = studentAnootationDownloadZippedUrl;
             state.error = state.error ? state.error : false;
 
             // Render template
