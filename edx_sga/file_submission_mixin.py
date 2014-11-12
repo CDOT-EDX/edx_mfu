@@ -101,7 +101,7 @@ class FileSubmissionMixin(XBlockMixin):
 
 	def uploaded_file_list(self, module_id):
 		assert self.is_course_staff()
-		return get_student_state(module_id)['uploaded_files']
+		return self.get_student_state(module_id)['uploaded_files']
 
 def _now():
 	return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
