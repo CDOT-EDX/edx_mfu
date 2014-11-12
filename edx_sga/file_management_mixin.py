@@ -135,8 +135,6 @@ class FileManagementMixin(object):
 		request: not used.
 		suffix:  holds the key hash of the file to be deleted.
 		"""
-		assert self.upload_allowed()
-
 		if key in filelist:
 			metadata = get_file_metadata(filelist, key)
 
