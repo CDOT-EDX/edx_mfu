@@ -54,7 +54,7 @@ class FileSubmissionMixin(XBlockMixin):
 	def staff_download_file(self, request, suffix=''):
 		assert self.is_course_staff()
 		return self.download_file(
-			self.uploaded_file_list(request.params['moudule_id']),
+			self.uploaded_file_list(request.params['module_id']),
 			suffix
 		 )
 	
