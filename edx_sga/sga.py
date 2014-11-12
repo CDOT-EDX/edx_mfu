@@ -368,9 +368,9 @@ class StaffGradedAssignmentXBlock(
 
     def enter_grade(self, module_id, grade, comment=''):
         self.set_student_state(
-            request.params['module_id'],
-            score = float(request.params['grade']),
-            comment = request.params.get('comment', ''),
+            module_id,
+            score = float(grade),
+            comment = comment,
             score_published = False,
             score_approved = self.is_instructor()
         )
