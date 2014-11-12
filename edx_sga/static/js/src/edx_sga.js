@@ -158,7 +158,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             //set up annotated file submision modal
             $(element).find(".manage-annotated-button")
                 .leanModal({closeButton: "#manage-annotated-exit"})
-                .on("click", handleManageAnnotated(state));
+                .on("click", handleManageAnnotated;
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
@@ -249,12 +249,13 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             });
         }
 
-        function handleManageAnnotated(state) 
+        function handleManageAnnotated() 
         {
             var form = $(element).find("#manage-annotations-form");
             var row = $(this).parents("tr");
             $(element).find("#student-name-annotations").text(row.data("fullname"));
             var annotated = row.data("annotated");
+            form.find("#fileuploadError").text("");
 
             var fileContent;
             if (annotated.length > 0)
@@ -301,31 +302,33 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         "Uploading... " + percent + "%");
                 },
                 fail: function(e, data) {
+                    var error = "";
                     if (data.jqXHR.status == 413) {
-                        state.error = "The file you are trying to upload is too large."
+                        error = "The file you are trying to upload is too large."
                     }
                     else {
                         // Suitably vague
-                        state.error = "There was an error uploading your file.";
+                        error = "There was an error uploading your file.";
 
                         console.log("There was an error with file upload.");
                         console.log("event: ", e);
                         console.log("data: ", data);
                     }
-                    renderStaffGrading(state);
-                    handleManageAnnotated(state);
+                    form.find("#fileuploadError").text(error);
+                    //display error
                 },
                 done: function(e, data) { 
-                    renderStaffGrading(state);
                     if (data.result.success !== undefined) {
                         // Actually, this is an error
                         state.error = data.result.success;
-                        handleManageAnnotated(state);
+                        form.find("#fileuploadError").text(data.result.success);
                     }
                     else {
                         // The happy path, no errors
-                        handleManageAnnotated(data.result); 
+                        renderStaffGrading(data.result);
+                        handleManageAnnotated();
                     }
+
                 }
             });
 
