@@ -309,7 +309,7 @@ class StaffGradedAssignmentXBlock(
 
     @XBlock.handler
     def staff_remove_grade(self, request, suffix=''):
-        self.remove_grade(module_id)
+        self.remove_grade(request.params['module_id'])
         
         return Response(json_body=self.staff_grading_data())
 
