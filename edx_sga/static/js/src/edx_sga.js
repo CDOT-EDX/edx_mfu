@@ -335,7 +335,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             });
 
             form.find(".annotatedFileDelete").on("click", annotated, function(filelist) {
-                var url = deleteAnnotationFileUrl + "/" + annotated[this.value].sha1;
+                var url = deleteAnnotationFileUrl + "/" + annotated[this.value].sha1
                     + '?module_id=' + row.data("module_id");
                 $.get(url).success(function ( data ) {
                         renderStaffGrading(data);                    
