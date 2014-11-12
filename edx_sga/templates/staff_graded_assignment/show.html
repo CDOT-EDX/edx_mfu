@@ -161,20 +161,6 @@
           <td><%= assignment.comment %></td>
 
           <td>
-            <% if (assignment.uploaded.length > 0) { %>
-              <ul>
-                <% for (var i = 0; i < assignment.uploaded.length; i++) { %>
-
-                  <li>
-                    <a href="<%= annotatedDownloadUrl + '/' + assignment.annotated[i].sha1 %>?module_id=<%= assignment.module_id %>">
-                      <%= assignment.uploaded[i].filename %>
-                    </a>
-                  </li>
-
-                <% } %>
-              </ul>
-              <p><a href="<%= annotatedDownloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a>
-            <% } %>
             <p><a class="manage-annotated-button" href="#{{ id }}-manage-annotated">
               {% trans "Manage" %}
             </a></p>
@@ -296,7 +282,9 @@
             <input class="fileuploadAnnotated" type="file" name="annotation"/>
             <button>Select a file</button>
           </div>
-          
+
+          <p><span id="fileuploadError"/></p>
+
           <button type="button" id="manage-annotated-exit">
             {% trans "Exit" %}
           </button>
