@@ -394,7 +394,7 @@ class StaffGradedAssignmentXBlock(
             module_id,
             is_submitted = False,
             score = None,
-            comment = request.params.get('comment', ''),
+            comment = '',
             score_published = False,
             score_approved = self.is_instructor(),
             uploaded_files = dict(),
