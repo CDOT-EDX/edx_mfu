@@ -67,8 +67,6 @@ class FileAnnotationMixin(XBlockMixin):
 		module = StudentModule.objects.get(pk=request.params['module_id'])
 		state = json.loads(module.state)
 
-		#TODO: assignment name with student, course and assignemnt name.
-		#return self.download_zipped(self.annotated_files, 'assignment')
 		return self.download_zipped(
 			state['annotated_files'], 
 			self.display_name + "-" + module.student.username + "annotated.zip"
@@ -76,8 +74,6 @@ class FileAnnotationMixin(XBlockMixin):
 
 	@XBlock.handler
 	def student_download_annotated_zipped(self, request, suffix=''):
-		#TODO: assignment name with course and assignemnt name.
-		#return self.download_zipped(self.annotated_files, 'assignment')
 		return self.download_zipped(
 			self.annotated_files, 
 			self.display_name + "-" + self.username + "-annotated.zip"

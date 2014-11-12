@@ -62,13 +62,17 @@
         {% trans "This assignment has not yet been graded." %}
       <% } %>
 
-      <% if(annotated.length > 0)  { %>
+      <% if(annotated.length > 0 && graded)  { %>
         <p>Annotated Files </p>
-        <% for (var i = 0; i < annotated.length; i++) { %>
-          <ul>
-            <li><a href="<%= downloadUrl + '/' + annotated[i].sha1 %>"><%= annotated[i].filename %></a></li>
-          </ul>
-        <% } %>
+        <ul>
+          <% for (var i = 0; i < annotated.length; i++) { %>
+          
+            <li><a href="<%= downloadAnnotatedUrl + '/' + annotated[i].sha1 %>"><%= annotated[i].filename %></a></li>
+          <% } %>
+        </ul>
+        <p><a href="<%= downloadAnnotatedZippedUrl %>">Download All</a></p>
+      <% } else if {!graded && submitted) { %>
+        <p> No annotations are available </p>
       <% } %>
 
       <p>Submitted on: <%= submission_time %></p>
@@ -100,11 +104,12 @@
         <th>Files</th>
         <th>Submission Date</th>
         <th>Grade</th>
-        <th>Instructors comments</th>
+        <th>Instructors Comments</th>
         <th>Annotations</th>
         <th>Options</th>
       </tr>
       <tr>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
