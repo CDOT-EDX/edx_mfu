@@ -38,11 +38,11 @@ class FileAnnotationMixin(XBlockMixin):
 	@XBlock.handler
 	def staff_upload_annotated(self, request, suffix=''):
 		module_id = request.params['module_id']
-		#self.get_student_state(request.params['module_id'])
-		#upload = request.params['annotation']
+		state = self.get_student_state(module_id)
+		annotated_list = self.annotated_file_list(module_id)
 
 		filelist = self.upload_file(
-			self.get_student_state(module_id).get('annotated_files'), 
+			annotated_list, 
 			request.params['annotation']
 		)
 
