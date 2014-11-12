@@ -152,8 +152,6 @@ class FileManagementMixin(object):
 		return filelist
 
 	def delete_all(self, filelist):
-		assert self.upload_allowed();
-
 		for key in filelist.keys():
 			self.delete(filelist, key)
 
