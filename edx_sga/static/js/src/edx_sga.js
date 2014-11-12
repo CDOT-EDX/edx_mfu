@@ -249,7 +249,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             });
         }
 
-        function handleManageAnnotated(data) 
+        function handleManageAnnotated(state) 
         {
             var form = $(element).find("#manage-annotations-form");
             var row = $(this).parents("tr");
