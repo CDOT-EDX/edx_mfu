@@ -95,7 +95,11 @@ class FileAnnotationMixin(XBlockMixin):
 		return Response(status=204)
 
 	def annotated_file_list(self, module_id):
-		return self.get_student_state(module_id).get('annotated_files')
+		filelist = self.get_student_state(module_id).get('annotated_files')
+		if filelist is None:
+			return dict()
+		else:
+			return filelist
 
 def _now():
 	return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
