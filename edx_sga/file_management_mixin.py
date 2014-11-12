@@ -34,6 +34,8 @@ class FileManagementMixin(object):
 	A mixin to handle file management for the SGA XBlock.
 	"""
 	def upload_file(self, filelist, upload):
+		"""Saves a file to a list of files.
+		"""
 		upload_key = _get_key(upload.file)
 
 		metadata = FileMetaData(
@@ -52,11 +54,13 @@ class FileManagementMixin(object):
 
 		if not default_storage.exists(path):
 			default_storage.save(path, File(upload.file))
+
+		#Need to return the list as staff cannot directly modify student fields.
 		return filelist
 		#return Response(json_body=self.student_state())
 
 	def download_file(self, filelist, key):
-		"""Returns a file list
+		"""Returns a file in the response body.
 		"""
 		assert filelist is not None
 
@@ -170,13 +174,20 @@ def _get_key(file):
 	return sha1.hexdigest()
 
 def get_file_metadata(filelist, hash = None):
-	if filelist is None:
+	"""Wraps file metadata in a FileMetaData tuple.
+	Returns all files, or a single file specified by hash.
+
+	Keyword arguments:
+	filelist: a list of file metadata.
+	suffix:   (optional) the hash of the desired file.
+	"""
+	if filelist is None: #no files => emply dict
 		return dict()
-	elif hash is None:
+	elif hash is None: #return all files.
 		return {key: FileMetaData._make(metadata) 
 			for (key, metadata) in filelist.iteritems()}
 	else:
-		if hash not in filelist:
+		if hash not in filelist: #return one file.
 			return None
 		else:
 			return FileMetaData._make(filelist[hash])
