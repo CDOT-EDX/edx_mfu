@@ -76,6 +76,7 @@ class FileManagementMixin(object):
 			metadata.filename
 		)
 
+		#check for file existance.
 		if metadata is None:
 			log.error("Attempt to download non-existant file at " + path)
 			return Response(status = 404)
