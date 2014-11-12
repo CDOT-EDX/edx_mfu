@@ -82,7 +82,7 @@ class FileAnnotationMixin(XBlockMixin):
 	def staff_delete_annotated(self, request, suffix=''):
 		module_id = request.params['module_id']
 		filelist = self.annotated_file_list(module_id)
-		newFilelist = self.delete_file(uploaded, suffix)
+		newFilelist = self.delete_file(filelist, suffix)
 
 		self.set_student_state(
 			module_id, 
