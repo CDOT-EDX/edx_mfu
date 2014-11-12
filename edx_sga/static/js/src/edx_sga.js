@@ -281,6 +281,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             {
                 fileContent = "<p>No annotations available for this student.</p>";
             }
+
             form.find("#annotated-file-list").html(fileContent);
 
             form.find("#annotated-download-all").attr(
@@ -322,7 +323,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 done: function(e, data) { 
                     if (data.result.success !== undefined) {
                         // Actually, this is an error
-                        state.error = data.result.success;
+                        error = data.result.success;
                         form.find("#fileuploadError").text(data.result.success);
                     }
                     else {
@@ -333,14 +334,13 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }
             });
 
-            form.find(".annotatedFileDelete").on("click", function(metadata) {
+            form.find(".annotatedFileDelete").on("click", annotated[this.value], function(metadata) {
                 var url = deleteAnnotationFileUrl + "/" + metadata.sha1
                     + '?module_id=' + row.data("module_id");
-                $.get(url).success(
-                    function ( data ) {
+                $.get(url).success(function ( data ) {
                         renderStaffGrading(data);                    
                 });
-            }(annotated[this.value]));
+            });
 
             form.find("#manage-annotated-exit").on("click", function() {
                 setTimeout(function() {

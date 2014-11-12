@@ -88,7 +88,7 @@ class FileAnnotationMixin(XBlockMixin):
 			annotated_files = newFilelist
 		)
 
-		return Response(status=204)
+		return Response(json_body=self.staff_grading_data())
 
 	def annotated_file_list(self, module_id):
 		assert self.is_course_staff()
