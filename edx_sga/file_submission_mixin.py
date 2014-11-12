@@ -64,14 +64,14 @@ class FileSubmissionMixin(XBlockMixin):
 		module = self.get_module(request.params['module_id'])
 		return self.download_zipped(
 			self.uploaded_file_list(request.params['moudule_id']), 
-			self.display_name + "-" + module.student.username + ".zip"
+			self.display_name + "-" + module.student.username
 		)
 
 	@XBlock.handler
 	def student_download_zipped(self, request, suffix=''):
 		return self.download_zipped(
 			self.uploaded_files, 
-			self.display_name + "assignment.zip"
+			self.display_name + "assignment"
 		)
 
 	@XBlock.handler

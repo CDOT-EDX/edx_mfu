@@ -69,14 +69,14 @@ class FileAnnotationMixin(XBlockMixin):
 
 		return self.download_zipped(
 			state['annotated_files'], 
-			self.display_name + "-" + module.student.username + "annotated.zip"
+			self.display_name + "-" + module.student.username + "annotated"
 		)
 
 	@XBlock.handler
 	def student_download_annotated_zipped(self, request, suffix=''):
 		return self.download_zipped(
 			self.annotated_files, 
-			self.display_name + "-annotated.zip"
+			self.display_name + "-annotated"
 		)
 	@XBlock.handler
 	def staff_delete_annotated(self, request, suffix=''):
