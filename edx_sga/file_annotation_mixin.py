@@ -55,10 +55,11 @@ class FileAnnotationMixin(XBlockMixin):
 
 	@XBlock.handler
 	def staff_download_annotated(self, request, suffix=''):
-		return self.download_file(
-			self.get_student_state(request.params['module_id']), 
-			suffix
-		)
+		# return self.download_file(
+		# 	self.get_student_state(request.params['module_id']), 
+		# 	suffix
+		# )
+		return Response(status=404)
 	
 	#For downloading the entire assingment for one student.
 	@XBlock.handler
@@ -83,7 +84,7 @@ class FileAnnotationMixin(XBlockMixin):
 		module_id = request.params['module_id']
 		uploaded = self.get_student_state(module_id)
 		newFilelist = self.delete_file(uploaded, suffix)
-		
+
 		self.set_student_state(
 			module_id, 
 			annotated_files = newFilelist
