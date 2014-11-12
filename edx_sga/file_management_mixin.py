@@ -52,10 +52,11 @@ class FileManagementMixin(object):
 
 		if not default_storage.exists(path):
 			default_storage.save(path, File(upload.file))
-		return Response(json_body=self.student_state())
+		return filelist
+		#return Response(json_body=self.student_state())
 
 	def download_file(self, filelist, key):
-		"""Returns a file s
+		"""Returns a file list
 		"""
 		assert filelist is not None
 

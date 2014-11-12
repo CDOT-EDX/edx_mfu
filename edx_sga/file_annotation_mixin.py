@@ -42,7 +42,7 @@ class FileAnnotationMixin(XBlockMixin):
 		#upload = request.params['annotation']
 
 		filelist = self.upload_file(
-			self.get_student_state(module_id), 
+			self.get_student_state(module_id).get('annotated_files'), 
 			request.params['annotation']
 		)
 
