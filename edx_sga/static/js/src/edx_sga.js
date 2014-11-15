@@ -330,8 +330,30 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     else {
                         // The happy path, no errors
                         renderStaffGrading(data.result);
+
+                        var fileContent;
+                        if (annotated.length > 0)
+                        {
+                            fileContent = "<table>";
+                            for (var i = 0; i < annotated.length; i++)
+                            {
+                                fileContent += '<tr> <td>'
+                                    + '<a href="' + staffDownloadAnnotatedUrl + '/' + annotated[i].sha1 + "?module_id=" + row.data("module_id") + '">'
+                                    + annotated[i].filename + "</a>"
+                                    + "</td><td>"
+                                    + '<button class="annotatedFileDelete"'
+                                    +   'value="' + i + '" type="button" name="deleteannotated">'
+                                    +   'delete'
+                                    + '</button>'
+                                    + '</td> </tr>';
+                            }
+                            fileContent += "</table>";
+                        }
+                        else
+                        {
+                            fileContent = "<p>No annotations available for this student.</p>";
+                        }
                     }
-                    handleManageAnnotated();
                 }
             });
 
