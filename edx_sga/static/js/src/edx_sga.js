@@ -230,7 +230,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             form.find("#remove-grade").on("click", function(module_id) {
                 var url = removeGradeUrl + "?module_id=" + module_id;
                 $.get(url).success(renderStaffGrading);
-            };
+            });
             form.find("#enter-grade-cancel").on("click", function() {
                 /* We're kind of stretching the limits of leanModal, here,
                  * by nesting modals one on top of the other.  One side effect
