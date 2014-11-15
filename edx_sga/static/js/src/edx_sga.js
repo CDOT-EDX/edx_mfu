@@ -222,15 +222,14 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }
                 else {
                     // No errors
-                    $.post(enterGradeUrl, form.serialize(), function(data) {
-                        renderStaffGrading(data)
-                    });
+                    $.post(enterGradeUrl, form.serialize())
+                        .success(renderStaffGrading);
                 }
             });
-            form.find("#remove-grade").on("click", function() {
-                var url = removeGradeUrl + "?module_id=" + row.data("module_id");
+            form.find("#remove-grade").on("click", function(module_id) {
+                var url = removeGradeUrl + "?module_id=" + module_id;
                 $.get(url).success(renderStaffGrading);
-            });
+            }(row.data("module_id")));
             form.find("#enter-grade-cancel").on("click", function() {
                 /* We're kind of stretching the limits of leanModal, here,
                  * by nesting modals one on top of the other.  One side effect
