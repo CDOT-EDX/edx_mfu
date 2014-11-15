@@ -354,6 +354,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             fileContent = "<p>No annotations available for this student.</p>";
                         }
                     }
+
+                    form.find("#annotated-file-list").html(fileContent);
                 }
             });
 
