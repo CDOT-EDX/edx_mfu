@@ -202,7 +202,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         /* Click event handler for "enter grade" */
         function handleGradeEntry() {
             var row = $(this).parents("tr");
-            var module_id = row.data("module_id");
+            var module_id = row.data("module_id")
             var form = $(element).find("#enter-grade-form");
             $(element).find("#student-name").text(row.data("fullname"));
             form.find("#module_id-input").val(row.data("module_id"));
@@ -227,7 +227,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         .success(renderStaffGrading);
                 }
             });
-            form.find("#remove-grade").on("click", function(module_id) {
+            form.find("#remove-grade").on("click", function() {
                 var url = removeGradeUrl + "?module_id=" + module_id;
                 $.get(url).success(renderStaffGrading);
             });
