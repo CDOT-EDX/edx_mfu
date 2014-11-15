@@ -134,6 +134,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
         function renderStaffGrading(data) {
             $(".grade-modal").hide();
+            $(".annotated-modal").hide();
 
             // Add download urls to template context
             data.downloadUrl = staffDownloadUrl;
@@ -180,7 +181,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 });
 
 
-            //Individual Submission Control
+            //Remove a submission, including grades and files.
             $(element).find(".remove-submission-button")
                 .on("click", function(){
                     var url = removeSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
@@ -189,6 +190,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     });
                 });
 
+            //reopens a submission for a student.  Clears previous grade.
             $(element).find(".reopen-submission-button")
                 .on("click", function(){
                     var url = reopenSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");

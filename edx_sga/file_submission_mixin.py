@@ -100,6 +100,11 @@ class FileSubmissionMixin(XBlockMixin):
 		return Response(status=204)
 
 	def uploaded_file_list(self, module_id):
+		"""Returns a list of files uploaded by a student.
+		
+		Keyword arguments:
+		module_id: A student module id.
+		"""
 		assert self.is_course_staff()
 		return self.get_student_state(module_id)['uploaded_files']
 
