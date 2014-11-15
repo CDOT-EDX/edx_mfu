@@ -202,6 +202,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         /* Click event handler for "enter grade" */
         function handleGradeEntry() {
             var row = $(this).parents("tr");
+            var module_id = row.data("module_id");
             var form = $(element).find("#enter-grade-form");
             $(element).find("#student-name").text(row.data("fullname"));
             form.find("#module_id-input").val(row.data("module_id"));
@@ -229,7 +230,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             form.find("#remove-grade").on("click", function(module_id) {
                 var url = removeGradeUrl + "?module_id=" + module_id;
                 $.get(url).success(renderStaffGrading);
-            }(row.data("module_id")));
+            };
             form.find("#enter-grade-cancel").on("click", function() {
                 /* We're kind of stretching the limits of leanModal, here,
                  * by nesting modals one on top of the other.  One side effect
