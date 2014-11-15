@@ -222,8 +222,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }
                 else {
                     // No errors
-                    $.post(enterGradeUrl, form.serialize())
-                        .success(renderStaffGrading);
+                    $.post(enterGradeUrl, form.serialize(), function(data) {
+                        renderStaffGrading(data)
+                    });
                 }
             });
             form.find("#remove-grade").on("click", function() {

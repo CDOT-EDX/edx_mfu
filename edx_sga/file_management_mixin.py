@@ -62,7 +62,11 @@ class FileManagementMixin(object):
 		#return Response(json_body=self.student_state())
 
 	def download_file(self, filelist, key):
-		"""Returns a file in the response body.
+		"""Returns a file specified by a key.
+
+		Keyword arguments:
+		filelist: a list of all files for this students submission.
+		filename: the name of the zip file.
 		"""
 		assert filelist is not None
 
@@ -108,6 +112,7 @@ class FileManagementMixin(object):
 		if (len(filelist) == 0 or filelist is None):
 			return Response(status = 404)
 
+		#buffer to create zip file in memory.
 		buff = StringIO.StringIO()
 		assignment_zip = ZipFile(buff, mode='w')
 
@@ -134,8 +139,8 @@ class FileManagementMixin(object):
 		"""Removes an uploaded file from the assignment
 
 		Keyword arguments:
-		request: not used.
-		suffix:  holds the key hash of the file to be deleted.
+		filelist: A dictionary containint file metadata.
+		key:      holds the key hash of the file to be deleted.
 		"""
 		if key not in filelist:
 			return filelist
@@ -154,6 +159,11 @@ class FileManagementMixin(object):
 		return filelist
 
 	def delete_all(self, filelist):
+		"""Removes all files in the supplied filelist
+
+		Keyword arguments:
+		filelist: A dictionary containint file metadata.
+		"""
 		for key in filelist.keys():
 			self.delete_file(filelist, key)
 

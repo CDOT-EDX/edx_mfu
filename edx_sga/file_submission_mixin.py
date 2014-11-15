@@ -76,7 +76,7 @@ class FileSubmissionMixin(XBlockMixin):
 
 	@XBlock.handler
 	def student_delete_file(self, request, suffix=''):
-		"""Removes an uploaded file from the assignemtn
+		"""Removes an uploaded file from the assignemnt
 
 		Keyword arguments:
 		request: not used.

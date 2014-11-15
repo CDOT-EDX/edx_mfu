@@ -78,6 +78,7 @@ class FileAnnotationMixin(XBlockMixin):
 			self.annotated_files, 
 			self.display_name + "-annotated"
 		)
+	
 	@XBlock.handler
 	def staff_delete_annotated(self, request, suffix=''):
 		module_id = request.params['module_id']
