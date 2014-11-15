@@ -331,7 +331,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         // The happy path, no errors
                         renderStaffGrading(data.result);
                     }
-
+                    handleManageAnnotated();
                 }
             });
 
