@@ -332,6 +332,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     else {
                         // The happy path, no errors
                         renderStaffGrading(data.result);
+                    }
                 }
             });
 
