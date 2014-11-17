@@ -253,10 +253,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         }
                         //handleManageAnnotatedInner(row);
                         //reset the upload field.
-                        var uploadDiv = form.find(".uploadAnnotated").html('
-                            <input class="fileuploadAnnotated" type="file" name="annotation"/>            <input class="fileuploadAnnotated" type="file" name="annotation"/>
-                            <button>Select a file</button>
-                        ');
+                        var uploadDiv = form.find(".uploadAnnotated").html(
+                            '<input class="fileuploadAnnotated" type="file" name="annotation"/>'           <input class="fileuploadAnnotated" type="file" name="annotation"/>
+                          + '<button>Select a file</button>'
+                        );
                         row.find(".manage-annotated-button").click();
                     }
                 });
