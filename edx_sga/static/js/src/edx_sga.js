@@ -328,7 +328,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     }
                     form.find("#fileuploadError").text(error);
                     //display error
-                    handleManageAnnotated(row);
+                    handleManageAnnotatedInner(row);
 
                 },
                 done: function(e, data) { 
@@ -341,7 +341,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         // The happy path, no errors
                         renderStaffGrading(data.result);
                     }
-                    handleManageAnnotated(row);
+                    handleManageAnnotatedInner(row);
                 }
             });
 
@@ -349,7 +349,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 var url = deleteAnnotationFileUrl + "/" + annotated[this.value].sha1
                     + '?module_id=' + row.data("module_id");
                 $.get(url).success(renderStaffGrading);
-                handleManageAnnotated(row);
+                handleManageAnnotatedInner(row);
             });
 
             form.find("#manage-annotated-exit").on("click", function() {
