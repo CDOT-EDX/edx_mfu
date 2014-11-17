@@ -281,6 +281,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 function populateAnnotationList()
                 {
                     var fileContent;
+                    $(this).parents("tr");
 
                     var annotated = row.data("annotated");
                     if (annotated.length > 0)
