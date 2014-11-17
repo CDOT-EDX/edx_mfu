@@ -166,15 +166,13 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(element).find(".remove-all-submissions-button")
                 .on("click", function(){
                     var url = removeAllSubmissionsUrl;
-                    $.get(url, function(data))
-                        .success(renderStaffGrading);
+                    $.get(url).success(renderStaffGrading);
                 });
 
             $(element).find(".reopen-all-submissions-button")
                 .on("click", function(){
                     var url = reopenAllSubmissionsUrl;
-                    $.get(url, function(data))
-                        .success(renderStaffGrading);
+                    $.get(url).success(renderStaffGrading);
                 });
 
 
@@ -182,8 +180,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(element).find(".remove-submission-button")
                 .on("click", function(){
                     var url = removeSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
-                    $.get(url, function(data))
-                        .success(renderStaffGrading);
+                    $.get(url).success(renderStaffGrading);
                 });
 
             //reopens a submission for a student.  Clears previous grade.
