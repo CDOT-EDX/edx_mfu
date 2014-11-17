@@ -252,7 +252,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             renderStaffGrading(data.result);
                         }
                         //handleManageAnnotatedInner(row);
-                        uploadField.clear();
+                        //reset the upload field.
+                        var uploadDiv = form.find(".uploadAnnotated").html('
+                            <input class="fileuploadAnnotated" type="file" name="annotation"/>            <input class="fileuploadAnnotated" type="file" name="annotation"/>
+                            <button>Select a file</button>
+                        ');
                         row.find(".manage-annotated-button").click();
                     }
                 });
