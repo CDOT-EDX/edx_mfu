@@ -250,6 +250,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         else {
                             // The happy path, no errors
                             renderStaffGrading(data.result);
+                            populateAnnotationList();
                         }
                         //handleManageAnnotatedInner(row);
                         //reset the upload field.
@@ -267,7 +268,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     $.get(url).success(function(data) {
                         renderStaffGrading(data);
                     });
-                    //handleManageAnnotatedInner(row);
+                    populateAnnotationList();
                 });
 
                 form.find("#manage-annotated-exit").on("click", function() {
