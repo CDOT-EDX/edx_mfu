@@ -253,7 +253,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             renderStaffGrading(data.result);
                             annotated = $.grep(data.assignments, function(e){ 
                                 return e.module_id == module_id; 
-                            })[o].annotated;
+                            })[0].annotated;
                             populateAnnotationList();
                         }
                         //handleManageAnnotatedInner(row);
@@ -273,7 +273,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         renderStaffGrading(data);
                         annotated = $.grep(data.assignments, function(e){ 
                             return e.module_id == module_id; 
-                        })[o].annotated;
+                        })[0].annotated;
                         populateAnnotationList();
                     });
                 });
