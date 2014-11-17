@@ -196,25 +196,18 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             function handleManageAnnotated() 
             {
                 var row = $(this).parents("tr");
-                var studentData = $.grep(allStudentData.assignments, function(e){ 
-                    return e.module_id == row.data('module_id'); 
-                })[0];
+                var studentData = = getAssignment(allStudentData);
                 
+                $(element).find("#student-name-annotations").text(studentData.fullname);
                 var form = $(element).find("#manage-annotations-form");
-                //var module_id = row.data('module_id');
-                //var uploadField = form.find(".fileuploadAnnotated");
-
-                $(element).find("#student-name-annotations").text(row.data("fullname"));
-                //var annotated = row.data("annotated");
                 form.find("#fileuploadError").text("");
+                form.find("#annotated-download-all").attr(
+                    "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
 
                 populateAnnotationList();
 
-                form.find("#annotated-download-all").attr(
-                    "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + row.data("module_id"));
-
                 form.find(".fileuploadAnnotated").fileupload({
-                    url: annotatedUploadUrl + "?module_id=" + row.data("module_id"),
+                    url: annotatedUploadUrl + "?module_id=" + studentData.module_id;
                     add: function(e, data) {
                         var do_upload = form.find(".uploadAnnotated").html('');
                         $('<button/>')
@@ -257,9 +250,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         else {
                             // The happy path, no errors
                             renderStaffGrading(data.result);
-                            studentData.annotated = $.grep(data.assignments, function(e){ 
-                                return e.module_id == module_id; 
-                            })[0].annotated;
+                            studentData.annotated = getAssignment(data).annotated;
                             populateAnnotationList();
                         }
                         //handleManageAnnotatedInner(row);
@@ -272,14 +263,12 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     }
                 });
 
-                form.find(".annotatedFileDelete").on("click", function(filelist) {
-                    var url = deleteAnnotationFileUrl + "/" + annotated[this.value].sha1
-                        + '?module_id=' + row.data("module_id");
+                form.find(".annotatedFileDelete").on("click", function() {
+                    var url = deleteAnnotationFileUrl + "/" + studentData.annotated[this.value].sha1
+                        + '?module_id=' + studentData.module_id;
                     $.get(url).success(function(data) {
                         renderStaffGrading(data);
-                        studentData.annotated = $.grep(data.assignments, function(e){ 
-                            return e.module_id == module_id; 
-                        })[0].annotated;
+                        studentData.annotated = getAssignment(data).annotated;
                         populateAnnotationList();
                     });
                 });
@@ -301,8 +290,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         for (var i = 0; i < studentData.annotated.length; i++)
                         {
                             fileContent += '<tr> <td>'
-                                + '<a href="' + staffDownloadAnnotatedUrl + '/' + studentData.annotated[i].sha1 + "?module_id=" + row.data("module_id") + '">'
-                                +   studentData.annotated[i].filename + "</a>"
+                                + '<a href="' + staffDownloadAnnotatedUrl + '/' + studentData.annotated[i].sha1 + "?module_id=" + studentData.module_id + '">'
+                                +   studentData.annotated[i].filename 
+                                + "</a>"
                                 + "</td><td>"
                                 + '<button class="annotatedFileDelete"'
                                 +   'value="' + i + '" type="button" name="deleteannotated">'
@@ -318,6 +308,13 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     }
 
                     form.find("#annotated-file-list").html(fileContent);
+                }
+
+                function getAssignment(allStudentData)
+                {
+                    return $.grep(allStudentData.assignments, function(e){ 
+                        return e.module_id == studentData.module_id; 
+                    })[0];
                 }
             }
         }
@@ -373,126 +370,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     $("#grade-submissions-button").click(); 
                 }, 225);
             });
-        }
-
-        //All upload, download and delete for annotated files
-        function handleManageAnnotated() 
-        {
-            var row = $(this).parents("tr");
-            var module_id = row.data('module_id');
-            var form = $(element).find("#manage-annotations-form");
-            
-            $(element).find("#student-name-annotations").text(row.data("fullname"));
-            var annotated = row.data("annotated");
-            form.find("#fileuploadError").text("");
-
-            var annotated = row.data('annotated');
-
-            populateAnnotationList();
-
-            form.find("#annotated-download-all").attr(
-                "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + row.data("module_id"));
-
-            form.find(".fileuploadAnnotated").fileupload({
-                url: annotatedUploadUrl + "?module_id=" + row.data("module_id"),
-                add: function(e, data) {
-                    var do_upload = form.find(".uploadAnnotated").html('');
-                    $('<button/>')
-                        .text('Upload ' + data.files[0].name)
-                        .appendTo(do_upload)
-                        .click(function() {
-                            do_upload.text("Uploading...");
-                            data.submit();
-                        });
-                },
-                progressall: function(e, data) {
-                    var percent = parseInt(data.loaded / data.total * 100, 10);
-                    form.find(".uploadAnnotated").text(
-                        "Uploading... " + percent + "%");
-                },
-                fail: function(e, data) {
-                    var error = "";
-                    if (data.jqXHR.status == 413) {
-                        error = "The file you are trying to upload is too large."
-                    }
-                    else {
-                        // Suitably vague
-                        error = "There was an error uploading your file.";
-
-                        console.log("There was an error with file upload.");
-                        console.log("event: ", e);
-                        console.log("data: ", data);
-                    }
-                    form.find("#fileuploadError").text(error);
-                    //display error
-                    //handleManageAnnotatedInner(row);
-
-                },
-                done: function(e, data) { 
-                    if (data.result.success !== undefined) {
-                        // Actually, this is an error
-                        error = data.result.success;
-                        form.find("#fileuploadError").text(data.result.success);
-                    }
-                    else {
-                        // The happy path, no errors
-                        renderStaffGrading(data.result);
-                        annotated = $.grep(data.assignments, function(e){
-                            return e.module_id == module_id; 
-                        })[0].annotated;
-                        populateAnnotationList();
-                    }
-                    // handleManageAnnotatedInner(row);
-                }
-            });
-
-            form.find(".annotatedFileDelete").on("click", annotated, function(filelist) {
-                var url = deleteAnnotationFileUrl + "/" + annotated[this.value].sha1
-                    + '?module_id=' + row.data("module_id");
-                $.get(url).success(function(data) {
-                    renderStaffGrading(data);
-                    annotated = $.grep(data.assignments, function(e){
-                        return e.module_id == module_id; 
-                    })[0].annotated;
-                    populateAnnotationList();
-                });
-                //handleManageAnnotatedInner(row);
-            });
-
-            form.find("#manage-annotated-exit").on("click", function() {
-                setTimeout(function() {
-                    $("#grade-submissions-button").click(); 
-                }, 225);
-            });
-
-            //Creates the list of annotated files.
-            function populateAnnotationList()
-            {
-                var fileContent;
-                if (annotated.length > 0)
-                {
-                    fileContent = "<table>";
-                    for (var i = 0; i < annotated.length; i++)
-                    {
-                        fileContent += '<tr> <td>'
-                            + '<a href="' + staffDownloadAnnotatedUrl + '/' + annotated[i].sha1 + "?module_id=" + row.data("module_id") + '">'
-                            + annotated[i].filename + "</a>"
-                            + "</td><td>"
-                            + '<button class="annotatedFileDelete"'
-                            +   'value="' + i + '" type="button" name="deleteannotated">'
-                            +   'delete'
-                            + '</button>'
-                            + '</td> </tr>';
-                    }
-                    fileContent += "</table>";
-                }
-                else
-                {
-                    fileContent = "<p>No annotations available for this student.</p>";
-                }
-
-                form.find("#annotated-file-list").html(fileContent);
-            }
         }
 
         $(function($) { // onLoad
