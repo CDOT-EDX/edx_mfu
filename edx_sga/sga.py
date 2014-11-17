@@ -152,6 +152,10 @@ class StaffGradedAssignmentXBlock(
         return fragment
 
     def update_staff_debug_context(self, context):
+        """
+        Gathers information for the Staff Debug Info button on 
+        the lms page.
+        """
         published = self.published_date
         context['is_released'] = published and published < _now()
         context['location'] = self.location
@@ -195,7 +199,14 @@ class StaffGradedAssignmentXBlock(
         }
 
     def staff_grading_data(self):
+        """
+        Gathers data for display to staff using the Grade Submission
+        button on the lms page.
+        """
         def get_student_data(module):
+            """
+            Packages data from a student module for display to staff.
+            """
             state = json.loads(module.state)
             instructor = self.is_instructor()
             score = state.get('score')

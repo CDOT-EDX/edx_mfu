@@ -136,6 +136,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(".grade-modal").hide();
             //$(".annotated-modal").hide();
 
+            var allStudentData = data;
+
             // Add download urls to template context
             data.downloadUrl = staffDownloadUrl;
             data.downloadZippedUrl = staffDownloadZippedUrl;
@@ -194,12 +196,16 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             function handleManageAnnotated() 
             {
                 var row = $(this).parents("tr");
+                var studentData = $.grep(allStudentData, function(e){ 
+                    return e.module_id == row.data('module_id'); 
+                })[0];
+                
                 var form = $(element).find("#manage-annotations-form");
-                var module_id = row.data('module_id');
-                var uploadField = form.find(".fileuploadAnnotated");
+                //var module_id = row.data('module_id');
+                //var uploadField = form.find(".fileuploadAnnotated");
 
                 $(element).find("#student-name-annotations").text(row.data("fullname"));
-                var annotated = row.data("annotated");
+                //var annotated = row.data("annotated");
                 form.find("#fileuploadError").text("");
 
                 populateAnnotationList();
@@ -207,7 +213,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 form.find("#annotated-download-all").attr(
                     "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + row.data("module_id"));
 
-                uploadField.fileupload({
+                form.find(".fileuploadAnnotated").fileupload({
                     url: annotatedUploadUrl + "?module_id=" + row.data("module_id"),
                     add: function(e, data) {
                         var do_upload = form.find(".uploadAnnotated").html('');
@@ -251,7 +257,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         else {
                             // The happy path, no errors
                             renderStaffGrading(data.result);
-                            annotated = $.grep(data.assignments, function(e){ 
+                            studentData.annotated = $.grep(data.assignments, function(e){ 
                                 return e.module_id == module_id; 
                             })[0].annotated;
                             populateAnnotationList();
@@ -271,7 +277,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         + '?module_id=' + row.data("module_id");
                     $.get(url).success(function(data) {
                         renderStaffGrading(data);
-                        annotated = $.grep(data.assignments, function(e){ 
+                        studentData.annotated = $.grep(data.assignments, function(e){ 
                             return e.module_id == module_id; 
                         })[0].annotated;
                         populateAnnotationList();
@@ -289,14 +295,14 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 {
                     var fileContent;
 
-                    if (annotated.length > 0)
+                    if (studentData.annotated.length > 0)
                     {
                         fileContent = "<table>";
-                        for (var i = 0; i < annotated.length; i++)
+                        for (var i = 0; i < studentData.annotated.length; i++)
                         {
                             fileContent += '<tr> <td>'
                                 + '<a href="' + staffDownloadAnnotatedUrl + '/' + annotated[i].sha1 + "?module_id=" + row.data("module_id") + '">'
-                                + annotated[i].filename + "</a>"
+                                + studentData.annotated[i].filename + "</a>"
                                 + "</td><td>"
                                 + '<button class="annotatedFileDelete"'
                                 +   'value="' + i + '" type="button" name="deleteannotated">'
