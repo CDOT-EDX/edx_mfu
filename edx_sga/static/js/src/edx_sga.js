@@ -196,7 +196,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             function handleManageAnnotated() 
             {
                 var row = $(this).parents("tr");
-                var studentData = $.grep(allStudentData, function(e){ 
+                var studentData = $.grep(allStudentData.assignments, function(e){ 
                     return e.module_id == row.data('module_id'); 
                 })[0];
                 
