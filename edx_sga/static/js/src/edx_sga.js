@@ -208,6 +208,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
                 populateAnnotationList();
 
+                var uploadDiv = form.find(".uploadAnnotated");
                 form.find(".fileuploadAnnotated").fileupload({
                     url: annotatedUploadUrl + "?module_id=" + studentData.module_id,
                     add: function(e, data) {
@@ -222,6 +223,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     },
                     progressall: function(e, data) {
                         var percent = parseInt(data.loaded / data.total * 100, 10);
+                        form.find(".uploadAnnotated")
                         form.find(".uploadAnnotated").text(
                             "Uploading... " + percent + "%");
                     },
@@ -311,6 +313,16 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     }
 
                     form.find("#annotated-file-list").html(fileContent);
+
+                    form.find(".annotatedFileDelete").on("click", function() {
+                        var url = deleteAnnotationFileUrl + "/" + studentData.annotated[this.value].sha1
+                            + '?module_id=' + studentData.module_id;
+                        $.get(url).success(function(data) {
+                            renderStaffGrading(data);
+                            studentData.annotated = getAssignment(data).annotated;
+                            populateAnnotationList();
+                        });
+                    });
                 }
 
                 function getAssignment(allStudentData)
