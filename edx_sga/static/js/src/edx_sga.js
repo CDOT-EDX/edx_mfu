@@ -252,7 +252,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         else {
                             // The happy path, no errors
                             renderStaffGrading(data.result);
-                            studentData.annotated = getAssignment(data).annotated;
+                            studentData.annotated = getAssignment(data.result).annotated;
                             populateAnnotationList();
                         }
                         //handleManageAnnotatedInner(row);
