@@ -207,7 +207,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 populateAnnotationList();
 
                 form.find(".fileuploadAnnotated").fileupload({
-                    url: annotatedUploadUrl + "?module_id=" + studentData.module_id;
+                    url: annotatedUploadUrl + "?module_id=" + studentData.module_id,
                     add: function(e, data) {
                         var do_upload = form.find(".uploadAnnotated").html('');
                         $('<button/>')
