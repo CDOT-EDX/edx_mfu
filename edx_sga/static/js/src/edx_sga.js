@@ -201,7 +201,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 //var annotated = row.data("annotated");
                 form.find("#fileuploadError").text("");
 
-                populateAnnotationList(annotated, form.find("#annotated-file-list"))
+                populateAnnotationList();
 
                 form.find("#annotated-download-all").attr(
                     "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + row.data("module_id"));
