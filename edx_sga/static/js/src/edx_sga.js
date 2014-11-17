@@ -431,7 +431,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         })[0].annotated;
                         populateAnnotationList();
                     }
-                    //handleManageAnnotatedInner(row);
+                    // handleManageAnnotatedInner(row);
                 }
             });
 
