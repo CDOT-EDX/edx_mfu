@@ -196,7 +196,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             function handleManageAnnotated() 
             {
                 var row = $(this).parents("tr");
-                var studentData = getAssignment(allStudentData);
+                var studentData = $.grep(allStudentData.assignments, function(e){ 
+                        return e.module_id == row.data("module_id"); 
+                    })[0];;
                 
                 $(element).find("#student-name-annotations").text(studentData.fullname);
                 var form = $(element).find("#manage-annotations-form");
