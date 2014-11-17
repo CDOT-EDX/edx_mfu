@@ -254,9 +254,14 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             });
         }
 
-        function handleManageAnnotated(previousRow = null) 
+        function handleManageAnnotated()
         {
-            var row = (previousRow !== null) ? previousRow : $(this).parents("tr");
+            handleManageAnnotated($(this).parents("tr"));
+        }
+
+        function handleManageAnnotated(previousRow) 
+        {
+            var row = previousRow;
             var form = $(element).find("#manage-annotations-form");
             
             $(element).find("#student-name-annotations").text(row.data("fullname"));
