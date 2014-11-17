@@ -107,6 +107,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }
             });
 
+            //submission file deletion
             $(content).find(".filedelete").click(function(e)
             {
                 var url = deleteSubmissionFileUrl + '/' + state.uploaded[this.value].sha1;
@@ -175,7 +176,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     $.get(url).success(renderStaffGrading);
                 });
 
-
             //Remove a submission, including grades and files.
             $(element).find(".remove-submission-button")
                 .on("click", function(){
@@ -190,42 +190,115 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     $.get(url).success(renderStaffGrading);
                 });
 
-/*            //all submission control
-            $(element).find(".remove-all-submissions-button")
-                .on("click", function(){
-                    var url = removeAllSubmissionsUrl;
-                    $.get(url, function(data) {
-                        renderStaffGrading(data);
-                    });
+            //All upload, download and delete for annotated files
+            function handleManageAnnotated() 
+            {
+                var row = $(this).parents("tr");
+                var form = $(element).find("#manage-annotations-form");
+                
+                $(element).find("#student-name-annotations").text(row.data("fullname"));
+                var annotated = row.data("annotated");
+                form.find("#fileuploadError").text("");
+
+                populateAnnotationList(annotated, form.find("#annotated-file-list"))
+
+                form.find("#annotated-download-all").attr(
+                    "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + row.data("module_id"));
+
+                form.find(".fileuploadAnnotated").fileupload({
+                    url: annotatedUploadUrl + "?module_id=" + row.data("module_id"),
+                    add: function(e, data) {
+                        var do_upload = form.find(".uploadAnnotated").html('');
+                        $('<button/>')
+                            .text('Upload ' + data.files[0].name)
+                            .appendTo(do_upload)
+                            .click(function() {
+                                do_upload.text("Uploading...");
+                                data.submit();
+                            });
+                    },
+                    progressall: function(e, data) {
+                        var percent = parseInt(data.loaded / data.total * 100, 10);
+                        form.find(".uploadAnnotated").text(
+                            "Uploading... " + percent + "%");
+                    },
+                    fail: function(e, data) {
+                        var error = "";
+                        if (data.jqXHR.status == 413) {
+                            error = "The file you are trying to upload is too large."
+                        }
+                        else {
+                            // Suitably vague
+                            error = "There was an error uploading your file.";
+
+                            console.log("There was an error with file upload.");
+                            console.log("event: ", e);
+                            console.log("data: ", data);
+                        }
+                        form.find("#fileuploadError").text(error);
+                        //display error
+                        //handleManageAnnotatedInner(row);
+
+                    },
+                    done: function(e, data) { 
+                        if (data.result.success !== undefined) {
+                            // Actually, this is an error
+                            error = data.result.success;
+                            form.find("#fileuploadError").text(data.result.success);
+                        }
+                        else {
+                            // The happy path, no errors
+                            renderStaffGrading(data.result);
+                        }
+                        //handleManageAnnotatedInner(row);
+                        row.find(".manage-annotated-button").click();
+                    }
                 });
 
-            $(element).find(".reopen-all-submissions-button")
-                .on("click", function(){
-                    var url = reopenAllSubmissionsUrl;
-                    $.get(url, function(data) {
+                form.find(".annotatedFileDelete").on("click", annotated, function(filelist) {
+                    var url = deleteAnnotationFileUrl + "/" + annotated[this.value].sha1
+                        + '?module_id=' + row.data("module_id");
+                    $.get(url).success(function(data) {
                         renderStaffGrading(data);
                     });
+                    //handleManageAnnotatedInner(row);
                 });
 
-
-            //Remove a submission, including grades and files.
-            $(element).find(".remove-submission-button")
-                .on("click", function(){
-                    var url = removeSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
-                    $.get(url, function(data) {
-                        renderStaffGrading(data);
-                    });
+                form.find("#manage-annotated-exit").on("click", function() {
+                    setTimeout(function() {
+                        $("#grade-submissions-button").click(); 
+                    }, 225);
                 });
 
-            //reopens a submission for a student.  Clears previous grade.
-            $(element).find(".reopen-submission-button")
-                .on("click", function(){
-                    var url = reopenSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
-                    $.get(url, function(data) {
-                        renderStaffGrading(data);
-                    });
-                });*/
+                //Creates the list of annotated files.
+                function populateAnnotationList()
+                {
+                    var fileContent;
+                    if (annotated.length > 0)
+                    {
+                        fileContent = "<table>";
+                        for (var i = 0; i < annotated.length; i++)
+                        {
+                            fileContent += '<tr> <td>'
+                                + '<a href="' + staffDownloadAnnotatedUrl + '/' + annotated[i].sha1 + "?module_id=" + row.data("module_id") + '">'
+                                + annotated[i].filename + "</a>"
+                                + "</td><td>"
+                                + '<button class="annotatedFileDelete"'
+                                +   'value="' + i + '" type="button" name="deleteannotated">'
+                                +   'delete'
+                                + '</button>'
+                                + '</td> </tr>';
+                        }
+                        fileContent += "</table>";
+                    }
+                    else
+                    {
+                        fileContent = "<p>No annotations available for this student.</p>";
+                    }
 
+                    form.find("#annotated-file-list").html(fileContent);
+                }
+            }
         }
 
         /* Click event handler for "enter grade" */
@@ -281,11 +354,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             });
         }
 
-/*        function handleManageAnnotated()
-        {
-            handleManageAnnotatedInner($(this).parents("tr"));
-        }*/
-
+        //All upload, download and delete for annotated files
         function handleManageAnnotated() 
         {
             var row = $(this).parents("tr");
@@ -296,31 +365,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             form.find("#fileuploadError").text("");
 
             populateAnnotationList(annotated, form.find("#annotated-file-list"))
-
-/*            var fileContent;
-            if (annotated.length > 0)
-            {
-                fileContent = "<table>";
-                for (var i = 0; i < annotated.length; i++)
-                {
-                    fileContent += '<tr> <td>'
-                        + '<a href="' + staffDownloadAnnotatedUrl + '/' + annotated[i].sha1 + "?module_id=" + row.data("module_id") + '">'
-                        + annotated[i].filename + "</a>"
-                        + "</td><td>"
-                        + '<button class="annotatedFileDelete"'
-                        +   'value="' + i + '" type="button" name="deleteannotated">'
-                        +   'delete'
-                        + '</button>'
-                        + '</td> </tr>';
-                }
-                fileContent += "</table>";
-            }
-            else
-            {
-                fileContent = "<p>No annotations available for this student.</p>";
-            }
-
-            form.find("#annotated-file-list").html(fileContent);*/
 
             form.find("#annotated-download-all").attr(
                 "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + row.data("module_id"));
@@ -377,7 +421,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             form.find(".annotatedFileDelete").on("click", annotated, function(filelist) {
                 var url = deleteAnnotationFileUrl + "/" + annotated[this.value].sha1
                     + '?module_id=' + row.data("module_id");
-                $.get(url).success(renderStaffGrading);
+                $.get(url).success(function(data) {
+                    renderStaffGrading(data);
+                });
                 //handleManageAnnotatedInner(row);
             });
 
@@ -387,6 +433,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }, 225);
             });
 
+            //Creates the list of annotated files.
             function populateAnnotationList()
             {
                 var fileContent;
