@@ -281,7 +281,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 function populateAnnotationList()
                 {
                     var fileContent;
-                    $(this).parents("tr");
 
                     var annotated = row.data("annotated");
                     if (annotated.length > 0)
@@ -374,6 +373,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             var annotated = row.data("annotated");
             form.find("#fileuploadError").text("");
 
+            var annotated = row.data('annotated');
+
             populateAnnotationList();
 
             form.find("#annotated-download-all").attr(
@@ -423,6 +424,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     else {
                         // The happy path, no errors
                         renderStaffGrading(data.result);
+                        annotated = data.annotated;
+                        populateAnnotationList();
                     }
                     //handleManageAnnotatedInner(row);
                 }
@@ -433,6 +436,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     + '?module_id=' + row.data("module_id");
                 $.get(url).success(function(data) {
                     renderStaffGrading(data);
+                    annotated = data.annotated;
+                    populateAnnotationList();
                 });
                 //handleManageAnnotatedInner(row);
             });
