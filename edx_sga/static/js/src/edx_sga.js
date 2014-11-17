@@ -208,10 +208,12 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
                 populateAnnotationList();
 
-                var uploadDiv = form.find(".uploadAnnotated");
-                form.find(".fileuploadAnnotated").fileupload({
+                var uploadDiv;
+
+                form.find(".uploadAnnotated").fileupload({
                     url: annotatedUploadUrl + "?module_id=" + studentData.module_id,
                     add: function(e, data) {
+                        uploadDiv = form.find(".uploadAnnotated").clone();
                         var do_upload = form.find(".uploadAnnotated").html('');
                         $('<button/>')
                             .text('Upload ' + data.files[0].name)
@@ -259,10 +261,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         }
                         //handleManageAnnotatedInner(row);
                         //reset the upload field.
-                        var uploadDiv = form.find(".uploadAnnotated").html(
+                        form.find(".uploadAnnotated") = uploadDiv;
+/*                        var uploadDiv = form.find(".uploadAnnotated").html(
                             '<input class="fileuploadAnnotated" type="file" name="annotation"/>'
                           + '<button>Select a file</button>'
-                        );
+                        );*/
                         //uploadDiv.empty();
                         //row.find(".manage-annotated-button").click();
                     }
