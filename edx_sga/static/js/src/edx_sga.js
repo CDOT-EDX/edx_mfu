@@ -251,6 +251,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             renderStaffGrading(data.result);
                         }
                         //handleManageAnnotatedInner(row);
+                        this.empty();
                         row.find(".manage-annotated-button").click();
                     }
                 });
