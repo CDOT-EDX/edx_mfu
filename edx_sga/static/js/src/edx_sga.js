@@ -256,10 +256,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
         function handleManageAnnotated()
         {
-            handleManageAnnotated($(this).parents("tr"));
+            handleManageAnnotatedInner($(this).parents("tr"));
         }
 
-        function handleManageAnnotated(previousRow) 
+        function handleManageAnnotatedInner(previousRow) 
         {
             var row = previousRow;
             var form = $(element).find("#manage-annotations-form");
