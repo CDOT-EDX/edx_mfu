@@ -123,11 +123,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
             $(content).find(".assingmentsubmit").click(function(e)
             {
-                $.get(submitUrl).success(
-                    function () {
-                        state.submitted = true;
-                        state.upload_allowed = false;
-                        render(state);
+                $.get(submitUrl).success(function () {
+                    state.submitted = true;
+                    state.upload_allowed = false;
+                    render(state);
                 });
             });
         }
@@ -167,6 +166,38 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             $(element).find(".remove-all-submissions-button")
                 .on("click", function(){
                     var url = removeAllSubmissionsUrl;
+                    $.get(url, function(data))
+                        .success(renderStaffGrading);
+                });
+
+            $(element).find(".reopen-all-submissions-button")
+                .on("click", function(){
+                    var url = reopenAllSubmissionsUrl;
+                    $.get(url, function(data))
+                        .success(renderStaffGrading);
+                });
+
+
+            //Remove a submission, including grades and files.
+            $(element).find(".remove-submission-button")
+                .on("click", function(){
+                    var url = removeSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
+                    $.get(url, function(data))
+                        .success(renderStaffGrading);
+                });
+
+            //reopens a submission for a student.  Clears previous grade.
+            $(element).find(".reopen-submission-button")
+                .on("click", function(){
+                    var url = reopenSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
+                    $.get(url, function(data))
+                        .success(renderStaffGrading);
+                });
+
+/*            //all submission control
+            $(element).find(".remove-all-submissions-button")
+                .on("click", function(){
+                    var url = removeAllSubmissionsUrl;
                     $.get(url, function(data) {
                         renderStaffGrading(data);
                     });
@@ -197,7 +228,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     $.get(url, function(data) {
                         renderStaffGrading(data);
                     });
-                });
+                });*/
 
         }
 
@@ -254,21 +285,51 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             });
         }
 
-        function handleManageAnnotated()
+/*        function handleManageAnnotated()
         {
             handleManageAnnotatedInner($(this).parents("tr"));
+        }*/
+
+        function populateAnnotationList(annotated, tableElement)
+        {
+            var content;
+            if (annotated.length > 0)
+            {
+                content = "<table>";
+                for (var i = 0; i < annotated.length; i++)
+                {
+                    content += '<tr> <td>'
+                        + '<a href="' + staffDownloadAnnotatedUrl + '/' + annotated[i].sha1 + "?module_id=" + row.data("module_id") + '">'
+                        + annotated[i].filename + "</a>"
+                        + "</td><td>"
+                        + '<button class="annotatedFileDelete"'
+                        +   'value="' + i + '" type="button" name="deleteannotated">'
+                        +   'delete'
+                        + '</button>'
+                        + '</td> </tr>';
+                }
+                content += "</table>";
+            }
+            else
+            {
+                content = "<p>No annotations available for this student.</p>";
+            }
+
+            tableElement.html(fileContent);
         }
 
-        function handleManageAnnotatedInner(previousRow) 
+        function handleManageAnnotated() 
         {
-            var row = previousRow;
+            var row = $(this).parents("tr");
             var form = $(element).find("#manage-annotations-form");
             
             $(element).find("#student-name-annotations").text(row.data("fullname"));
             var annotated = row.data("annotated");
             form.find("#fileuploadError").text("");
 
-            var fileContent;
+            populateAnnotationList(annotated, form.find("#annotated-file-list"))
+
+/*            var fileContent;
             if (annotated.length > 0)
             {
                 fileContent = "<table>";
@@ -291,7 +352,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 fileContent = "<p>No annotations available for this student.</p>";
             }
 
-            form.find("#annotated-file-list").html(fileContent);
+            form.find("#annotated-file-list").html(fileContent);*/
 
             form.find("#annotated-download-all").attr(
                 "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + row.data("module_id"));
@@ -328,7 +389,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     }
                     form.find("#fileuploadError").text(error);
                     //display error
-                    handleManageAnnotatedInner(row);
+                    //handleManageAnnotatedInner(row);
 
                 },
                 done: function(e, data) { 
@@ -341,7 +402,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         // The happy path, no errors
                         renderStaffGrading(data.result);
                     }
-                    handleManageAnnotatedInner(row);
+                    //handleManageAnnotatedInner(row);
                 }
             });
 
@@ -349,7 +410,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 var url = deleteAnnotationFileUrl + "/" + annotated[this.value].sha1
                     + '?module_id=' + row.data("module_id");
                 $.get(url).success(renderStaffGrading);
-                handleManageAnnotatedInner(row);
+                //handleManageAnnotatedInner(row);
             });
 
             form.find("#manage-annotated-exit").on("click", function() {
