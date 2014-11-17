@@ -256,7 +256,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
         function handleManageAnnotated(previousRow) 
         {
-            var row = typeof previousRow !== 'undefined' ? previousRow : $(this).parents("tr");
+            var row = (typeof(previousRow) !== 'undefined') ? previousRow : $(this).parents("tr");
             var form = $(element).find("#manage-annotations-form");
             
             $(element).find("#student-name-annotations").text(row.data("fullname"));
