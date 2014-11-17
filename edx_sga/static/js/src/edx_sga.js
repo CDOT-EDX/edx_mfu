@@ -134,7 +134,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
         function renderStaffGrading(data) {
             $(".grade-modal").hide();
-            $(".annotated-modal").hide();
+            //$(".annotated-modal").hide();
 
             // Add download urls to template context
             data.downloadUrl = staffDownloadUrl;
@@ -257,7 +257,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             '<input class="fileuploadAnnotated" type="file" name="annotation"/>'
                           + '<button>Select a file</button>'
                         );
-                        row.find(".manage-annotated-button").click();
+                        //row.find(".manage-annotated-button").click();
                     }
                 });
 
