@@ -226,7 +226,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 });
 
                 //for restoring the file upload button
-                var uploadDiv = form.find(".uploadAnnotated").clone();
+                var uploadDiv = form.find(".uploadAnnotated").clone().first();
                 function initAnnotatedUpload()
                 {
                     form.find(".uploadAnnotated").fileupload({
@@ -287,10 +287,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             }
                             //reset the upload field.
                             form.find(".uploadAnnotated").empty();
-                            for (var i = 0; i < uploadDiv.first().children.length; i++)
+                            for (var i = 0; i < uploadDiv.children.length; i++)
                             {
                                 form.find(".uploadAnnotated")
-                                    .append(uploadDiv.first().children[i]);
+                                    .append(uploadDiv.children[i]);
                             }
 
                             initAnnotatedUpload();
