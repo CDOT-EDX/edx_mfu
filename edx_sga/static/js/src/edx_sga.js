@@ -501,9 +501,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             if (is_staff) {
                 gradingTemplate = _.template(
                     $(element).find("#sga-grading-tmpl").text());
-                uploadTemplate = _.tempate(
+                uploadTemplate = _.template(
                     $(element).find("#sga-upload-tmpl").text());
-                filelistTemplate = _.tempate(
+                filelistTemplate = _.template(
                     $(element).find("#sga-filelist-tmpl").text());
 
                 block.find("#grade-submissions-button")
