@@ -224,7 +224,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
 
                 handleUpload(
-                    form.find("#upload-annotated"),
+                    form.find(".upload"),
                     uploadData
                 );
 
