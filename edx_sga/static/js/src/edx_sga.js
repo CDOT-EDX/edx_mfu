@@ -213,7 +213,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     add: function(e, data)
                     {
                         var do_upload = form.find(".uploadAnnotated").html('');
-                        $('<button/>')
+                        $("#upload-annotated-button")
                             .text('Upload ' + data.files[0].name)
                             .appendTo(do_upload)
                             .click(function() {
@@ -265,7 +265,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             populateAnnotationList();
                         }
                         //reset the upload field.
-                        form.find(".uploadAnnotated").replaceWith(uploadDivClone);
+                        form.find(".uploadAnnotated").replaceWith(uploadDivClone.clone());
                     }
                 });
 
