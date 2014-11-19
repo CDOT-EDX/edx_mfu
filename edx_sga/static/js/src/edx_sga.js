@@ -203,15 +203,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     })[0];;
                 
                 //package data for other templates
-                var uploadData = {
+                var fileData = {
+                    module_id: studentData.module_id,
                     uploadType: "annotation",
-                    module_id: studentData.module_id,
-                    uploadUrl: annotatedUploadUrl
-                }
-
-                var filelistData = {
-                    module_id: studentData.module_id,
-                    filelist: studentData.annotated,
+                    filelist: studentData.filelist,
+                    uploadUrl: annotatedUploadUrl,
                     downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
                     downloadUrl: staffDownloadAnnotatedUrl,
                     deleteUrl: deleteAnnotationFileUrl
@@ -225,12 +221,12 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
                 handleUpload(
                     form.find(".upload"),
-                    uploadData
+                    fileData
                 );
 
                 handleFilelist(
                     form.find('#annotated-file-list'),
-                    filelistData
+                    fileData
                 );
 /*            
                 form.find(".fileuploadAnnotated").fileupload({
@@ -465,7 +461,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     {
                         // The happy path, no errors
                         renderStaffGrading(data.result);
-                        studentData.annotated = getAssignment(data.result).annotated;
+                        uploadData.filelist = getAssignment(data.result).annotated;
                         populateAnnotationList();
                         uploadState.error = "";
                     }
