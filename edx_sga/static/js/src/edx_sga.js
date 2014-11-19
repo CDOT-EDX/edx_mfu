@@ -287,10 +287,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             }
                             //reset the upload field.
                             form.find(".uploadAnnotated").empty();
-                            for (var i = 0; i < uploadDiv.childNodes.length; i++)
+                            for (var i = 0; i < uploadDiv.children.length; i++)
                             {
                                 form.find(".uploadAnnotated")
-                                    .append(uploadDiv.childNodes[i]);
+                                    .append(uploadDiv.children[i]);
                             }
 
                             initAnnotatedUpload();
