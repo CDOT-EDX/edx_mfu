@@ -214,7 +214,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     module_id: studentData.module_id,
                     filelist: studentData.annotated,
                     downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
-                    downloadUrl: staffDownloadAnnotatedUrl
+                    downloadUrl: staffDownloadAnnotatedUrl,
+                    deleteUrl: deleteAnnotationFileUrl
                 }
 
                 $(element).find("#student-name-annotations").text(studentData.fullname);
@@ -481,14 +482,14 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             fileUploadDiv.html(filelistTemplate(fileState));
 
             fileUploadDiv.find(".annotatedFileDelete").on("click", function() {
-                var url = deleteAnnotationFileUrl + "/" + fileState.filelist[this.value].sha1
+                var url = deleteUrl + "/" + fileState.filelist[this.value].sha1
                     + '?module_id=' + fileState.module_id;
                 $.get(url).success(function(data) {
                     if (this.value < filestate.filelist.length)
                     {
                         filestate.filelist.splice(this.value, 1);
                     }
-                    
+
                     handleFileList(fileListDiv, fileState);
                 });
             });
