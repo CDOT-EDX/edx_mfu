@@ -208,7 +208,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
                 populateAnnotationList();
 
-                form.find(".uploadAnnotated").fileupload({
+                form.find(".fileuploadAnnotated").fileupload({
                     url: annotatedUploadUrl + "?module_id=" + studentData.module_id,
                     add: function(e, data)
                     {
@@ -224,7 +224,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     progressall: function(e, data) 
                     {
                         var percent = parseInt(data.loaded / data.total * 100, 10);
-                        form.find(".uploadAnnotated")
+                        //form.find(".uploadAnnotated")
                         form.find(".uploadAnnotated")
                             .text("Uploading... " + percent + "%");
                     },
