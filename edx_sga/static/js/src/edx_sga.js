@@ -409,7 +409,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         function handleUpload(e, data)
         {
             var uploadState = data;
-            uploadState.error = "";
+            if (typeof uploadState.error === 'undefined')
+            {
+                uploadState.error = "";
+            }
 
             var fileUploadDiv = e;
             fileUploadDiv.html(uploadTemplate(uploadState));
@@ -448,7 +451,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         console.log("event: ", e);
                         console.log("data: ", data);
                     }
-                    handleUpload(uploadState);
+                    handleUpload(fileUploadState, uploadState);
 
                 },
                 done: function(e, data) 
@@ -464,9 +467,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         renderStaffGrading(data.result);
                         studentData.annotated = getAssignment(data.result).annotated;
                         populateAnnotationList();
+                        uploadState.error = "";
                     }
                     //reset the upload field.
-                    fileUploadDiv.html(uploadTemplate(uploadState));
+                    handleUpload(fileUploadDiv, uploadState)
                 }
             });
         }
