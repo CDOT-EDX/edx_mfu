@@ -462,7 +462,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         // The happy path, no errors
                         renderStaffGrading(data.result);
                         uploadData.filelist = getAssignment(data.result).annotated;
-                        populateAnnotationList();
+                        handleFilelist();
                         uploadState.error = "";
                     }
                     //reset the upload field.
