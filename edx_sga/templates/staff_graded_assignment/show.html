@@ -224,20 +224,6 @@
       <p><%= error %></p>
   </script>
 
-  <script type="text/template" id="sga-annotation-tmpl">
-    <div>Files for <%= fullname %><span id="student-name-annotations"/></div>
-
-    <div id="annotated-file-list">loading...</div>
-    
-    <div id="upload-annotated">loading...</div>
-
-    <p><span id="file-upload-error"/></p>
-
-    <button type="button" id="manage-annotated-exit">
-      {% trans "Exit" %}
-    </button>
-  </script>
-
   <div aria-hidden="true" class="wrap-instructor-info">
     <a class="instructor-info-action" id="grade-submissions-button"
        href="#{{ id }}-grade">{% trans "Grade Submissions" %}</a>
@@ -317,13 +303,10 @@
         <form id="manage-annotations-form">
           <div>Files for <span id="student-name-annotations"/></div>
 
-          <div id="annotated-file-list"></div>
-          <p><a id="annotated-download-all"> Download All </a></p>
+          <div id="annotated-file-list">loading...</div>
           
           <div id="upload-annotated">loading...</div>
-
-          <p><span id="file-upload-error"/></p>
-
+          
           <button type="button" id="manage-annotated-exit">
             {% trans "Exit" %}
           </button>
