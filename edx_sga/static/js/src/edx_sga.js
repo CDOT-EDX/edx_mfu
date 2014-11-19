@@ -29,8 +29,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
         
         var template = _.template($(element).find("#sga-tmpl").text());
-        //var uploadTemplate = _.tempate($(element).find("#sga-upload-tmpl").text());
-        //var filelistTemplate = _.tempate($(element).find("#sga-filelist-tmpl").text());
+        var uploadTemplate;
+        var filelistTemplate;
         var gradingTemplate;
 
         function render(state) {
@@ -203,7 +203,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     })[0];;
                 
                 //package data for other templates
-                /*var uploadData = {
+                var uploadData = {
                     uploadType: "annotation",
                     module_id: studentData.module_id,
                     uploadUrl: annotatedUploadUrl
@@ -215,7 +215,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
                     downloadUrl: staffDownloadAnnotatedUrl,
                     deleteUrl: deleteAnnotationFileUrl
-                }*/
+                }
 
                 $(element).find("#student-name-annotations").text(studentData.fullname);
                 var form = $(element).find("#manage-annotations-form");
@@ -223,7 +223,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 form.find("#annotated-download-all").attr(
                     "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
 
-/*
                 handleUpload(
                     form.find("#upload-annotated"),
                     uploadData
@@ -233,7 +232,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     form.find('#annotated-file-list'),
                     filelistData
                 );
-*/
 /*            
                 form.find(".fileuploadAnnotated").fileupload({
                     url: annotatedUploadUrl + "?module_id=" + studentData.module_id,
@@ -407,8 +405,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }, 225);
             });
         }
-/*
-        function handleUpload(e, data)// module_id, identifier, uploadType, uploadUrl)
+
+        function handleUpload(e, data)
         {
             var uploadState = data;
             uploadState.error = "";
@@ -493,7 +491,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 });
             });
         }
-*/
+
         $(function($) { // onLoad
             var block = $(element).find(".sga-block");
             var state = block.attr("data-state");
@@ -503,6 +501,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             if (is_staff) {
                 gradingTemplate = _.template(
                     $(element).find("#sga-grading-tmpl").text());
+                uploadTemplate = _.tempate(
+                    $(element).find("#sga-upload-tmpl").text());
+                filelistTemplate = _.tempate(
+                    $(element).find("#sga-filelist-tmpl").text());
+
                 block.find("#grade-submissions-button")
                     .leanModal()
                     .on("click", function() {
