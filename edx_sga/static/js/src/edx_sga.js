@@ -214,7 +214,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 {
                     form.find(".uploadAnnotated").fileupload({
                         url: annotatedUploadUrl + "?module_id=" + studentData.module_id,
-                        add: function(e, data) {
+                        add: function(e, data)
+                        {
                             var do_upload = form.find(".uploadAnnotated").html('');
                             $('<button/>')
                                 .text('Upload ' + data.files[0].name)
@@ -224,18 +225,22 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                                     data.submit();
                                 });
                         },
-                        progressall: function(e, data) {
+                        progressall: function(e, data) 
+                        {
                             var percent = parseInt(data.loaded / data.total * 100, 10);
                             form.find(".uploadAnnotated")
-                            form.find(".uploadAnnotated").text(
-                                "Uploading... " + percent + "%");
+                            form.find(".uploadAnnotated")
+                                .text("Uploading... " + percent + "%");
                         },
-                        fail: function(e, data) {
+                        fail: function(e, data) 
+                        {
                             var error = "";
-                            if (data.jqXHR.status == 413) {
+                            if (data.jqXHR.status == 413)
+                            {
                                 error = "The file you are trying to upload is too large."
                             }
-                            else {
+                            else 
+                            {
                                 // Suitably vague
                                 error = "There was an error uploading your file.";
 
@@ -248,13 +253,16 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             //handleManageAnnotatedInner(row);
 
                         },
-                        done: function(e, data) { 
-                            if (data.result.success !== undefined) {
+                        done: function(e, data) 
+                        { 
+                            if (data.result.success !== undefined) 
+                            {
                                 // Actually, this is an error
                                 error = data.result.success;
                                 form.find("#fileuploadError").text(data.result.success);
                             }
-                            else {
+                            else 
+                            {
                                 // The happy path, no errors
                                 renderStaffGrading(data.result);
                                 studentData.annotated = getAssignment(data.result).annotated;
