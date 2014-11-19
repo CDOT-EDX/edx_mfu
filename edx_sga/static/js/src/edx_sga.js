@@ -226,7 +226,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 });
 
                 //for restoring the file upload button
-                var uploadDiv = form.find(".uploadAnnotated").clone();
+                var uploadDiv = form.find(".uploadAnnotated").first().clone();
                 function initAnnotatedUpload()
                 {
                     form.find(".uploadAnnotated").fileupload({
