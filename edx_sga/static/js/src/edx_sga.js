@@ -207,6 +207,23 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
 
                 populateAnnotationList();
+                initAnnotatedUpload();
+
+                form.find(".annotatedFileDelete").on("click", function() {
+                    var url = deleteAnnotationFileUrl + "/" + studentData.annotated[this.value].sha1
+                        + '?module_id=' + studentData.module_id;
+                    $.get(url).success(function(data) {
+                        renderStaffGrading(data);
+                        studentData.annotated = getAssignment(data).annotated;
+                        populateAnnotationList();
+                    });
+                });
+
+                form.find("#manage-annotated-exit").on("click", function() {
+                    setTimeout(function() {
+                        $("#grade-submissions-button").click(); 
+                    }, 225);
+                });
 
                 //for restoring the file upload button
                 var uploadDiv = form.find(".uploadAnnotated").clone();
@@ -279,22 +296,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         }
                     });
                 }
-
-                form.find(".annotatedFileDelete").on("click", function() {
-                    var url = deleteAnnotationFileUrl + "/" + studentData.annotated[this.value].sha1
-                        + '?module_id=' + studentData.module_id;
-                    $.get(url).success(function(data) {
-                        renderStaffGrading(data);
-                        studentData.annotated = getAssignment(data).annotated;
-                        populateAnnotationList();
-                    });
-                });
-
-                form.find("#manage-annotated-exit").on("click", function() {
-                    setTimeout(function() {
-                        $("#grade-submissions-button").click(); 
-                    }, 225);
-                });
 
                 //Creates the list of annotated files.
                 function populateAnnotationList()
