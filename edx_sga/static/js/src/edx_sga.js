@@ -451,7 +451,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         console.log("event: ", e);
                         console.log("data: ", data);
                     }
-                    handleUpload(fileUploadState, uploadState);
+                    handleUpload(fileUploadDiv, uploadState);
 
                 },
                 done: function(e, data) 
