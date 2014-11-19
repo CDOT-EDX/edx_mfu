@@ -224,7 +224,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 form.find("#annotated-download-all").attr(
                     "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
 
-                populateAnnotationList();
+                //populateAnnotationList();
 /*
                 handleUpload(
                     form.find("#upload-annotated"),
