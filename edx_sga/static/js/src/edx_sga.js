@@ -419,7 +419,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 add: function(e, data)
                 {
                     var do_upload = fileUploadDiv.html('');
-                    fileUploadDiv.find(".fileuploadbutton")
+                    $('<button/>')
                         .text('Upload ' + data.files[0].name)
                         .appendTo(do_upload)
                         .click(function() {
