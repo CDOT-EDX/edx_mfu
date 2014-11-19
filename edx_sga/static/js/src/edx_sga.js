@@ -29,10 +29,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
         
         var template = _.template($(element).find("#sga-tmpl").text());
-        var uploadTemplate = _.tempate($(element).find("#sga-upload-tmpl").text());
-        var filelistTemplate = _.tempate($(element).find("#sga-filelist-tmpl").text());
+        //var uploadTemplate = _.tempate($(element).find("#sga-upload-tmpl").text());
+        //var filelistTemplate = _.tempate($(element).find("#sga-filelist-tmpl").text());
         var gradingTemplate;
-        var annotationManagerTemplate;
 
         function render(state) {
             // Add download urls to template context
@@ -224,7 +223,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 form.find("#annotated-download-all").attr(
                     "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
 
-                //populateAnnotationList();
 /*
                 handleUpload(
                     form.find("#upload-annotated"),
