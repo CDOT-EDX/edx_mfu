@@ -418,7 +418,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             fileUploadDiv.html(uploadTemplate(uploadState));
 
             fileUploadDiv.find(".fileupload").fileupload({
-                url: uploadUrl + "?module_id=" + uploadState.module_id,
+                url: uploadState.uploadUrl + "?module_id=" + uploadState.module_id,
                 add: function(e, data)
                 {
                     var do_upload = fileUploadDiv.html('');
