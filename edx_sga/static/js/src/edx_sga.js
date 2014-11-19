@@ -204,7 +204,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     })[0];;
                 
                 //package data for other templates
-                var uploadData = {
+                /*var uploadData = {
                     uploadType: "annotation",
                     module_id: studentData.module_id,
                     uploadUrl: annotatedUploadUrl
@@ -216,7 +216,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
                     downloadUrl: staffDownloadAnnotatedUrl,
                     deleteUrl: deleteAnnotationFileUrl
-                }
+                }*/
 
                 $(element).find("#student-name-annotations").text(studentData.fullname);
                 var form = $(element).find("#manage-annotations-form");
@@ -225,7 +225,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
 
                 populateAnnotationList();
-
+/*
                 handleUpload(
                     form.find("#upload-annotated"),
                     uploadData
@@ -235,6 +235,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     form.find('#annotated-file-list'),
                     filelistData
                 );
+*/
 /*            
                 form.find(".fileuploadAnnotated").fileupload({
                     url: annotatedUploadUrl + "?module_id=" + studentData.module_id,
