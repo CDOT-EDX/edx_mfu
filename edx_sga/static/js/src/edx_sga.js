@@ -213,8 +213,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     add: function(e, data)
                     {
                         var do_upload = form.find(".uploadAnnotated").html('');
-                        $('#upload-annotated-button')
-                            .text('Upload ' + data.files[0].name)
+                        var button = $('#upload-annotated-button');
+                        button.text('Upload ' + data.files[0].name)
                             .appendTo(do_upload)
                             .click(function() {
                                 do_upload.text("Uploading...");
