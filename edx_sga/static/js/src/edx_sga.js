@@ -209,7 +209,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 populateAnnotationList();
                 initAnnotatedUpload();
 
-                form.find(".annotatedFileDelete").on("click", function() {
+/*                form.find(".annotatedFileDelete").on("click", function() {
                     var url = deleteAnnotationFileUrl + "/" + studentData.annotated[this.value].sha1
                         + '?module_id=' + studentData.module_id;
                     $.get(url).success(function(data) {
@@ -217,7 +217,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         studentData.annotated = getAssignment(data).annotated;
                         populateAnnotationList();
                     });
-                });
+                });*/
 
                 form.find("#manage-annotated-exit").on("click", function() {
                     setTimeout(function() {
@@ -287,9 +287,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             }
                             //reset the upload field.
                             form.find(".uploadAnnotated").empty();
-                            for (var i = 0; i < uploadDiv.length; i++)
+                            for (var i = 0; i < uploadDiv.childNodes.length; i++)
                             {
-                                form.find(".uploadAnnotated").append(uploadDiv[i]);
+                                form.find(".uploadAnnotated")
+                                    .append(uploadDiv.childNodes[i]);
                             }
 
                             initAnnotatedUpload();
