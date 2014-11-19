@@ -409,7 +409,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 }, 225);
             });
         }
-
+/*
         function handleUpload(e, data)// module_id, identifier, uploadType, uploadUrl)
         {
             var uploadState = data;
@@ -495,7 +495,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 });
             });
         }
-
+*/
         $(function($) { // onLoad
             var block = $(element).find(".sga-block");
             var state = block.attr("data-state");
