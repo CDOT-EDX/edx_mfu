@@ -207,17 +207,67 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
 
                 populateAnnotationList();
-                initAnnotatedUpload();
 
-/*                form.find(".annotatedFileDelete").on("click", function() {
-                    var url = deleteAnnotationFileUrl + "/" + studentData.annotated[this.value].sha1
-                        + '?module_id=' + studentData.module_id;
-                    $.get(url).success(function(data) {
-                        renderStaffGrading(data);
-                        studentData.annotated = getAssignment(data).annotated;
-                        populateAnnotationList();
-                    });
-                });*/
+                form.find(".uploadAnnotated").fileupload({
+                    url: annotatedUploadUrl + "?module_id=" + studentData.module_id,
+                    add: function(e, data)
+                    {
+                        var do_upload = form.find(".uploadAnnotated").html('');
+                        $('<button/>')
+                            .text('Upload ' + data.files[0].name)
+                            .appendTo(do_upload)
+                            .click(function() {
+                                do_upload.text("Uploading...");
+                                data.submit();
+                            });
+                    },
+                    progressall: function(e, data) 
+                    {
+                        var percent = parseInt(data.loaded / data.total * 100, 10);
+                        form.find(".uploadAnnotated")
+                        form.find(".uploadAnnotated")
+                            .text("Uploading... " + percent + "%");
+                    },
+                    fail: function(e, data) 
+                    {
+                        var error = "";
+                        if (data.jqXHR.status == 413)
+                        {
+                            error = "The file you are trying to upload is too large."
+                        }
+                        else 
+                        {
+                            // Suitably vague
+                            error = "There was an error uploading your file.";
+
+                            console.log("There was an error with file upload.");
+                            console.log("event: ", e);
+                            console.log("data: ", data);
+                        }
+                        form.find("#fileuploadError").text(error);
+                        //display error
+                        //handleManageAnnotatedInner(row);
+
+                    },
+                    done: function(e, data) 
+                    { 
+                        if (data.result.success !== undefined) 
+                        {
+                            // Actually, this is an error
+                            error = data.result.success;
+                            form.find("#fileuploadError").text(data.result.success);
+                        }
+                        else 
+                        {
+                            // The happy path, no errors
+                            renderStaffGrading(data.result);
+                            studentData.annotated = getAssignment(data.result).annotated;
+                            populateAnnotationList();
+                        }
+                        //reset the upload field.
+                        form.find(".uploadAnnotated").replaceWith(uploadDivClone);
+                    }
+                });
 
                 form.find("#manage-annotated-exit").on("click", function() {
                     setTimeout(function() {
@@ -226,73 +276,11 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 });
 
                 //for restoring the file upload button
-                var uploadDivClone = form.find(".uploadAnnotated").clone();
+                var uploadDivClone = form.find(".uploadAnnotated").clone(true);
+                
                 function initAnnotatedUpload()
                 {
-                    form.find(".uploadAnnotated").fileupload({
-                        url: annotatedUploadUrl + "?module_id=" + studentData.module_id,
-                        add: function(e, data)
-                        {
-                            var do_upload = form.find(".uploadAnnotated").html('');
-                            $('<button/>')
-                                .text('Upload ' + data.files[0].name)
-                                .appendTo(do_upload)
-                                .click(function() {
-                                    do_upload.text("Uploading...");
-                                    data.submit();
-                                });
-                        },
-                        progressall: function(e, data) 
-                        {
-                            var percent = parseInt(data.loaded / data.total * 100, 10);
-                            form.find(".uploadAnnotated")
-                            form.find(".uploadAnnotated")
-                                .text("Uploading... " + percent + "%");
-                        },
-                        fail: function(e, data) 
-                        {
-                            var error = "";
-                            if (data.jqXHR.status == 413)
-                            {
-                                error = "The file you are trying to upload is too large."
-                            }
-                            else 
-                            {
-                                // Suitably vague
-                                error = "There was an error uploading your file.";
 
-                                console.log("There was an error with file upload.");
-                                console.log("event: ", e);
-                                console.log("data: ", data);
-                            }
-                            form.find("#fileuploadError").text(error);
-                            //display error
-                            //handleManageAnnotatedInner(row);
-
-                        },
-                        done: function(e, data) 
-                        { 
-                            if (data.result.success !== undefined) 
-                            {
-                                // Actually, this is an error
-                                error = data.result.success;
-                                form.find("#fileuploadError").text(data.result.success);
-                            }
-                            else 
-                            {
-                                // The happy path, no errors
-                                renderStaffGrading(data.result);
-                                studentData.annotated = getAssignment(data.result).annotated;
-                                populateAnnotationList();
-                            }
-                            //reset the upload field.
-                            var uploadDiv = form.find(".uploadAnnotated").empty();
-                            uploadDiv.unbind();
-                            uploadDivClone.children().clone().appendTo(uploadDiv);
-
-                            initAnnotatedUpload();
-                        }
-                    });
                 }
 
                 //Creates the list of annotated files.
