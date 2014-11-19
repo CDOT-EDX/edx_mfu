@@ -213,7 +213,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     add: function(e, data)
                     {
                         var do_upload = form.find(".uploadAnnotated").html('');
-                        $('<button/>')
+                        $('#upload-annotated-button')
                             .text('Upload ' + data.files[0].name)
                             .appendTo(do_upload)
                             .click(function() {
@@ -224,7 +224,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                     progressall: function(e, data) 
                     {
                         var percent = parseInt(data.loaded / data.total * 100, 10);
-                        //form.find(".uploadAnnotated")
                         form.find(".uploadAnnotated")
                             .text("Uploading... " + percent + "%");
                     },
@@ -244,9 +243,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             console.log("event: ", e);
                             console.log("data: ", data);
                         }
-                        form.find("#fileuploadError").text(error);
-                        //display error
-                        //handleManageAnnotatedInner(row);
+                        form.find("#file-upload-error").text(error);
 
                     },
                     done: function(e, data) 
@@ -255,7 +252,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         {
                             // Actually, this is an error
                             error = data.result.success;
-                            form.find("#fileuploadError").text(data.result.success);
+                            form.find("#file-upload-error")
+                                .text(data.result.success);
                         }
                         else 
                         {
@@ -265,7 +263,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             populateAnnotationList();
                         }
                         //reset the upload field.
-                        form.find(".uploadAnnotated").replaceWith(uploadDivClone.clone(true));
+                        form.find(".uploadAnnotated")
+                            .replaceWith(uploadDivClone.clone(true));
                     }
                 });
 
@@ -277,11 +276,6 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
                 //for restoring the file upload button
                 var uploadDivClone = form.find(".uploadAnnotated").clone(true);
-                
-                function initAnnotatedUpload()
-                {
-
-                }
 
                 //Creates the list of annotated files.
                 function populateAnnotationList()
