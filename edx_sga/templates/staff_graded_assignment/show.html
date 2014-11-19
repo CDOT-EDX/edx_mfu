@@ -200,6 +200,42 @@
     </table>
   </script>
 
+  <script type="text/template" id="sga-filelist-tmpl">
+    <% if(filelist.length > 0) %>
+      <% for (var i = 0; i < filelist.length; i++) { %>
+        <tr>
+          <td>
+            <a href="<%= downloadUrl + '/' + filelist[i].sha1 %>"><%= filelist[i].filename %></a>
+          <td>
+            <button class="fileDelete" value="<%= i %>" type="button" name="delete">delete</button>
+          </td>
+        </tr>
+      <% } %>
+
+      <p><a href=<%= downloadZippedUrl + "?module_id=" = module_id%> Download All </a></p>
+    <% } else { %>
+      {% trans "No annotations available for this student." %}
+    <% } %>
+  </script>
+
+  <script type="text/template" id="sga-upload-tmpl">
+      <input class="fileupload" type="file" name="<%= uploadType %>"/>
+      <button>Select a file</button>
+  </script>
+
+  <script type="text/template" id="sga-annotation-tmpl">
+    <div>Files for <%= fullname %><span id="student-name-annotations"/></div>
+
+    <div id="annotated-file-list">loading...</div>
+    
+    <div id="upload-annotated">loading...</div>
+
+    <p><span id="file-upload-error"/></p>
+
+    <button type="button" id="manage-annotated-exit">
+      {% trans "Exit" %}
+    </button>
+  </script>
 
   <div aria-hidden="true" class="wrap-instructor-info">
     <a class="instructor-info-action" id="grade-submissions-button"
@@ -283,13 +319,9 @@
           <div id="annotated-file-list"></div>
           <p><a id="annotated-download-all"> Download All </a></p>
           
-          <div class="uploadAnnotated">
-            <input class="fileuploadAnnotated" type="file" name="annotation"/>
-            <button id="upload-annotated-button">Select a file</button>
-            <p><span id="annotated-upload-status"></span><p>
-          </div>
+          <div id="upload-annotated">loading...</div>
 
-          <p><span id="fileuploadError"/></p>
+          <p><span id="file-upload-error"/></p>
 
           <button type="button" id="manage-annotated-exit">
             {% trans "Exit" %}

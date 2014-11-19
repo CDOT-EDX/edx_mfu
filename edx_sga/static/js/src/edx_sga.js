@@ -29,7 +29,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
         
         var template = _.template($(element).find("#sga-tmpl").text());
+        var uploadTemplate = _.tempate($(element).find("#sga-upload-tmpl").text());
+        var filelistTemplate = _.tempate($(element).find("#sga-filelist-tmpl").text());
         var gradingTemplate;
+        var annotationManagerTemplate;
 
         function render(state) {
             // Add download urls to template context
@@ -200,6 +203,20 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         return e.module_id == row.data("module_id"); 
                     })[0];;
                 
+                //package data for other templates
+                var uploadData = {
+                    uploadType: "annotation",
+                    module_id: studentData.module_id,
+                    uploadUrl: annotatedUploadUrl
+                }
+
+                var filelistData = {
+                    module_id: studentData.module_id,
+                    filelist: studentData.annotated,
+                    downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
+                    downloadUrl: staffDownloadAnnotatedUrl
+                }
+
                 $(element).find("#student-name-annotations").text(studentData.fullname);
                 var form = $(element).find("#manage-annotations-form");
                 form.find("#fileuploadError").text("");
@@ -208,12 +225,22 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
                 populateAnnotationList();
 
+                handleUpload(
+                    form.find("#upload-annotated"),
+                    uploadData
+                );
+
+                handleFilelist(
+                    form.find('#annotated-file-list'),
+                    filelistData
+                );
+/*            
                 form.find(".fileuploadAnnotated").fileupload({
                     url: annotatedUploadUrl + "?module_id=" + studentData.module_id,
                     add: function(e, data)
                     {
                         var do_upload = form.find(".uploadAnnotated").html('');
-                        $('#upload-annotated-button')
+                        $('<button/>')
                             .text('Upload ' + data.files[0].name)
                             .appendTo(do_upload)
                             .click(function() {
@@ -266,7 +293,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                         form.find(".uploadAnnotated")
                             .replaceWith(uploadDivClone.clone(true));
                     }
-                });
+                });*/
 
                 form.find("#manage-annotated-exit").on("click", function() {
                     setTimeout(function() {
@@ -275,9 +302,10 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 });
 
                 //for restoring the file upload button
-                var uploadDivClone = form.find(".uploadAnnotated").clone(true);
+                //var uploadDivClone = form.find(".uploadAnnotated").clone(true);
 
                 //Creates the list of annotated files.
+/*
                 function populateAnnotationList()
                 {
                     var fileContent;
@@ -316,7 +344,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                             populateAnnotationList();
                         });
                     });
-                }
+                }*/
 
                 function getAssignment(allStudentData)
                 {
@@ -377,6 +405,92 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 setTimeout(function() {
                     $("#grade-submissions-button").click(); 
                 }, 225);
+            });
+        }
+
+        function handleUpload(e, data)// module_id, identifier, uploadType, uploadUrl)
+        {
+            var uploadState = data;
+            uploadState.error = "";
+
+            var fileUploadDiv = e;
+            fileUploadDiv.html(uploadTemplate(uploadState));
+
+            fileUploadDiv.find(".fileupload").fileupload({
+                url: uploadUrl + "?module_id=" + uploadState.module_id,
+                add: function(e, data)
+                {
+                    var do_upload = fileUploadDiv.html('');
+                    $('<button/>')
+                        .text('Upload ' + data.files[0].name)
+                        .appendTo(do_upload)
+                        .click(function() {
+                            do_upload.text("Uploading...");
+                            data.submit();
+                        });
+                },
+                progressall: function(e, data) 
+                {
+                    var percent = parseInt(data.loaded / data.total * 100, 10);
+                    fileUploadDiv.text("Uploading... " + percent + "%");
+                },
+                fail: function(e, data) 
+                {
+                    var error = "";
+                    if (data.jqXHR.status == 413)
+                    {
+                        uploadState.error = "The file you are trying to upload is too large."
+                    }
+                    else 
+                    {
+                        // Suitably vague
+                        uploadState.error = "There was an error uploading your file.";
+
+                        console.log("There was an error with file upload.");
+                        console.log("event: ", e);
+                        console.log("data: ", data);
+                    }
+                    handleUpload(uploadState);
+
+                },
+                done: function(e, data) 
+                { 
+                    if (data.result.success !== undefined) 
+                    {
+                        // Actually, this is an error
+                        uploadState.error = data.result.success;
+                    }
+                    else 
+                    {
+                        // The happy path, no errors
+                        renderStaffGrading(data.result);
+                        studentData.annotated = getAssignment(data.result).annotated;
+                        populateAnnotationList();
+                    }
+                    //reset the upload field.
+                    fileUploadDiv.html(uploadTemplate(uploadState));
+                }
+            });
+        }
+
+        function handleFilelist(e, data)
+        {
+            var fileState = data;
+
+            var fileListDiv = e;
+            fileUploadDiv.html(filelistTemplate(fileState));
+
+            fileUploadDiv.find(".annotatedFileDelete").on("click", function() {
+                var url = deleteAnnotationFileUrl + "/" + fileState.filelist[this.value].sha1
+                    + '?module_id=' + fileState.module_id;
+                $.get(url).success(function(data) {
+                    if (this.value < filestate.filelist.length)
+                    {
+                        filestate.filelist.splice(this.value, 1);
+                    }
+                    
+                    handleFileList(fileListDiv, fileState);
+                });
             });
         }
 
