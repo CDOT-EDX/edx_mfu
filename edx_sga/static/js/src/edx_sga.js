@@ -268,11 +268,9 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                                 studentData.annotated = getAssignment(data.result).annotated;
                                 populateAnnotationList();
                             }
-                            //handleManageAnnotatedInner(row);
                             //reset the upload field.
                             form.find(".uploadAnnotated").empty();
-
-                            for (var i = 0; i < uploadDiv.length, i++)
+                            for (var i = 0; i < uploadDiv.length; i++)
                             {
                                 form.find(".uploadAnnotated").append(uploadDiv[i]);
                             }
