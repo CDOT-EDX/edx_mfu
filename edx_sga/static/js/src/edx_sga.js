@@ -129,20 +129,36 @@ function StaffGradedAssignmentXBlock(runtime, element)
             $(element).find(".remove-all-submissions-button")
                 .on("click", function(){
                     var url = removeAllSubmissionsUrl;
-                    $.get(url).success(renderStaffGrading);
+                    $.get(url).success(function() {
+                        allStudentData.assignments.each(
+                            removeSubmission(this);
+                        );
+                        renderStaffGrading(allStudentData);
+                    });
                 });
 
             $(element).find(".reopen-all-submissions-button")
                 .on("click", function(){
                     var url = reopenAllSubmissionsUrl;
-                    $.get(url).success(renderStaffGrading);
+                    $.get(url).success(function() {
+                        allStudentData.assignments.each(function() {
+                            this.submitted = false;
+                        });
+                        renderStaffGrading(allStudentData);
+                    });
                 });
 
             //Remove a submission, including grades and files.
             $(element).find(".remove-submission-button")
                 .on("click", function(){
-                    var url = removeSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
-                    $.get(url).success(renderStaffGrading);
+                    var module_id = $(this).parents("tr").data("module_id");
+                    var url = removeSubmissionUrl + "?module_id=" + module_id;
+                    $.get(url).success(function() {
+                        removeSubmission($.grep(allStudentData.assignments, function(e) {
+                            return e.module_id == module_id;
+                        })[0]);
+                        renderStaffGrading(allStudentData);
+                    });
                 });
 
             //reopens a submission for a student.  Clears previous grade.
@@ -156,9 +172,10 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         $.grep(allStudentData.assignments, function(e) {
                             return e.module_id == module_id;
                         })[0].submitted = false;
-                        renderStaffGrading(data);
+                        renderStaffGrading(allStudentData);
                     });
                 });
+
 
 
             //All upload, download and delete for annotated files
@@ -212,6 +229,23 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     })[0];
                 }
             }
+        }
+
+        function removeSubmission(submission)
+        {
+            submission.uploaded = [];
+            submission.annotated = [];
+            submision.submitted = false;
+
+            removeGrade(submission);
+        }
+
+        function removeGrade(submission)
+        {
+            sumission.score = null;
+            submission.comment = '';
+            submision.published = false;
+            submission.approved = false;
         }
 
         /* Click event handler for "enter grade" */

@@ -357,13 +357,15 @@ class StaffGradedAssignmentXBlock(
                 is_submitted = False
             )   
 
-        return Response(json_body=self.staff_grading_data())       
+        return Response(status=204)
+        #return Response(json_body=self.staff_grading_data())       
 
     @XBlock.handler
     def staff_remove_submission(self, request, suffix=''):
         self.remove_submission(request.params['module_id'])
 
-        return Response(json_body=self.staff_grading_data())
+        return Response(status=204)
+        #return Response(json_body=self.staff_grading_data())
 
     @XBlock.handler
     def staff_remove_all_submissions(self, request, suffix=''):
@@ -376,7 +378,8 @@ class StaffGradedAssignmentXBlock(
         for module in query:
             self.remove_submission(module.id)
 
-        return Response(json_body=self.staff_grading_data())
+        return Response(status=204)
+        #return Response(json_body=self.staff_grading_data())
 
     def enter_grade(self, module_id, grade, comment=''):
         self.set_student_state(
@@ -405,10 +408,10 @@ class StaffGradedAssignmentXBlock(
         self.set_student_state(
             module_id,
             is_submitted = False,
-            score = None,
-            comment = '',
-            score_published = False,
-            score_approved = self.is_instructor(),
+            #score = None,
+            #comment = '',
+            #score_published = False,
+            #score_approved = self.is_instructor(),
             uploaded_files = dict(),
             annotated_files = dict()
         )
