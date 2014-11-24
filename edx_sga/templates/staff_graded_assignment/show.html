@@ -114,7 +114,7 @@
 
         <% for (var i = 0; i < filelist.length; i++) { %>
           <tr>
-            <td><a href="<%= downloadUrl + '/' + filelist[i].sha1 %>"><%= filelist[i].filename %></a></td>
+            <td><a href="<% print(downloadUrl(filelist[i].sha1)); %>"><%= filelist[i].filename %></a></td>
           </tr>
         <% } %>
       <% } %>
