@@ -3,52 +3,12 @@
 <div class="sga-block" data-state="{{ student_state }}" 
      data-staff="{{ is_course_staff }}">
   <script type="text/template" id="sga-tmpl">
-    <% if (uploaded.length > 0) { %>
-      <b>Uploaded Files</b>
-      <p>
-        <table>
 
-          <% if (upload_allowed) { %>
-            <% for (var i = 0; i < uploaded.length; i++) { %>
-              <tr>
-                <td><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></td>
-                <td>
-                  <button class="filedelete" value="<%= i %>" type="button" name="delete">delete</button>
-                </td>
-              </tr>
-            <% } %>
+    <b>Uploaded Files</b>
 
-          <% } else { %>
-
-            <% for (var i = 0; i < uploaded.length; i++) { %>
-              <tr>
-                <td><a href="<%= downloadUrl + '/' + uploaded[i].sha1 %>"><%= uploaded[i].filename %></a></td>
-              </tr>
-            <% } %>
-          <% } %>
-
-        </table>
-      </p>
-
-      <p><a href="<%= downloadZippedUrl %>">Download All</a></p>
-
-    <% } else { %>
-      <p>No file has been uploaded.</p>
-    <% } %>
-
-    <% if (upload_allowed) { %>
-      <p>
-        <% if (uploaded) { %>
-          {% trans "Upload another file." %}
-        <% } else { %>
-          {% trans "Upload a file." %}
-        <% } %>
-        <div class="upload">
-          <input class="fileupload" type="file" name="assignment"/>
-          <button>Select a file</button>
-        </div>
-      </p>
-    <% } %>
+    <div class="filelist">loading...</div>
+          
+    <div class="upload">loading...</div>
 
     <% if (submitted) { %>
 
@@ -133,7 +93,7 @@
   </script>
 
   <script type="text/template" id="sga-upload-tmpl">
-      <input class="fileupload" type="file" name="<%= uploadType %>"/>
+      <input class="fileupload" type="file" name="file"/>
       <button class="fileuploadbutton">Select a file</button>
       <p class="error"><%= error %></p>
   </script>

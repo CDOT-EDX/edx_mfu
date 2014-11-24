@@ -41,7 +41,7 @@ class FileSubmissionMixin(XBlockMixin):
 
 		key, uploaded = self.upload_file(
 			self.uploaded_files, 
-			request.params['assignment']
+			request.params['uploadedFile']
 		)
 		
 		return Response(json_body={

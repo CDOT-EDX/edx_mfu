@@ -47,97 +47,40 @@ function StaffGradedAssignmentXBlock(runtime, element)
             // Render template
             var content = $(element).find("#sga-content").html(template(state));
 
-/*            var fileData = {
-                module_id:         studentData.module_id,
-                uploadType:        "assignment",
-                filelist:          studentData.uploaded,
-                uploadUrl:         annotatedUploadUrl,
+            var uploadData = {
+                filelist:          state.uploaded,
+                uploadUrl:         uploadUrl,
+                downloadZippedUrl: studentDownloadZippedUrl,
+                downloadUrl: function(hash) 
+                {
+                    return studentDownloadUrl + '/' + hash; 
+                },
+                deleteUrl: function(hash) 
+                {
+                    return deleteFileUrl +'/' + hash;
+                },
+                upload_allowed:    state.upload_allowed 
+            };
+
+
+            var annotatedData = {
+                filelist:          state.annotated,
                 downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
-                downloadUrl:       staffDownloadAnnotatedUrl,
-                deleteUrl:         deleteAnnotationFileUrl,
-                upload_allowed:    true 
-            };*/
-
-            // Set up file upload
-            $(content).find(".fileupload").fileupload({
-                url: uploadUrl,
-                add: function(e, data) {
-                    var do_upload = $(content).find(".upload").html('');
-                    $('<button/>')
-                        .text('Upload ' + data.files[0].name)
-                        .appendTo(do_upload)
-                        .click(function() {
-                            do_upload.text("Uploading...");
-                            data.submit();
-                        });
+                downloadUrl: function(hash) 
+                {
+                    return studentDownloadUrl + '/' + hash; 
                 },
-                progressall: function(e, data) {
-                    var percent = parseInt(data.loaded / data.total * 100, 10);
-                    $(content).find(".upload").text(
-                        "Uploading... " + percent + "%");
+                deleteUrl: function(hash) 
+                {
+                    return "";
                 },
-                fail: function(e, data) {
-                    /**
-                     * Nginx and other sanely implemented servers return a 
-                     * "413 Request entity too large" status code if an 
-                     * upload exceeds its limit.  See the 'done' handler for
-                     * the not sane way that Django handles the same thing.
-                     */
-                    if (data.jqXHR.status == 413) {
-                        /* I guess we have no way of knowing what the limit is
-                         * here, so no good way to inform the user of what the
-                         * limit is.
-                         */
-                        state.error = "The file you are trying to upload is too large."
-                    }
-                    else {
-                        // Suitably vague
-                        state.error = "There was an error uploading your file.";
+                upload_allowed:    false
+            };
 
-                        // Dump some information to the console to help someone
-                        // debug.
-                        console.log("There was an error with file upload.");
-                        console.log("event: ", e);
-                        console.log("data: ", data);
-                    }
-                    render(state);
-                },
-                done: function(e, data) { 
-                    /* When you try to upload a file that exceeds Django's size
-                     * limit for file uploads, Django helpfully returns a 200 OK
-                     * response with a JSON payload of the form:
-                     * 
-                     *   {'success': '<error message'}
-                     * 
-                     * Thanks Obama!
-                     */
-                    if (data.result.success !== undefined) {
-                        // Actually, this is an error
-                        state.error = data.result.success;
-                        render(state);
-                    }
-                    else {
-                        // The happy path, no errors
-                        render(data.result); 
-                    }
-                }
-            });
+            handleUpload($('#student-upload'), uploadData);
+            handleFilelist($('student-annotated'), annotatedData);
 
-            //submission file deletion
-            $(content).find(".filedelete").click(function(e)
-            {
-                var url = deleteSubmissionFileUrl + '/' + state.uploaded[this.value].sha1;
-                $.get(url).success(
-                    (function (i) {
-                        if (i < state.uploaded.length)
-                        {
-                            state.uploaded.splice(i, 1);
-                        }
-                    })(this.value)
-                );
-                render(state);
-            });
-
+            //submit assignment for marking.
             $(content).find(".assingmentsubmit").click(function(e)
             {
                 $.get(submitUrl).success(function () {
@@ -220,7 +163,6 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 
                 //package data for other templates
                 var fileData = {
-                    uploadType:        "annotation",
                     filelist:          studentData.annotated,
                     uploadUrl:         annotatedUploadUrl + "?module_id=" 
                                        + studentData.module_id,
@@ -241,10 +183,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
                 var form = $(element).find("#manage-annotations-form");
 
-                handleUpload(
-                    form,
-                    fileData
-                );
+                handleUpload(form, fileData);
 
                 $(element).find("#student-name-annotations").text(studentData.fullname);
                 

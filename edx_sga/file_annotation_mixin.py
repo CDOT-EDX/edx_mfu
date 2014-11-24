@@ -43,7 +43,7 @@ class FileAnnotationMixin(XBlockMixin):
 
 		key, uploaded = self.upload_file(
 			annotated_list, 
-			request.params['annotation']
+			request.params['uploadedFile']
 		)
 
 		#need to save state sepratly as user is instructor
