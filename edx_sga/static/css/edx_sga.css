@@ -38,6 +38,7 @@
 */
 .sga-block .upload {
     position: relative;
+    margin-bottom: 2em;
 }
 
 .sga-block .upload button {
