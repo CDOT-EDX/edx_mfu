@@ -1,6 +1,8 @@
 /* Javascript for StaffGradedAssignmentXBlock. */
-function StaffGradedAssignmentXBlock(runtime, element) {
-    function xblock($, _) {
+function StaffGradedAssignmentXBlock(runtime, element) 
+{
+    function xblock($, _) 
+    {
         var uploadUrl = runtime.handlerUrl(element, 'student_upload_file');
         var studentDownloadUrl = runtime.handlerUrl(element, 'student_download_file');
         var studentDownloadZippedUrl = runtime.handlerUrl(element, 'student_download_zipped')
@@ -33,7 +35,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         var filelistTemplate;
         var gradingTemplate;
 
-        function render(state) {
+        function render(state) 
+        {
             // Add download urls to template context
             state.downloadUrl = studentDownloadUrl;
             state.downloadZippedUrl = studentDownloadZippedUrl;
@@ -134,7 +137,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             });
         }
 
-        function renderStaffGrading(data) {
+        function renderStaffGrading(data) 
+        {
             $(".grade-modal").hide();
             //$(".annotated-modal").hide();
 
@@ -165,7 +169,7 @@ function StaffGradedAssignmentXBlock(runtime, element) {
             //set up annotated file submision modal
             $(element).find(".manage-annotated-button")
                 .leanModal({closeButton: "#manage-annotated-exit"})
-                .on("click", handleManageAnnotated)
+                .on("click", handleManageAnnotated);
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
@@ -189,7 +193,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
 
             //reopens a submission for a student.  Clears previous grade.
             $(element).find(".reopen-submission-button")
-                .on("click", function(){
+                .on("click", function()
+                {
                     var url = reopenSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
                     $.get(url).success(renderStaffGrading);
                 });
@@ -204,30 +209,31 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 
                 //package data for other templates
                 var fileData = {
-                    module_id: studentData.module_id,
-                    uploadType: "annotation",
-                    filelist: studentData.filelist,
-                    uploadUrl: annotatedUploadUrl,
+                    module_id:         studentData.module_id,
+                    uploadType:        "annotation",
+                    filelist:          studentData.filelist,
+                    uploadUrl:         annotatedUploadUrl,
                     downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
-                    downloadUrl: staffDownloadAnnotatedUrl,
-                    deleteUrl: deleteAnnotationFileUrl
-                }
-
-                $(element).find("#student-name-annotations").text(studentData.fullname);
-                var form = $(element).find("#manage-annotations-form");
-                form.find("#fileuploadError").text("");
-                form.find("#annotated-download-all").attr(
-                    "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
+                    downloadUrl:       staffDownloadAnnotatedUrl,
+                    deleteUrl:         deleteAnnotationFileUrl
+                };
 
                 handleUpload(
                     form.find(".upload"),
-                    fileData
+                    fileData,
+                    form.find('#annotated-file-list')
                 );
 
                 handleFilelist(
                     form.find('#annotated-file-list'),
                     fileData
                 );
+
+                $(element).find("#student-name-annotations").text(studentData.fullname);
+                var form = $(element).find("#manage-annotations-form");
+                form.find("#fileuploadError").text("");
+                form.find("#annotated-download-all").attr(
+                    "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
 
                 form.find("#manage-annotated-exit").on("click", function() {
                     setTimeout(function() {
@@ -245,7 +251,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         }
 
         /* Click event handler for "enter grade" */
-        function handleGradeEntry() {
+        function handleGradeEntry() 
+        {
             var row = $(this).parents("tr");
             var module_id = row.data("module_id")
             var form = $(element).find("#enter-grade-form");
@@ -305,18 +312,23 @@ function StaffGradedAssignmentXBlock(runtime, element) {
                 uploadState.error = "";
             }
 
-            var fileListHandler = function(){
+            var fileListHandler = function()
+            {
                 if (typeof fileListDiv === 'undefined')
                 {
-                    return {render: function()};
+                    return { 
+                        render: function() {} 
+                    };
                 }
                 else
                 {
                     var e = fileListDiv;
                     var data = uploadState;
-                    return {render: function(){
-                        handleFilelist(e, data);
-                    }};
+                    return { 
+                        render: function(){
+                            handleFilelist(e, data);
+                        }
+                    };
                 }
             };
 
@@ -449,7 +461,8 @@ function StaffGradedAssignmentXBlock(runtime, element) {
         loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.fileupload.js");
         xblock($, _);
     }
-    else {
+    else 
+    {
         /**
          * Studio, on the other hand, uses require.js and already knows about
          * jquery.fileupload.
