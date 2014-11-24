@@ -409,8 +409,8 @@ function StaffGradedAssignmentXBlock(runtime, element)
             fileListDiv.html(filelistTemplate(fileState));
 
             fileListDiv.find(".fileDownload").each(function() {
-                $(this).attr('value');
-                url = fileState.downloadUrl(fileState.filelist[$(this).val()].sha1);
+                var pos = $(this).attr('value');
+                url = fileState.downloadUrl(fileState.filelist[pos].sha1);
                 $(this).attr("href", url);
             });
 
