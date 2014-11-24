@@ -230,12 +230,12 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     {
                         return staffDownloadAnnotatedUrl + '/' + hash 
                         + "?module_id=" + studentData.module_id;
-                    }
+                    },
                     deleteUrl: function(hash) 
                     {
                         return deleteAnnotationFileUrl +'/' + hash
                         + "?module_id=" + studentData.module_id;
-                    }
+                    },
                     upload_allowed:    true 
                 };
 
