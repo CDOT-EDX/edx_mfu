@@ -47,6 +47,17 @@ function StaffGradedAssignmentXBlock(runtime, element)
             // Render template
             var content = $(element).find("#sga-content").html(template(state));
 
+/*            var fileData = {
+                module_id:         studentData.module_id,
+                uploadType:        "assignment",
+                filelist:          studentData.uploaded,
+                uploadUrl:         annotatedUploadUrl,
+                downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
+                downloadUrl:       staffDownloadAnnotatedUrl,
+                deleteUrl:         deleteAnnotationFileUrl,
+                upload_allowed:    true 
+            };*/
+
             // Set up file upload
             $(content).find(".fileupload").fileupload({
                 url: uploadUrl,
@@ -369,7 +380,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     {
                         // The happy path, no errors
                         renderStaffGrading(data.result);
-                        uploadState.filelist = data.result.assignments[0].annotated;
+                        uploadState.filelist.push(data.result);
                         uploadState.error = "";
                         //renderFileList();
                     }
