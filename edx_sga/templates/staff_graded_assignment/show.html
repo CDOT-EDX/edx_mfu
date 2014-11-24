@@ -102,9 +102,10 @@
               <td>
                 <a class="fileDownload" value="<%= i %>" href="">
                   <%= filelist[i].filename %>
-                </a></td>
+                </a>
+              </td>
               <td>
-                <button class="filedelete" value="<%= i %>" type="button" name="delete">delete</button>
+                <button class="fileDelete" value="<%= i %>" type="button" name="delete">delete</button>
               </td>
             </tr>
           <% } %>
@@ -114,9 +115,11 @@
 
         <% for (var i = 0; i < filelist.length; i++) { %>
           <tr>
-            <td><a class="fileDownload" value="<%= i %>" href="">
-              <%= filelist[i].filename %>
-            </a></td>
+            <td>
+              <a class="fileDownload" value="<%= i %>" href="">
+                <%= filelist[i].filename %>
+              </a>
+            </td>
           </tr>
         <% } %>
       <% } %>
