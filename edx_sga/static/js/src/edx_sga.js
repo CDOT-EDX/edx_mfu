@@ -31,8 +31,8 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
         
         var template = _.template($(element).find("#sga-tmpl").text());
-        var uploadTemplate;
-        var filelistTemplate;
+        var uploadTemplate = _.template($(element).find("#sga-upload-tmpl").text());
+        var filelistTemplate = _.template($(element).find("#sga-filelist-tmpl").text());
         var gradingTemplate;
 
         function render(state) 
@@ -413,10 +413,6 @@ function StaffGradedAssignmentXBlock(runtime, element)
             if (is_staff) {
                 gradingTemplate = _.template(
                     $(element).find("#sga-grading-tmpl").text());
-                uploadTemplate = _.template(
-                    $(element).find("#sga-upload-tmpl").text());
-                filelistTemplate = _.template(
-                    $(element).find("#sga-filelist-tmpl").text());
 
                 block.find("#grade-submissions-button")
                     .leanModal()
