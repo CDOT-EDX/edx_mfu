@@ -414,7 +414,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             });
 
             fileListDiv.find(".fileDelete").on("click", function() {
-                var url = fileState.deleteUrl(fileState.filelist[this.value].sha1);
+                var url = fileState.deleteUrl(fileState.filelist[this.val()].sha1);
                 var pos = this.value;
                 $.get(url).success(function(data) {
                     if (pos < fileState.filelist.length)
