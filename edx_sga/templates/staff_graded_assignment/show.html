@@ -6,9 +6,10 @@
 
     <b>Uploaded Files</b>
 
-    <div class="filelist">loading...</div>
-          
-    <div class="upload">loading...</div>
+    <div id="student-upload">
+      <div class="filelist">loading...</div>     
+      <div class="upload">loading...</div>
+    </div>
 
     <% if (submitted) { %>
 
@@ -22,18 +23,7 @@
         {% trans "This assignment has not yet been graded." %}
       <% } %>
 
-      <% if(annotated.length > 0 && graded)  { %>
-        <p>Annotated Files </p>
-        <ul>
-          <% for (var i = 0; i < annotated.length; i++) { %>
-          
-            <li><a href="<%= downloadAnnotatedUrl + '/' + annotated[i].sha1 %>"><%= annotated[i].filename %></a></li>
-          <% } %>
-        </ul>
-        <p><a href="<%= downloadAnnotatedZippedUrl %>">Download All</a></p>
-      <% } else if (!graded && submitted) { %>
-        <p> No annotations are available </p>
-      <% } %>
+      <div id="student-annotated">loading...</div>
 
       <p>Submitted on: <%= submission_time %></p>
 
@@ -93,7 +83,7 @@
   </script>
 
   <script type="text/template" id="sga-upload-tmpl">
-      <input class="fileupload" type="file" name="file"/>
+      <input class="fileupload" type="file" name="uploadedFile"/>
       <button class="fileuploadbutton">Select a file</button>
       <p class="error"><%= error %></p>
   </script>
