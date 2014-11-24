@@ -219,14 +219,8 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 };
 
                 handleUpload(
-                    form.find(".upload"),
+                    form
                     fileData,
-                    form.find('#annotated-file-list')
-                );
-
-                handleFilelist(
-                    form.find('#annotated-file-list'),
-                    fileData
                 );
 
                 $(element).find("#student-name-annotations").text(studentData.fullname);
@@ -304,7 +298,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             });
         }
 
-        function handleUpload(e, data, fileListDiv)
+        function handleUpload(e, data)
         {
             var uploadState = data;
             if (typeof uploadState.error === 'undefined')
@@ -322,7 +316,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 }
                 else
                 {
-                    var e = fileListDiv;
+                    var e = form.find('filelist');
                     var data = uploadState;
                     return { 
                         render: function(){
@@ -330,7 +324,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         }
                     };
                 }
-            };
+            }();
 
             var fileUploadDiv = e;
             fileUploadDiv.html(uploadTemplate(uploadState));
