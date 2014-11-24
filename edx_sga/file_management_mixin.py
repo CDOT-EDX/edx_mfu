@@ -58,7 +58,7 @@ class FileManagementMixin(object):
 			default_storage.save(path, File(upload.file))
 
 		#Need to return the list as staff cannot directly modify student fields.
-		return metadata
+		return (upload_key, metadata)
 		#return Response(json_body=self.student_state())
 
 	def download_file(self, filelist, key):
