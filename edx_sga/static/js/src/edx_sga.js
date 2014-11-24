@@ -397,7 +397,8 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         fileState.filelist.splice(pos, 1);
                     }
 
-                    fileListDiv.html(filelistTemplate(fileState));
+                    handleFilelist(fileListDiv, fileState)
+                    //fileListDiv.html(filelistTemplate(fileState));
                 });
             });
         }
