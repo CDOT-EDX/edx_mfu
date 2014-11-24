@@ -318,7 +318,6 @@ function StaffGradedAssignmentXBlock(runtime, element)
             }(e.find('.filelist'));
 
             renderFileList();
-
             fileUploadDiv.html(uploadTemplate(uploadState));
 
             fileUploadDiv.find(".fileupload").fileupload({
@@ -356,7 +355,6 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         console.log("data: ", data);
                     }
                     handleUpload(fileUploadDiv, uploadState);
-
                 },
                 done: function(e, data) 
                 { 
@@ -371,7 +369,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         renderStaffGrading(data.result);
                         uploadState.filelist = data.result.assignments[0].annotated;
                         uploadState.error = "";
-                        renderFileList();
+                        //renderFileList();
                     }
                     //reset the upload field.
                     handleUpload(fileUploadDiv, uploadState);
