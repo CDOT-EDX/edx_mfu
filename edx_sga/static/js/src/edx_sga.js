@@ -149,11 +149,12 @@ function StaffGradedAssignmentXBlock(runtime, element)
             $(element).find(".reopen-submission-button")
                 .on("click", function()
                 {
-                    var url = reopenSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
+                    var module_id = $(this).parents("tr").data("module_id");
+                    var url = reopenSubmissionUrl + "?module_id=" + module_id;
                     //$.get(url).success(renderStaffGrading);
                     $.get(url).success($.grep(allStudentData.assignments, function(e) {
-                        return e.module_id == row.data("module_id");
-                    }).submitted = false);
+                        return e.module_id == module_id;
+                    })[0].submitted = false);
                 });
 
 
