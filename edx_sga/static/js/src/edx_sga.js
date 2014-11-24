@@ -308,25 +308,25 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 uploadState.error = "";
             }
 
-            var parent = e;
+            var fileUploadDiv = parent.find('.upload');
 
             var renderFileList = function(e, data)
             {
                 return function(){
-                            handleFilelist(e, data);
+                    handleFilelist(e, data);
                 };
-            }(parent.find('filelist'), uploadState);
+            }(e.find('filelist'), uploadState);
 
             renderFileList();
 
 
-            parent.html(uploadTemplate(uploadState));
+            fileUploadDiv.html(uploadTemplate(uploadState));
 
-            parent.find(".fileupload").fileupload({
+            fileUploadDiv.find(".fileupload").fileupload({
                 url: uploadState.uploadUrl + "?module_id=" + uploadState.module_id,
                 add: function(e, data)
                 {
-                    var do_upload = parent.html('');
+                    var do_upload = fileUploadDiv.html('');
                     $('<button/>')
                         .text('Upload ' + data.files[0].name)
                         .appendTo(do_upload)
@@ -338,7 +338,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 progressall: function(e, data) 
                 {
                     var percent = parseInt(data.loaded / data.total * 100, 10);
-                    parent.text("Uploading... " + percent + "%");
+                    fileUploadDiv.text("Uploading... " + percent + "%");
                 },
                 fail: function(e, data) 
                 {
@@ -356,7 +356,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         console.log("event: ", e);
                         console.log("data: ", data);
                     }
-                    handleUpload(parent, uploadState);
+                    handleUpload(fileUploadDiv, uploadState);
 
                 },
                 done: function(e, data) 
@@ -376,7 +376,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     }
                     //reset the upload field.
                     //handleUpload(fileUploadDiv, uploadState)
-                    parent.html(uploadTemplate(uploadState));
+                    fileUploadDiv.html(uploadTemplate(uploadState));
                     renderFileList();
                 }
             });
