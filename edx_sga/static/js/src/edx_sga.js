@@ -219,7 +219,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 };
 
                 handleUpload(
-                    form
+                    form,
                     fileData,
                 );
 
