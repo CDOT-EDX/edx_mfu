@@ -43,12 +43,12 @@ class FileSubmissionMixin(XBlockMixin):
 			self.uploaded_files, 
 			request.params['assignment']
 		)
-
+		
         return {
             "sha1":      uploaded.sha1, 
             "filename":  uploaded.filename,
             "timestamp": uploaded.timestamp
-        )
+        }
 		
 	@XBlock.handler
 	def student_download_file(self, request, suffix=''):
