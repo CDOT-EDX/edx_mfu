@@ -201,21 +201,32 @@
   </script>
 
   <script type="text/template" id="sga-filelist-tmpl">
-    <% if(filelist.length > 0) { %>
-      <% for (var i = 0; i < filelist.length; i++) { %>
-        <tr>
-          <td>
-            <a href="<%= downloadUrl + '/' + filelist[i].sha1 %>">
-              <%= filelist[i].filename %></a>
-          </td>
-          <% if (upload_allowed) { %>
-            <td>
-              <button class="fileDelete" value="<%= i %>" type="button" name="delete">delete</button>
-            </td>
+    <% if(filelist.length > 0) { %>  
+
+      <% if (upload_allowed) { %>
+        <table>
+          <% for (var i = 0; i < filelist.length; i++) { %>
+            <tr>
+              <td>
+                <a href="<%= downloadUrl + '/' + filelist[i].sha1 %>">
+                  <%= filelist[i].filename %>
+                </a></td>
+              <td>
+                <button class="filedelete" value="<%= i %>" type="button" name="delete">delete</button>
+              </td>
+            </tr>
           <% } %>
-        </tr>
+        </table>
+
+      <% } else { %>
+
+        <% for (var i = 0; i < filelist.length; i++) { %>
+          <tr>
+            <td><a href="<%= downloadUrl + '/' + filelist[i].sha1 %>"><%= filelist[i].filename %></a></td>
+          </tr>
+        <% } %>
       <% } %>
-      <p>Download</p>
+
       <a href="<%= downloadZippedUrl + '?module_id=' + module_id %>"> 
         Download All 
       </a>
