@@ -324,7 +324,9 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         }
                     };
                 }
-            }();
+            };
+
+            fileListHandler.render();
 
             var fileUploadDiv = e;
             fileUploadDiv.html(uploadTemplate(uploadState));
