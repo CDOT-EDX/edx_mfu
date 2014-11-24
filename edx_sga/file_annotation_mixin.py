@@ -47,6 +47,7 @@ class FileAnnotationMixin(XBlockMixin):
 		)
 
 		#need to save state sepratly as user is instructor
+		annotated[key] = uploaded
 		self.set_student_state(
 			module_id, 
 			filelist=annotated_list
