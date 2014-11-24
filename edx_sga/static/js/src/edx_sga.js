@@ -78,7 +78,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             };
 
             handleUpload($('#student-upload'), uploadData);
-            handleFilelist($('student-annotated'), annotatedData);
+            handleFilelist($('#student-annotated'), annotatedData);
 
             //submit assignment for marking.
             $(content).find(".assingmentsubmit").click(function(e)
