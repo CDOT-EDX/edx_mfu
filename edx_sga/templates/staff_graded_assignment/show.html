@@ -83,9 +83,11 @@
   </script>
 
   <script type="text/template" id="sga-upload-tmpl">
+    <% if (upload_allowed) %>
       <input class="fileupload" type="file" name="uploadedFile"/>
       <button class="fileuploadbutton">Select a file</button>
       <p class="error"><%= error %></p>
+    <% } %>
   </script>
 
   <div id="sga-content">
