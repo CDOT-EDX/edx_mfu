@@ -411,7 +411,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             fileListDiv.find(".fileDownload").each(function(index) {
                 $(this).attr("href", 
                     fileState.downloadUrl(fileState.filelist[this.value].sha1))
-            ));
+            });
 
             fileListDiv.find(".fileDelete").on("click", function() {
                 var url = fileState.deleteUrl(fileState.filelist[this.value].sha1);
