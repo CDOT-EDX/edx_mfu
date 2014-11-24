@@ -36,9 +36,9 @@
 /*These impact the function of the upload methods.
   No clue why.
 */
-/*.sga-block .upload {
-    position: relative;
-}*/
+.sga-block .upload {
+    position: inline-block;
+}
 
 .sga-block .upload button {
     position: absolute;
