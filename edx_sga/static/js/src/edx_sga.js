@@ -379,7 +379,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     else 
                     {
                         // The happy path, no errors
-                        renderStaffGrading(data.result);
+                        //renderStaffGrading(data.result);
                         uploadState.filelist.push(data.result);
                         uploadState.error = "";
                         //renderFileList();
