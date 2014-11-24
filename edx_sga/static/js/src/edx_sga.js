@@ -223,15 +223,18 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     uploadType:        "annotation",
                     filelist:          studentData.annotated,
                     uploadUrl:         annotatedUploadUrl + "?module_id=" 
-                                       + studentData.uploadState.module_id,
-                    downloadZippedUrl: staffDownloadAnnotatedZippedUrl + ?module,
-                    downloadUrl:       function(hash) {
+                                       + studentData.module_id,
+                    downloadZippedUrl: staffDownloadAnnotatedZippedUrl 
+                                       + "?module_id=" studentData.module_id;
+                    downloadUrl: function(hash) 
+                    {
                         return staffDownloadAnnotatedUrl + '/' + hash 
-                        + "?module_id=" + module_id;
+                        + "?module_id=" + studentData.module_id;
                     }
-                    deleteUrl:         function(hash) {
+                    deleteUrl: function(hash) 
+                    {
                         return deleteAnnotationFileUrl +'/' + hash
-                        + "?module_id=" + module_id;
+                        + "?module_id=" + studentData.module_id;
                     }
                     upload_allowed:    true 
                 };
