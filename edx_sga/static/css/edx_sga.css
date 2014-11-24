@@ -41,7 +41,7 @@
 }
 
 .sga-block .upload button {
-    /*position: absolute*/;
+    position: absolute;
     top: 0px;
     left: 0px;
     z-index: 1;
