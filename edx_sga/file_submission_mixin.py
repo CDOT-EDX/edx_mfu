@@ -39,13 +39,13 @@ class FileSubmissionMixin(XBlockMixin):
 	def student_upload_file(self, request, suffix=''):
 		assert self.upload_allowed()
 
-		uploaded = self.upload_file(
+		key, uploaded = self.upload_file(
 			self.uploaded_files, 
 			request.params['assignment']
 		)
 		
 		return {
-			"sha1":      uploaded.sha1, 
+			"sha1":      key, 
 			"filename":  uploaded.filename,
 			"timestamp": uploaded.timestamp
 		}

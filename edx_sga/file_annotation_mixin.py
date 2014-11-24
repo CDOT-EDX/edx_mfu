@@ -41,7 +41,7 @@ class FileAnnotationMixin(XBlockMixin):
 		state = self.get_student_state(module_id)
 		annotated_list = self.annotated_file_list(module_id)
 
-		uploaded = self.upload_file(
+		key, uploaded = self.upload_file(
 			annotated_list, 
 			request.params['annotation']
 		)
@@ -53,7 +53,7 @@ class FileAnnotationMixin(XBlockMixin):
 		)
 
 		return {
-			"sha1":      uploaded.sha1, 
+			"sha1":      key, 
 			"filename":  uploaded.filename,
 			"timestamp": uploaded.timestamp
 		}
