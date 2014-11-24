@@ -150,8 +150,12 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 .on("click", function()
                 {
                     var url = reopenSubmissionUrl + "?module_id=" + $(this).parents("tr").data("module_id");
-                    $.get(url).success(renderStaffGrading);
+                    //$.get(url).success(renderStaffGrading);
+                    $.get(url).success($.grep(allStudentData.assignments, function(e) {
+                        return e.module_id == row.data("module_id");
+                    }).submitted = false);
                 });
+
 
             //All upload, download and delete for annotated files
             function handleManageAnnotated() 

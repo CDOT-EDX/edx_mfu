@@ -340,7 +340,8 @@ class StaffGradedAssignmentXBlock(
             is_submitted = False
         )        
 
-        return Response(json_body=self.staff_grading_data())
+        return Response(status=204);
+        #return Response(json_body=self.staff_grading_data())
 
     @XBlock.handler
     def staff_reopen_all_submissions(self, request, suffix=''):
