@@ -218,13 +218,15 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     deleteUrl:         deleteAnnotationFileUrl
                 };
 
+                var form = $(element).find("#manage-annotations-form");
+
                 handleUpload(
                     form,
                     fileData
                 );
 
                 $(element).find("#student-name-annotations").text(studentData.fullname);
-                var form = $(element).find("#manage-annotations-form");
+                
                 form.find("#fileuploadError").text("");
                 form.find("#annotated-download-all").attr(
                     "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
