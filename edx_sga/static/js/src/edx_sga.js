@@ -306,27 +306,16 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 uploadState.error = "";
             }
 
-            var fileListHandler = function()
+            var renderFileList = function()
             {
-                if (typeof fileListDiv === 'undefined')
-                {
-                    return { 
-                        render: function() {} 
-                    };
-                }
-                else
-                {
-                    var e = form.find('filelist');
-                    var data = uploadState;
-                    return { 
-                        render: function(){
+                var e = form.find('filelist');
+                var data = uploadState;
+                return function(){
                             handleFilelist(e, data);
-                        }
-                    };
-                }
+                };
             };
 
-            fileListHandler.render();
+            renderFileList();
 
             var fileUploadDiv = e;
             fileUploadDiv.html(uploadTemplate(uploadState));
@@ -386,7 +375,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     //reset the upload field.
                     //handleUpload(fileUploadDiv, uploadState)
                     fileUploadDiv.html(uploadTemplate(uploadState));
-                    fileListHandler.render();
+                    renderFileList();
                 }
             });
         }
