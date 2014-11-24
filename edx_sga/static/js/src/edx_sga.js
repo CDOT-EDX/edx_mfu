@@ -409,8 +409,8 @@ function StaffGradedAssignmentXBlock(runtime, element)
             fileListDiv.html(filelistTemplate(fileState));
 
             fileListDiv.find(".fileDownload").each(function() {
-                url = fileState.downloadUrl(fileState.filelist[this.val()].sha1);
-                this.attr("href", url);
+                url = fileState.downloadUrl(fileState.filelist[$(this).val()].sha1);
+                $(this).attr("href", url);
             });
 
             fileListDiv.find(".fileDelete").on("click", function() {
@@ -423,7 +423,6 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     }
 
                     handleFilelist(fileListDiv, fileState)
-                    //fileListDiv.html(filelistTemplate(fileState));
                 });
             });
         }
