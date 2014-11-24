@@ -313,9 +313,9 @@ function StaffGradedAssignmentXBlock(runtime, element)
             var renderFileList = function(element)
             {
                 return function(){
-                    handleFilelist(element, data);
+                    handleFilelist(element, uploadState);
                 };
-            }(e.find('.filelist'), uploadState);
+            }(e.find('.filelist'));
 
             renderFileList();
 
