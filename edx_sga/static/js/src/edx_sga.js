@@ -392,7 +392,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 var url = fileState.deleteUrl + "/" + fileState.filelist[this.value].sha1
                     + '?module_id=' + fileState.module_id;
                 $.get(url).success(function(data) {
-                    if (this.value < filestate.filelist.length)
+                    if (this.value < fileState.filelist.length)
                     {
                         fileState.filelist.splice(this.value, 1);
                     }
