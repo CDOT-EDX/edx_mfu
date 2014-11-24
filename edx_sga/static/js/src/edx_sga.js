@@ -220,13 +220,19 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 
                 //package data for other templates
                 var fileData = {
-                    module_id:         studentData.module_id,
                     uploadType:        "annotation",
                     filelist:          studentData.annotated,
-                    uploadUrl:         annotatedUploadUrl,
-                    downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
-                    downloadUrl:       staffDownloadAnnotatedUrl,
-                    deleteUrl:         deleteAnnotationFileUrl,
+                    uploadUrl:         annotatedUploadUrl + "?module_id=" 
+                                       + studentData.uploadState.module_id,
+                    downloadZippedUrl: staffDownloadAnnotatedZippedUrl + ?module,
+                    downloadUrl:       function(hash) {
+                        return staffDownloadAnnotatedUrl + '/' + hash 
+                        + "?module_id=" + module_id;
+                    }
+                    deleteUrl:         function(hash) {
+                        return deleteAnnotationFileUrl +'/' + hash
+                        + "?module_id=" + module_id;
+                    }
                     upload_allowed:    true 
                 };
 
@@ -334,7 +340,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             fileUploadDiv.html(uploadTemplate(uploadState));
 
             fileUploadDiv.find(".fileupload").fileupload({
-                url: uploadState.uploadUrl + "?module_id=" + uploadState.module_id,
+                url: uploadState.uploadUrl,
                 add: function(e, data)
                 {
                     var do_upload = fileUploadDiv.html('');
@@ -400,8 +406,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             fileListDiv.html(filelistTemplate(fileState));
 
             fileListDiv.find(".fileDelete").on("click", function() {
-                var url = fileState.deleteUrl + "/" + fileState.filelist[this.value].sha1
-                    + '?module_id=' + fileState.module_id;
+                var url = fileState.deleteUrl(fileState.filelist[this.value].sha1);
                 var pos = this.value;
                 $.get(url).success(function(data) {
                     if (pos < fileState.filelist.length)
