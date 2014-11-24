@@ -223,7 +223,7 @@
   <script type="text/template" id="sga-upload-tmpl">
       <input class="fileupload" type="file" name="<%= uploadType %>"/>
       <button class="fileuploadbutton">Select a file</button>
-      <p><%= error %></p>
+      <p class="error"><%= error %></p>
   </script>
 
   <div aria-hidden="true" class="wrap-instructor-info">
@@ -308,11 +308,11 @@
           <div class="filelist">loading...</div>
           
           <div class="upload">loading...</div>
-          <div>
-            <button type="button" id="manage-annotated-exit">
-              {% trans "Exit" %}
-            </button>
-          </div>
+
+          <button type="button" id="manage-annotated-exit">
+            {% trans "Exit" %}
+          </button>
+
         </form>
       </div>
     </div>

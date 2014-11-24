@@ -374,7 +374,8 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         renderFileList();
                     }
                     //reset the upload field.
-                    fileUploadDiv.html(uploadTemplate(uploadState));
+                    handleUpload(fileUploadDiv, uploadState);
+                    //fileUploadDiv.html(uploadTemplate(uploadState));
                     
                 }
             });
