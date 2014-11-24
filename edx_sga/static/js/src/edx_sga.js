@@ -306,23 +306,25 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 uploadState.error = "";
             }
 
+            var parent = e;
+
             var renderFileList = function(e, data)
             {
                 return function(){
                             handleFilelist(e, data);
                 };
-            }(form.find('filelist'), uploadState);
+            }(parent.find('filelist'), uploadState);
 
             renderFileList();
 
-            var fileUploadDiv = e;
-            fileUploadDiv.html(uploadTemplate(uploadState));
 
-            fileUploadDiv.find(".fileupload").fileupload({
+            parent.html(uploadTemplate(uploadState));
+
+            parent.find(".fileupload").fileupload({
                 url: uploadState.uploadUrl + "?module_id=" + uploadState.module_id,
                 add: function(e, data)
                 {
-                    var do_upload = fileUploadDiv.html('');
+                    var do_upload = parent.html('');
                     $('<button/>')
                         .text('Upload ' + data.files[0].name)
                         .appendTo(do_upload)
@@ -334,7 +336,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 progressall: function(e, data) 
                 {
                     var percent = parseInt(data.loaded / data.total * 100, 10);
-                    fileUploadDiv.text("Uploading... " + percent + "%");
+                    parent.text("Uploading... " + percent + "%");
                 },
                 fail: function(e, data) 
                 {
@@ -352,7 +354,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         console.log("event: ", e);
                         console.log("data: ", data);
                     }
-                    handleUpload(fileUploadDiv, uploadState);
+                    handleUpload(parent, uploadState);
 
                 },
                 done: function(e, data) 
@@ -372,7 +374,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     }
                     //reset the upload field.
                     //handleUpload(fileUploadDiv, uploadState)
-                    fileUploadDiv.html(uploadTemplate(uploadState));
+                    parent.html(uploadTemplate(uploadState));
                     renderFileList();
                 }
             });
