@@ -409,7 +409,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             fileListDiv.html(filelistTemplate(fileState));
 
             fileListDiv.find(".fileDownload").attr(
-                "href", fileState.downloadUrl(fileState.filelist[this.value].sha1);
+                "href", fileState.downloadUrl(fileState.filelist[this.value].sha1)
             );
 
             fileListDiv.find(".fileDelete").on("click", function() {
