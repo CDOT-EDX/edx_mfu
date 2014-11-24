@@ -308,7 +308,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 uploadState.error = "";
             }
 
-            var fileUploadDiv = parent.find('.upload');
+            var fileUploadDiv = e.find('.upload');
 
             var renderFileList = function(e, data)
             {
