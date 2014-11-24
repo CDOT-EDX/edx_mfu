@@ -310,7 +310,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
             var fileUploadDiv = e.find('.upload');
 
-            var renderFileList = function(e, data)
+            var renderFileList = function(element, uploadData)
             {
                 return function(){
                     handleFilelist(e, data);
@@ -318,7 +318,6 @@ function StaffGradedAssignmentXBlock(runtime, element)
             }(e.find('.filelist'), uploadState);
 
             renderFileList();
-
 
             fileUploadDiv.html(uploadTemplate(uploadState));
 
