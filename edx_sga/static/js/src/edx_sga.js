@@ -409,12 +409,12 @@ function StaffGradedAssignmentXBlock(runtime, element)
             fileListDiv.html(filelistTemplate(fileState));
 
             fileListDiv.find(".fileDownload").each(function(index) {
-                url = fileState.downloadUrl(fileState.filelist[this.value].sha1);
+                url = fileState.downloadUrl(fileState.filelist[this.val()].sha1);
                 this.attr("href", url);
             });
 
             fileListDiv.find(".fileDelete").on("click", function() {
-                var url = fileState.deleteUrl(fileState.filelist[this.val()].sha1);
+                var url = fileState.deleteUrl(fileState.filelist[this.value].sha1);
                 var pos = this.value;
                 $.get(url).success(function(data) {
                     if (pos < fileState.filelist.length)
