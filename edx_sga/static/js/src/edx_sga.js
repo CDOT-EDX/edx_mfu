@@ -394,7 +394,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 $.get(url).success(function(data) {
                     if (this.value < filestate.filelist.length)
                     {
-                        filestate.filelist.splice(this.value, 1);
+                        fileState.filelist.splice(this.value, 1);
                     }
 
                     fileListDiv.html(filelistTemplate(fileState));
