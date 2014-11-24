@@ -220,7 +220,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
                 handleUpload(
                     form,
-                    fileData,
+                    fileData
                 );
 
                 $(element).find("#student-name-annotations").text(studentData.fullname);
