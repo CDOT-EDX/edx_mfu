@@ -389,7 +389,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             fileListDiv.html(filelistTemplate(fileState));
 
             fileListDiv.find(".fileDelete").on("click", function() {
-                var url = deleteUrl + "/" + fileState.filelist[this.value].sha1
+                var url = fileState.deleteUrl + "/" + fileState.filelist[this.value].sha1
                     + '?module_id=' + fileState.module_id;
                 $.get(url).success(function(data) {
                     if (this.value < filestate.filelist.length)
