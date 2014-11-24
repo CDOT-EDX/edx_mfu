@@ -57,7 +57,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 },
                 deleteUrl: function(hash) 
                 {
-                    return deleteFileUrl +'/' + hash;
+                    return deleteSubmissionFileUrl +'/' + hash;
                 },
                 upload_allowed:    state.upload_allowed 
             };
