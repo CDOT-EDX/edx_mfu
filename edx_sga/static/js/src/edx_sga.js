@@ -211,7 +211,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 var fileData = {
                     module_id:         studentData.module_id,
                     uploadType:        "annotation",
-                    filelist:          studentData.filelist,
+                    filelist:          studentData.annotated,
                     uploadUrl:         annotatedUploadUrl,
                     downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
                     downloadUrl:       staffDownloadAnnotatedUrl,
