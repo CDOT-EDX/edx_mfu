@@ -215,7 +215,8 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     uploadUrl:         annotatedUploadUrl,
                     downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
                     downloadUrl:       staffDownloadAnnotatedUrl,
-                    deleteUrl:         deleteAnnotationFileUrl
+                    deleteUrl:         deleteAnnotationFileUrl,
+                    upload_allowed:    true 
                 };
 
                 var form = $(element).find("#manage-annotations-form");

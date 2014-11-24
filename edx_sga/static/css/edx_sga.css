@@ -57,7 +57,7 @@
     z-index: 2;
 }
 
-.sga-block .upload button {
+.sga-block td .upload button {
     padding: 3px;
     width: 100%;
 }
