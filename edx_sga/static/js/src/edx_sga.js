@@ -152,12 +152,12 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     var module_id = $(this).parents("tr").data("module_id");
                     var url = reopenSubmissionUrl + "?module_id=" + module_id;
                     //$.get(url).success(renderStaffGrading);
-                    $.get(url).success(
+                    $.get(url).success(function() {}
                         $.grep(allStudentData.assignments, function(e) {
                             return e.module_id == module_id;
                         })[0].submitted = false;
                         renderStaffGrading(data);
-                    );
+                    });
                 });
 
 
