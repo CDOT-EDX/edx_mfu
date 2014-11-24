@@ -306,14 +306,12 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 uploadState.error = "";
             }
 
-            var renderFileList = function()
+            var renderFileList = function(e, data)
             {
-                var e = form.find('filelist');
-                var data = uploadState;
                 return function(){
                             handleFilelist(e, data);
                 };
-            };
+            }(form.find('filelist'), uploadState);
 
             renderFileList();
 
