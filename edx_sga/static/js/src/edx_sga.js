@@ -225,7 +225,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     uploadUrl:         annotatedUploadUrl + "?module_id=" 
                                        + studentData.module_id,
                     downloadZippedUrl: staffDownloadAnnotatedZippedUrl 
-                                       + "?module_id=" + studentData.module_id;
+                                       + "?module_id=" + studentData.module_id,
                     downloadUrl: function(hash) 
                     {
                         return staffDownloadAnnotatedUrl + '/' + hash 
