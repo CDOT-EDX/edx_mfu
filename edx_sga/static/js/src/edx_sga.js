@@ -388,7 +388,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             var fileListDiv = e;
             fileListDiv.html(filelistTemplate(fileState));
 
-            fileListDiv.find(".annotatedFileDelete").on("click", function() {
+            fileListDiv.find(".fileDelete").on("click", function() {
                 var url = deleteUrl + "/" + fileState.filelist[this.value].sha1
                     + '?module_id=' + fileState.module_id;
                 $.get(url).success(function(data) {
