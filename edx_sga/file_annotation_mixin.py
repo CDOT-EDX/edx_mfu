@@ -78,7 +78,7 @@ class FileAnnotationMixin(XBlockMixin):
 			self.annotated_files, 
 			self.display_name + "-annotated"
 		)
-	
+
 	@XBlock.handler
 	def staff_delete_annotated(self, request, suffix=''):
 		module_id = request.params['module_id']
@@ -93,6 +93,11 @@ class FileAnnotationMixin(XBlockMixin):
 		return Response(json_body=self.staff_grading_data())
 
 	def annotated_file_list(self, module_id):
+		"""Returns a list of annotated files for a student
+
+		Keyword arguments:
+		module_id: A student module id.
+		"""
 		assert self.is_course_staff()
 		filelist = self.get_student_state(module_id).get('annotated_files')
 		if filelist is None:
