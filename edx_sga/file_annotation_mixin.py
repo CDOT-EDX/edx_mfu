@@ -52,11 +52,11 @@ class FileAnnotationMixin(XBlockMixin):
 			filelist=annotated_list
 		)
 
-		return {
+		return Response(json_body={
 			"sha1":      key, 
 			"filename":  uploaded.filename,
 			"timestamp": uploaded.timestamp
-		}
+		})
 
 	@XBlock.handler
 	def student_download_annotated(self, request, suffix=''):
