@@ -133,10 +133,12 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         allStudentData.assignments.each(
                             removeSubmission(this);
                         );
+
                         renderStaffGrading(allStudentData);
                     });
                 });
 
+            //reopen all submissions for the asingment.
             $(element).find(".reopen-all-submissions-button")
                 .on("click", function(){
                     var url = reopenAllSubmissionsUrl;
@@ -144,6 +146,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         allStudentData.assignments.each(function() {
                             this.submitted = false;
                         });
+
                         renderStaffGrading(allStudentData);
                     });
                 });
@@ -157,6 +160,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         removeSubmission($.grep(allStudentData.assignments, function(e) {
                             return e.module_id == module_id;
                         })[0]);
+
                         renderStaffGrading(allStudentData);
                     });
                 });
@@ -172,6 +176,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         $.grep(allStudentData.assignments, function(e) {
                             return e.module_id == module_id;
                         })[0].submitted = false;
+
                         renderStaffGrading(allStudentData);
                     });
                 });
@@ -218,6 +223,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             }
         }
 
+        //reset a submission, removing all files and grades.
         function removeSubmission(submission)
         {
             submission.uploaded = [];
@@ -227,6 +233,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             removeGrade(submission);
         }
 
+        //remove a grade from a submission
         function removeGrade(submission)
         {
             sumission.score = null;
@@ -291,6 +298,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
         function handleUpload(e, data)
         {
+            //look into removing
             var uploadState = data;
             if (typeof uploadState.error === 'undefined')
             {
@@ -366,8 +374,14 @@ function StaffGradedAssignmentXBlock(runtime, element)
             });
         }
 
+        function renderUpload(e, uploadData)
+        {
+
+        }
+
         function handleFilelist(e, data)
         {
+            //look into removing
             var fileState = data;
 
             var fileListDiv = e;
@@ -391,6 +405,11 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     handleFilelist(fileListDiv, fileState)
                 });
             });
+        }
+
+        function renderFilelist(e, fileData)
+        {
+            
         }
 
         $(function($) { // onLoad
