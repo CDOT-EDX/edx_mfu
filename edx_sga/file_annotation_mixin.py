@@ -37,6 +37,9 @@ class FileAnnotationMixin(XBlockMixin):
 
 	@XBlock.handler
 	def staff_upload_annotated(self, request, suffix=''):
+        if not self.is_course_staff():
+            return Response(status=403)
+
 		module_id = request.params['module_id']
 		state = self.get_student_state(module_id)
 		annotated_list = self.annotated_file_list(module_id)
@@ -65,6 +68,9 @@ class FileAnnotationMixin(XBlockMixin):
 
 	@XBlock.handler
 	def staff_download_annotated(self, request, suffix=''):
+        if not self.is_course_staff():
+            return Response(status=403)
+
 		return self.download_file(
 			self.annotated_file_list(request.params['module_id']), 
 			suffix
@@ -73,7 +79,10 @@ class FileAnnotationMixin(XBlockMixin):
 	#For downloading the entire assingment for one student.
 	@XBlock.handler
 	def staff_download_annotated_zipped(self, request, suffix=''):
-		assert self.is_course_staff()
+		#assert self.is_course_staff()
+        if not self.is_course_staff():
+            return Response(status=403)
+
 		module = StudentModule.objects.get(pk=request.params['module_id'])
 		state = json.loads(module.state)
 
@@ -91,6 +100,9 @@ class FileAnnotationMixin(XBlockMixin):
 
 	@XBlock.handler
 	def staff_delete_annotated(self, request, suffix=''):
+        if not self.is_course_staff():
+            return Response(status=403)
+
 		module_id = request.params['module_id']
 		filelist = self.annotated_file_list(module_id)
 		newFilelist = self.delete_file(filelist, suffix)

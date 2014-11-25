@@ -186,7 +186,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         return e.module_id == row.data("module_id"); 
                     })[0];;
                 
-                //package data for other templates
+                //package data for other handlers
                 var fileData = {
                     filelist:          studentData.annotated,
                     uploadUrl:         annotatedUploadUrl + "?module_id=" 
@@ -210,24 +210,11 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
                 handleUpload(form, fileData);
 
-                $(element).find("#student-name-annotations").text(studentData.fullname);
-                
-                form.find("#fileuploadError").text("");
-                form.find("#annotated-download-all").attr(
-                    "href", staffDownloadAnnotatedZippedUrl + "?module_id=" + studentData.module_id);
-
                 form.find("#manage-annotated-exit").on("click", function() {
                     setTimeout(function() {
                         $("#grade-submissions-button").click(); 
                     }, 225);
                 });
-
-                function getAssignment(allStudentData)
-                {
-                    return $.grep(allStudentData.assignments, function(e){ 
-                        return e.module_id == studentData.module_id; 
-                    })[0];
-                }
             }
         }
 
@@ -369,14 +356,11 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     else 
                     {
                         // The happy path, no errors
-                        //renderStaffGrading(data.result);
                         uploadState.filelist.push(data.result);
                         uploadState.error = "";
-                        //renderFileList();
                     }
                     //reset the upload field.
                     handleUpload(parent, uploadState);
-                    //fileUploadDiv.html(uploadTemplate(uploadState));
                     
                 }
             });
