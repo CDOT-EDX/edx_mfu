@@ -305,11 +305,15 @@ class StaffGradedAssignmentXBlock(
 
     @XBlock.handler
     def get_staff_grading_data(self, request, suffix=''):
-        assert self.is_course_staff()
+        #assert self.is_course_staff()
+        if not self.is_course_staff():
+            return Response(status=403)
         return Response(json_body=self.staff_grading_data())
 
     @XBlock.handler
     def staff_enter_grade(self, request, suffix=''):
+        if not self.is_course_staff():
+            return Response(status=403)
         self.enter_grade(
             request.params['module_id'],
             request.params['grade'],
@@ -320,6 +324,8 @@ class StaffGradedAssignmentXBlock(
 
     @XBlock.handler
     def staff_remove_grade(self, request, suffix=''):
+        if not self.is_course_staff():
+            return Response(status=403)
         self.remove_grade(request.params['module_id'])
         
         return Response(json_body=self.staff_grading_data())
@@ -334,7 +340,9 @@ class StaffGradedAssignmentXBlock(
 
     @XBlock.handler 
     def staff_reopen_submission(self, request, suffix=''):
-        assert self.is_course_staff()
+        #assert self.is_course_staff()
+        if not self.is_course_staff():
+            return Response(status=403)
         self.set_student_state(
             request.params['module_id'],
             is_submitted = False
@@ -345,7 +353,10 @@ class StaffGradedAssignmentXBlock(
 
     @XBlock.handler
     def staff_reopen_all_submissions(self, request, suffix=''):
-        assert self.is_course_staff()
+        #assert self.is_course_staff()
+        if not self.is_course_staff():
+            return Response(status=403)
+
         query = StudentModule.objects.filter(
             course_id=self.xmodule_runtime.course_id,
             module_state_key=self.location
@@ -362,6 +373,8 @@ class StaffGradedAssignmentXBlock(
 
     @XBlock.handler
     def staff_remove_submission(self, request, suffix=''):
+        if not self.is_course_staff():
+            return Response(status=403)
         self.remove_submission(request.params['module_id'])
 
         return Response(status=204)
@@ -369,7 +382,10 @@ class StaffGradedAssignmentXBlock(
 
     @XBlock.handler
     def staff_remove_all_submissions(self, request, suffix=''):
-        assert self.is_course_staff()
+        #assert self.is_course_staff()
+        if not self.is_course_staff():
+            return Response(status=403)
+
         query = StudentModule.objects.filter(
             course_id=self.xmodule_runtime.course_id,
             module_state_key=self.location
@@ -382,6 +398,8 @@ class StaffGradedAssignmentXBlock(
         #return Response(json_body=self.staff_grading_data())
 
     def enter_grade(self, module_id, grade, comment=''):
+        if not self.is_course_staff():
+            return Response(status=403)
         self.set_student_state(
             module_id,
             score = float(grade),
@@ -391,6 +409,8 @@ class StaffGradedAssignmentXBlock(
         )
 
     def remove_grade(self, module_id):
+        if not self.is_course_staff():
+            return Response(status=403)
         self.set_student_state(
             module_id,
             score = None,
