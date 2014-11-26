@@ -80,7 +80,7 @@ class FileManagementMixin(object):
 		if key not in filelist:
 			raise ExceptionResponse.HTTPNotFound(
 				detail="File not found",
-				comment='No file matching hash ' . key . 'found'
+				comment='No file matching hash ' + key + 'found'
 				)
 
 		#get file info
