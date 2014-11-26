@@ -64,13 +64,13 @@
       <% } else { %>
 
         <% for (var i = 0; i < filelist.length; i++) { %>
-          <tr>
-            <td>
+          <ul>
+            <li>
               <a class="fileDownload" value="<%= i %>" href="">
                 <%= filelist[i].filename %>
               </a>
-            </td>
-          </tr>
+            </li>
+          </ul>
         <% } %>
       <% } %>
 
@@ -164,7 +164,8 @@
           <td><%= assignment.comment %></td>
 
           <td>
-            <p><a class="manage-annotated-button" href="#{{ id }}-manage-annotated">
+            <p><a class="manage-annotated-button" 
+                  href="#{{ id }}-manage-annotated">
               {% trans "Manage" %}
             </a></p>
           </td>
