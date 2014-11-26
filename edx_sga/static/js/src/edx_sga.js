@@ -81,7 +81,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 $.get(submitUrl).success(function () {
                     state.submitted = true;
                     state.upload_allowed = false;
-                    state.submitted_on = Date.now();
+                    state.submitted_on = Date.now().toISOString();
                     render(state);
                 });
             });
@@ -142,7 +142,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     
                     $.get(url).success(function() {
                         allStudentData.assignments.each(function() {
-                            this.submitted = false;
+                            reopenSubmission(this);
                         });
 
                         renderStaffGrading(allStudentData);
@@ -173,10 +173,10 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     var url = reopenSubmissionUrl + "?module_id=" + module_id;
                     
                     $.get(url).success(function() {
-                        $.grep(allStudentData.assignments, function(e) {
+                        reopenSubmission($.grep(allStudentData.assignments, function(e) {
                             return e.module_id == module_id;
-                        })[0].submitted = false;
-
+                        })[0]);
+                        
                         renderStaffGrading(allStudentData);
                     });
                 });
@@ -303,16 +303,24 @@ function StaffGradedAssignmentXBlock(runtime, element)
             }
         }
 
+
+
         //reset a submission, removing all files and grades.
         function removeSubmission(submission)
         {
             submission.uploaded = [];
             submission.annotated = [];
+
+            reopenSubmission(submission);
+            removeGrade(submission);
+        }
+
+        //reopen submission for student uploads
+        function reopenSubmission(submission)
+        {
             submission.submitted = false;
             submission.submitted_on = null;
             submission.may_grade = false;
-
-            removeGrade(submission);
         }
 
         //remove a grade from a submission
