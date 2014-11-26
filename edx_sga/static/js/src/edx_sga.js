@@ -123,7 +123,12 @@ function StaffGradedAssignmentXBlock(runtime, element)
             //set up annotated file submision modal
             $(element).find(".manage-annotated-button")
                 .leanModal({closeButton: "#manage-annotated-exit"})
-                .on("click", handleManageAnnotated);
+                .on("click", function() {
+                    handleManageAnnotated(
+                        $.grep(allStudentData.assignments, function(e){
+                            return e.module_id == this.attr("value");
+                        }))
+                });
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
@@ -184,16 +189,17 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
 
             //All upload, download and delete for annotated files
-            function handleManageAnnotated() 
+            function handleManageAnnotated(studentData) 
             {
-                var row = $(this).parents("tr");
-                var studentData = $.grep(allStudentData.assignments, function(e){ 
-                        return e.module_id == row.data("module_id"); 
-                    })[0];;
+                //var row = $(this).parents("tr");
+                //var studentData = $.grep(allStudentData.assignments, function(e){ 
+                //        return e.module_id == row.data("module_id"); 
+                //    })[0];
                 
-                $('#student-name-annotations').text(studentData.fullname)
+                $('#student-name-annotations').text(studentData.fullname);
 
-                //package data for other handlers
+                //Object containing data needed for rendering file list
+                //and upload button.
                 var fileData = {
                     filelist:          studentData.annotated,
                     uploadUrl:         annotatedUploadUrl + "?module_id=" 
