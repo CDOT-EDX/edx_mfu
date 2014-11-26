@@ -296,16 +296,16 @@ function StaffGradedAssignmentXBlock(runtime, element)
             });
         }
 
-        function handleUpload(e, data)
+        function handleUpload(parent, uploadState)
         {
             //look into removing
-            var uploadState = data;
+            //var uploadState = data;
             if (typeof uploadState.error === 'undefined')
             {
                 uploadState.error = "";
             }
 
-            var parent = e;
+            //var parent = e;
             var fileUploadDiv = e.find('.upload');
 
             var renderFileList = function(element)
@@ -374,17 +374,12 @@ function StaffGradedAssignmentXBlock(runtime, element)
             });
         }
 
-        function renderUpload(e, uploadData)
-        {
-
-        }
-
-        function handleFilelist(e, data)
+        function handleFilelist(fileListDiv, fileState)
         {
             //look into removing
-            var fileState = data;
+            //var fileState = data;
 
-            var fileListDiv = e;
+            //var fileListDiv = e;
             fileListDiv.html(filelistTemplate(fileState));
 
             fileListDiv.find(".fileDownload").each(function() {
@@ -407,10 +402,6 @@ function StaffGradedAssignmentXBlock(runtime, element)
             });
         }
 
-        function renderFilelist(e, fileData)
-        {
-            
-        }
 
         $(function($) { // onLoad
             var block = $(element).find(".sga-block");
