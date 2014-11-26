@@ -306,7 +306,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
         {
             submission.uploaded = [];
             submission.annotated = [];
-            submision.submitted = false;
+            submission.submitted = false;
 
             removeGrade(submission);
         }
