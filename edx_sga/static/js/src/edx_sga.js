@@ -314,9 +314,9 @@ function StaffGradedAssignmentXBlock(runtime, element)
         //remove a grade from a submission
         function removeGrade(submission)
         {
-            sumission.score = null;
+            submission.score = null;
             submission.comment = '';
-            submision.published = false;
+            submission.published = false;
             submission.approved = false;
         }
 
