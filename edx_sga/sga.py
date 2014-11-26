@@ -516,7 +516,7 @@ class StaffGradedAssignmentXBlock(
 			raise ExceptionResponse.HTTPForbidden(
 				detail='Not a staff member')
 		if request is not None:
-			if 'module_id' not in response.params:
+			if 'module_id' not in request.params:
 				raise ExceptionResponse.HTTPBadRequest(
 					detail='No module id was sent.',
 					comment='staff must send student module id with requests involing students.'
