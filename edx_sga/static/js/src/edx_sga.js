@@ -37,11 +37,6 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
         function render(state) 
         {
-            // Add download urls to template context
-            //state.downloadUrl = studentDownloadUrl;
-            //state.downloadZippedUrl = studentDownloadZippedUrl;
-            //state.downloadAnnotatedUrl = studentAnnotationDownloadUrl;
-            //state.downloadAnnotatedZippedUrl = studentAnootationDownloadZippedUrl;
             state.error = state.error ? state.error : false;
 
             // Render template
@@ -100,9 +95,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
             // Add download urls to template context
             data.downloadUrl = staffDownloadUrl;
-            data.downloadZippedUrl = staffDownloadZippedUrl;
-            //data.reopenSubmissionUrl = reopenSubmissionUrl;
-            //data.removeSubmissionUrl = removeSubmissionUrl;
+            data.downloadZippedUrl = staffDownloadZippedUrl;            //data.removeSubmissionUrl = removeSubmissionUrl;
 
             // Render template
             $(element).find("#grade-info")
@@ -244,27 +237,31 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     })[0];
 
                 var form = $(element).find("#enter-grade-form");
-                $(element).find("#student-name").text(row.data("fullname"));
+                $(element).find("#student-name").text(studentData.fullname);
 
                 form.find("#module_id-input").val(studentData.module_id);
                 form.find("#grade-input").val(studentData.score);
                 form.find("#comment-input").text(studentData.comment);
 
                 form.off("submit").on("submit", function(event) {
-                    var max_score = row.parents("#grade-info").data("max_score");
+                    var max_score = allStudentdata.max_score;//row.parents("#grade-info").data("max_score");
                     var score = Number(form.find("#grade-input").val());
                     event.preventDefault();
 
-                    if (isNaN(score)) {
+                    if (isNaN(score)) //entered score not integer
+                    {
                         form.find(".error").html("<br/>Grade must be a number.");
                     } 
-                    else if (score < 0) {
+                    else if (score < 0) //entered score not positive
+                    {
                         form.find(".error").html("<br/>Grade must be positive.");
                     }
-                    else if (score > max_score) {
+                    else if (score > max_score) //entered score too large.
+                    {
                         form.find(".error").html("<br/>Maximum score is " + max_score);
                     }
-                    else {
+                    else 
+                    {
                         // No errors
                         studentData.score = score;
                         studentData.comment = form.find("#comment-input").text();
@@ -275,10 +272,14 @@ function StaffGradedAssignmentXBlock(runtime, element)
                             });
                     }
                 });
+
+                //Remove the grade from the student's assignment.
                 form.find("#remove-grade").on("click", function() {
                     var url = removeGradeUrl + "?module_id=" + module_id;
                     $.get(url).success(renderStaffGrading);
                 });
+
+                //leave the grading pane.
                 form.find("#enter-grade-cancel").on("click", function() {
                     /* We're kind of stretching the limits of leanModal, here,
                      * by nesting modals one on top of the other.  One side effect
@@ -322,33 +323,36 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
 
 
-        function handleUpload(parent, uploadState)
+        function handleUpload(parent, state)
         {
             //look into removing
-            //var uploadState = data;
-            if (typeof uploadState.error === 'undefined')
+            //var state = data;
+            if (typeof state.error === undefined)
             {
-                uploadState.error = "";
+                state.error = "";
             }
 
             //var parent = e;
-            var fileUploadDiv = parent.find('.upload');
+            var fileuploadDiv = parent.find('.upload');
+            var filelistDiv = parent.find('.filelist');
 
-            var renderFileList = function(element)
+            handleFilelist(filelistDiv, state)
+
+/*            var renderFileList = function(element)
             {
                 return function(){
-                    handleFilelist(element, uploadState);
+                    handleFilelist(element, state);
                 };
-            }(parent.find('.filelist'));
+            }(parent.find('.filelist'));*/
 
-            renderFileList();
-            fileUploadDiv.html(uploadTemplate(uploadState));
+            //renderFileList();
+            fileuploadDiv.html(uploadTemplate(state));
 
-            fileUploadDiv.find(".fileupload").fileupload({
-                url: uploadState.uploadUrl,
+            fileuploadDiv.find(".fileupload").fileupload({
+                url: state.uploadUrl,
                 add: function(e, data)
                 {
-                    var do_upload = fileUploadDiv.html('');
+                    var do_upload = fileuploadDiv.html('');
                     $('<button/>')
                         .text('Upload ' + data.files[0].name)
                         .appendTo(do_upload)
@@ -360,70 +364,72 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 progressall: function(e, data) 
                 {
                     var percent = parseInt(data.loaded / data.total * 100, 10);
-                    fileUploadDiv.text("Uploading... " + percent + "%");
+                    fileuploadDiv.text("Uploading... " + percent + "%");
                 },
                 fail: function(e, data) 
                 {
                     var error = "";
                     if (data.jqXHR.status == 413)
                     {
-                        uploadState.error = "The file you are trying to upload is too large."
+                        state.error = "The file you are trying to upload is too large."
                     }
                     else 
                     {
                         // Suitably vague
-                        uploadState.error = "There was an error uploading your file.";
+                        state.error = "There was an error uploading your file.";
 
                         console.log("There was an error with file upload.");
                         console.log("event: ", e);
                         console.log("data: ", data);
                     }
-                    handleUpload(parent, uploadState);
+                    handleUpload(parent, state);
                 },
                 done: function(e, data) 
                 { 
                     if (data.result.success !== undefined) 
                     {
                         // Actually, this is an error
-                        uploadState.error = data.result.success;
+                        state.error = data.result.success;
                     }
                     else 
                     {
                         // The happy path, no errors
-                        uploadState.filelist.push(data.result);
-                        uploadState.error = "";
+                        state.filelist.push(data.result);
+                        state.error = "";
                     }
                     //reset the upload field.
-                    handleUpload(parent, uploadState);
+                    handleUpload(parent, state);
                     
                 }
             });
         }
 
-        function handleFilelist(fileListDiv, fileState)
+        function handleFilelist(fileListDiv, state)
         {
-            //look into removing
-            //var fileState = data;
+            fileListDiv.html(filelistTemplate(state));
 
-            //var fileListDiv = e;
-            fileListDiv.html(filelistTemplate(fileState));
-
+            //attach download url
+            //would do this with a template, but I am unsure how
+            //to use the downloadUrl function in an underscore.js
+            //template.
             fileListDiv.find(".fileDownload").each(function() {
                 var pos = $(this).attr('value');
-                url = fileState.downloadUrl(fileState.filelist[pos].sha1);
+                url = state.downloadUrl(state.filelist[pos].sha1);
                 $(this).attr("href", url);
             });
 
+            //bind file delete command to url.
             fileListDiv.find(".fileDelete").on("click", function() {
-                var url = fileState.deleteUrl(fileState.filelist[this.value].sha1);
+                var url = state.deleteUrl(state.filelist[this.value].sha1);
                 var pos = this.value;
+
                 $.get(url).success(function(data) {
-                    if (pos < fileState.filelist.length)
+                    if (pos < state.filelist.length)
                     {
-                        fileState.filelist.splice(pos, 1);
+                        state.filelist.splice(pos, 1);
                     }
 
-                    handleFilelist(fileListDiv, fileState)
+                    handleFilelist(fileListDiv, state)
                 });
             });
         }

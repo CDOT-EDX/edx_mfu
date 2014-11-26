@@ -37,7 +37,13 @@ class FileSubmissionMixin(XBlockMixin):
 
 	@XBlock.handler
 	def student_upload_file(self, request, suffix=''):
-		assert self.upload_allowed()
+		"""Allows a student to upload a file for submission.
+
+		Keyword arguments:
+		request: holds the file to be added to the submission.
+		suffix:  not used.
+		"""
+		self.validate_staff_request(request)
 
 		key, uploaded = self.upload_file(
 			self.uploaded_files, 
@@ -52,20 +58,29 @@ class FileSubmissionMixin(XBlockMixin):
 		
 	@XBlock.handler
 	def student_download_file(self, request, suffix=''):
+		"""Returns a temporary download link for a file.
+
+		Keyword arguments:
+		request: not used
+		suffix:  the hash of the file.
+		"""
 		return self.download_file(self.uploaded_files, suffix)
 
 	@XBlock.handler
 	def staff_download_file(self, request, suffix=''):
-		if not self.is_course_staff():
-			return Response(status=403)
+		"""Returns a temporary download link for a file.
 
-		assert self.is_course_staff()
+		Keyword arguments:
+		request: holds the module_id for a student module.
+		suffix:  the hash of the file.
+		"""
+		self.validate_staff_request(request)
+
 		return self.download_file(
 			self.uploaded_file_list(request.params['module_id']),
 			suffix
 		 )
 	
-	#For downloading the entire assingment for one student.
 	@XBlock.handler
 	def staff_download_zipped(self, request, suffix=''):
 		"""Returns all uploaded files in a zip file.
@@ -74,8 +89,7 @@ class FileSubmissionMixin(XBlockMixin):
 		request: holds the module_id for a student module.
 		suffix:  not used.
 		"""
-		if not self.is_course_staff():
-			return Response(status=403)
+		self.validate_staff_request(request)
 
 		module_id = request.params['module_id'];
 		module = self.get_module(module_id)
@@ -117,8 +131,7 @@ class FileSubmissionMixin(XBlockMixin):
 		request: holds module_id.
 		suffix:  holds the key hash of the file to be deleted.
 		"""
-		if not self.is_course_staff():
-			return Response(status=403)
+		self.validate_staff_request(request)
 
 		module_id = request.params['module_id']
 		uploaded = self.get_student_state(module_id).get('uploaded_files')

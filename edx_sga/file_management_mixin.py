@@ -64,9 +64,8 @@ class FileManagementMixin(object):
 		if not default_storage.exists(path):
 			default_storage.save(path, File(upload.file))
 
-		#Need to return the list as staff cannot directly modify student fields.
+		#Need to return key and metadata so staff can append it to list.
 		return (upload_key, metadata)
-		#return Response(json_body=self.student_state())
 
 	def download_file(self, filelist, key):
 		"""Returns a file specified by a key.

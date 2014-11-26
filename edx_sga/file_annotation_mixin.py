@@ -37,8 +37,7 @@ class FileAnnotationMixin(XBlockMixin):
 
 	@XBlock.handler
 	def staff_upload_annotated(self, request, suffix=''):
-		if not self.is_course_staff():
-			return Response(status=403)
+		self.validate_staff_request(request)
 
 		module_id = request.params['module_id']
 		state = self.get_student_state(module_id)
@@ -64,12 +63,23 @@ class FileAnnotationMixin(XBlockMixin):
 
 	@XBlock.handler
 	def student_download_annotated(self, request, suffix=''):
+		"""Returns a temporary download link for an annotated file.
+
+		Keyword arguments:
+		request: not used
+		suffix:  the hash of the file.
+		"""
 		return self.download_file(self.annotated_files, suffix)
 
 	@XBlock.handler
 	def staff_download_annotated(self, request, suffix=''):
-		if not self.is_course_staff():
-			return Response(status=403)
+		"""Returns a temporary download link for an annotated file.
+
+		Keyword arguments:
+		request: holds the module_id for a student module.
+		suffix:  the hash of the file.
+		"""
+		self.validate_staff_request(request)
 
 		return self.download_file(
 			self.annotated_file_list(request.params['module_id']), 
@@ -79,9 +89,14 @@ class FileAnnotationMixin(XBlockMixin):
 	#For downloading the entire assingment for one student.
 	@XBlock.handler
 	def staff_download_annotated_zipped(self, request, suffix=''):
+		"""Returns all annotated files in a zip file.
+
+		Keyword arguments:
+		request: holds the module_id for a student module.
+		suffix:  not used.
+		"""
 		#assert self.is_course_staff()
-		if not self.is_course_staff():
-			return Response(status=403)
+		self.validate_staff_request(request)
 
 		module = StudentModule.objects.get(pk=request.params['module_id'])
 		state = json.loads(module.state)
@@ -93,6 +108,12 @@ class FileAnnotationMixin(XBlockMixin):
 
 	@XBlock.handler
 	def student_download_annotated_zipped(self, request, suffix=''):
+		"""Returns all annotated files in a zip file.
+
+		Keyword arguments:
+		request: not used
+		suffix:  not used.
+		"""
 		return self.download_zipped(
 			self.annotated_files, 
 			self.display_name + "-annotated"
@@ -100,8 +121,9 @@ class FileAnnotationMixin(XBlockMixin):
 
 	@XBlock.handler
 	def staff_delete_annotated(self, request, suffix=''):
-		if not self.is_course_staff():
-			return Response(status=403)
+		"""
+		"""
+		self.validate_staff_request(request)
 
 		module_id = request.params['module_id']
 		filelist = self.annotated_file_list(module_id)

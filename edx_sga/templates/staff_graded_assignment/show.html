@@ -23,6 +23,7 @@
         {% trans "This assignment has not yet been graded." %}
       <% } %>
 
+      <b>Annotated Files</b>
       <div id="student-annotated">loading...</div>
 
       <p>Submitted on: <%= submission_time %></p>
@@ -78,7 +79,7 @@
         Download All 
       </a>
     <% } else { %>
-      {% trans "No annotations available for this student." %}
+      {% trans "No files availabe." %}
     <% } %>
   </script>
 
