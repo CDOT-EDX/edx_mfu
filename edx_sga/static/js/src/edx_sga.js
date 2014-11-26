@@ -244,7 +244,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 form.find("#comment-input").text(studentData.comment);
 
                 form.off("submit").on("submit", function(event) {
-                    var max_score = allStudentdata.max_score;//row.parents("#grade-info").data("max_score");
+                    var max_score = allStudentData.max_score;//row.parents("#grade-info").data("max_score");
                     var score = Number(form.find("#grade-input").val());
                     event.preventDefault();
 
