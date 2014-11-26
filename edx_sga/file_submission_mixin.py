@@ -43,7 +43,6 @@ class FileSubmissionMixin(XBlockMixin):
 		request: holds the file to be added to the submission.
 		suffix:  not used.
 		"""
-		self.validate_staff_request(request)
 
 		key, uploaded = self.upload_file(
 			self.uploaded_files, 
