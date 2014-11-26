@@ -124,7 +124,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             $(element).find(".manage-annotated-button")
                 .leanModal({closeButton: "#manage-annotated-exit"})
                 .on("click", function() {
-                    var pos = /^\d*\-/.exec($(this).attr('href'))[0];
+                    var pos = $(this).attr('href').split('-')[0];
                     handleManageAnnotated(
                         $.grep(allStudentData.assignments, function(e){
                             return e.module_id == pos;
