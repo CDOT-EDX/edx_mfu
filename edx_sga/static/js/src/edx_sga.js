@@ -266,6 +266,9 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     }
                     else {
                         // No errors
+                        studentData.score = score;
+                        studentData.comment = form.find("#comment-input").text();
+
                         $.post(enterGradeUrl, form.serialize())
                             .success(function() {
                                 renderStaffGrading(allStudentData);
