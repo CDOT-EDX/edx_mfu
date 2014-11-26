@@ -118,28 +118,19 @@ function StaffGradedAssignmentXBlock(runtime, element)
             // Set up grade entry modal
             $(element).find(".enter-grade-button")
                 .leanModal({closeButton: "#enter-grade-cancel"})
-                .on("click", function() {
-                    var module_id = $(this).parents("tr").data('module_id');
-
-                    handleGradeEntry(allStudentData, module_id);
-                });
+                .on("click", handleGradeEntry);
 
             //set up annotated file submision modal
             $(element).find(".manage-annotated-button")
                 .leanModal({closeButton: "#manage-annotated-exit"})
-                .on("click", function() {
-                    var module_id = $(this).parents("tr").data('module_id');
-
-                    handleManageAnnotated(
-                        $.grep(allStudentData.assignments, function(e){
-                            return e.module_id == module_id;
-                        })[0]);
-                });
+                .on("click", handleManageAnnotated);
 
             //all submission control
             $(element).find(".remove-all-submissions-button")
-                .on("click", function(){
+                .on("click", function()
+                {
                     var url = removeAllSubmissionsUrl;
+                    
                     $.get(url).success(function() {
                         allStudentData.assignments.each(
                             removeSubmission(this)
@@ -151,8 +142,10 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
             //reopen all submissions for the asingment.
             $(element).find(".reopen-all-submissions-button")
-                .on("click", function(){
+                .on("click", function()
+                {
                     var url = reopenAllSubmissionsUrl;
+                    
                     $.get(url).success(function() {
                         allStudentData.assignments.each(function() {
                             this.submitted = false;
@@ -164,9 +157,11 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
             //Remove a submission, including grades and files.
             $(element).find(".remove-submission-button")
-                .on("click", function(){
+                .on("click", function()
+                {
                     var module_id = $(this).parents("tr").data("module_id");
                     var url = removeSubmissionUrl + "?module_id=" + module_id;
+                    
                     $.get(url).success(function() {
                         removeSubmission($.grep(allStudentData.assignments, function(e) {
                             return e.module_id == module_id;
@@ -182,7 +177,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 {
                     var module_id = $(this).parents("tr").data("module_id");
                     var url = reopenSubmissionUrl + "?module_id=" + module_id;
-                    //$.get(url).success(renderStaffGrading);
+                    
                     $.get(url).success(function() {
                         $.grep(allStudentData.assignments, function(e) {
                             return e.module_id == module_id;
@@ -192,11 +187,17 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     });
                 });
 
-
-
             //All upload, download and delete for annotated files
-            function handleManageAnnotated(studentData) 
+            function handleManageAnnotated() 
             {   
+                var row = $(this).parents("tr");
+                var module_id = row.data("module_id")
+
+                var studentData = 
+                    $.grep(allStudentData.assignments, function(e){
+                        return e.module_id == module_id;
+                    })[0];
+
                 $('#student-name-annotations').text(studentData.fullname);
 
                 //Object containing data needed for rendering file list
@@ -230,6 +231,71 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     }, 225);
                 });
             }
+
+            /* Click event handler for "enter grade" */
+            function handleGradeEntry() 
+            {
+                var row = $(this).parents("tr");
+                var module_id = row.data("module_id")
+
+                var studentData = 
+                    $.grep(allStudentData.assignments, function(e){
+                        return e.module_id == module_id;
+                    })[0];
+
+                var form = $(element).find("#enter-grade-form");
+                $(element).find("#student-name").text(row.data("fullname"));
+
+                form.find("#module_id-input").val(studentData.module_id);
+                form.find("#grade-input").val(studentData.score);
+                form.find("#comment-input").text(studentData.comment);
+
+                form.off("submit").on("submit", function(event) {
+                    var max_score = row.parents("#grade-info").data("max_score");
+                    var score = Number(form.find("#grade-input").val());
+                    event.preventDefault();
+
+                    if (isNaN(score)) {
+                        form.find(".error").html("<br/>Grade must be a number.");
+                    } 
+                    else if (score < 0) {
+                        form.find(".error").html("<br/>Grade must be positive.");
+                    }
+                    else if (score > max_score) {
+                        form.find(".error").html("<br/>Maximum score is " + max_score);
+                    }
+                    else {
+                        // No errors
+                        $.post(enterGradeUrl, form.serialize())
+                            .success(function() {
+                                renderStaffGrading(allStudentData);
+                            });
+                    }
+                });
+                form.find("#remove-grade").on("click", function() {
+                    var url = removeGradeUrl + "?module_id=" + module_id;
+                    $.get(url).success(renderStaffGrading);
+                });
+                form.find("#enter-grade-cancel").on("click", function() {
+                    /* We're kind of stretching the limits of leanModal, here,
+                     * by nesting modals one on top of the other.  One side effect
+                     * is that when the enter grade modal is closed, it hides
+                     * the overlay for itself and for the staff grading modal,
+                     * so the overlay is no longer present to click on to close
+                     * the staff grading modal.  Since leanModal uses a fade out
+                     * time of 200ms to hide the overlay, our work around is to 
+                     * wait 225ms and then just "click" the 'Grade Submissions'
+                     * button again.  It would also probably be pretty 
+                     * straightforward to submit a patch to leanModal so that it
+                     * would work properly with nested modals.
+                     *
+                     * See: https://github.com/mitodl/edx-sga/issues/13
+                     */
+                    setTimeout(function() {
+                        $("#grade-submissions-button").click(); 
+                    }, 225);
+                });
+            }
         }
 
         //reset a submission, removing all files and grades.
@@ -251,68 +317,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             submission.approved = false;
         }
 
-        /* Click event handler for "enter grade" */
-        function handleGradeEntry(allStudentData, module_id) 
-        {
-            var studentData = 
-                $.grep(allStudentData.assignments, function(e){
-                    return e.module_id == module_id;
-                })[0];
-            var row = $(this).parents("tr");
-            //var module_id = row.data("module_id")
-            var form = $(element).find("#enter-grade-form");
-            $(element).find("#student-name").text(row.data("fullname"));
 
-            form.find("#module_id-input").val(studentData.module_id);
-            form.find("#grade-input").val(studentData.score);
-            form.find("#comment-input").text(studentData.comment);
-
-            form.off("submit").on("submit", function(event) {
-                var max_score = row.parents("#grade-info").data("max_score");
-                var score = Number(form.find("#grade-input").val());
-                event.preventDefault();
-
-                if (isNaN(score)) {
-                    form.find(".error").html("<br/>Grade must be a number.");
-                } 
-                else if (score < 0) {
-                    form.find(".error").html("<br/>Grade must be positive.");
-                }
-                else if (score > max_score) {
-                    form.find(".error").html("<br/>Maximum score is " + max_score);
-                }
-                else {
-                    // No errors
-                    $.post(enterGradeUrl, form.serialize())
-                        .success(function() {
-                            renderStaffGrading(allStudentData)
-                        });
-                }
-            });
-            form.find("#remove-grade").on("click", function() {
-                var url = removeGradeUrl + "?module_id=" + module_id;
-                $.get(url).success(renderStaffGrading);
-            });
-            form.find("#enter-grade-cancel").on("click", function() {
-                /* We're kind of stretching the limits of leanModal, here,
-                 * by nesting modals one on top of the other.  One side effect
-                 * is that when the enter grade modal is closed, it hides
-                 * the overlay for itself and for the staff grading modal,
-                 * so the overlay is no longer present to click on to close
-                 * the staff grading modal.  Since leanModal uses a fade out
-                 * time of 200ms to hide the overlay, our work around is to 
-                 * wait 225ms and then just "click" the 'Grade Submissions'
-                 * button again.  It would also probably be pretty 
-                 * straightforward to submit a patch to leanModal so that it
-                 * would work properly with nested modals.
-                 *
-                 * See: https://github.com/mitodl/edx-sga/issues/13
-                 */
-                setTimeout(function() {
-                    $("#grade-submissions-button").click(); 
-                }, 225);
-            });
-        }
 
         function handleUpload(parent, uploadState)
         {
