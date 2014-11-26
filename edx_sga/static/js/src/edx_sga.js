@@ -131,7 +131,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     var url = removeAllSubmissionsUrl;
                     $.get(url).success(function() {
                         allStudentData.assignments.each(
-                            removeSubmission(this);
+                            removeSubmission(this)
                         );
 
                         renderStaffGrading(allStudentData);
