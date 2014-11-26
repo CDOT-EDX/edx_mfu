@@ -258,7 +258,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 $.grep(allStudentData.assignments, function(e){
                     return e.module_id == module_id;
                 })[0];
-            //var row = $(this).parents("tr");
+            var row = $(this).parents("tr");
             //var module_id = row.data("module_id")
             var form = $(element).find("#enter-grade-form");
             $(element).find("#student-name").text(row.data("fullname"));
@@ -271,7 +271,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 var max_score = row.parents("#grade-info").data("max_score");
                 var score = Number(form.find("#grade-input").val());
                 event.preventDefault();
-                
+
                 if (isNaN(score)) {
                     form.find(".error").html("<br/>Grade must be a number.");
                 } 
