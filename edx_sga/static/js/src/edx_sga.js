@@ -306,7 +306,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             }
 
             //var parent = e;
-            var fileUploadDiv = e.find('.upload');
+            var fileUploadDiv = parent.find('.upload');
 
             var renderFileList = function(element)
             {
