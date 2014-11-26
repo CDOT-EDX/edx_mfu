@@ -22,6 +22,7 @@ from django.core.files import File
 from django.template import Context, Template
 
 from webob.response import Response
+import webob.exc as ExceptionResponse
 
 from xblock.core import XBlock
 from xblock.fields import Boolean, DateTime, Scope, String, Float, Dict
@@ -314,13 +315,15 @@ class StaffGradedAssignmentXBlock(
 	def staff_enter_grade(self, request, suffix=''):
 		if not self.is_course_staff():
 			return Response(status=403)
+
 		self.enter_grade(
 			request.params['module_id'],
 			request.params['grade'],
 			request.params.get('comment', '')
 		)
 
-		return Response(json_body=self.staff_grading_data())
+		return Response(status=204)
+		#return Response(json_body=self.staff_grading_data())
 
 	@XBlock.handler
 	def staff_remove_grade(self, request, suffix=''):
@@ -398,6 +401,8 @@ class StaffGradedAssignmentXBlock(
 		#return Response(json_body=self.staff_grading_data())
 
 	def enter_grade(self, module_id, grade, comment=''):
+		"""Allows staff to enter a grade for a student.
+		"""
 		if not self.is_course_staff():
 			return Response(status=403)
 		self.set_student_state(
@@ -420,6 +425,13 @@ class StaffGradedAssignmentXBlock(
 		)
 
 	def remove_submission(self, module_id):
+		"""Removes all grades and files from a students submission.
+		Reopens submission.
+
+		Keyword arguments:
+		module_id: The id of the student module for the student whos
+		submission is to be reopened.
+		"""
 		state = self.get_student_state(module_id)
 
 		self.delete_all(state.get('uploaded_files'))
@@ -437,10 +449,7 @@ class StaffGradedAssignmentXBlock(
 		)
 
 	def set_student_state(self, module_id, **fields):
-		"""Used for staff handlers that alter the fields of a student.
-		Users cannot access the fields of another user, even staff.
-		In order to change a students marks are upload an annotation,
-		we must do so by grabbing the student module.
+		"""Helper used to allow staff to set arbitrary student fields.
 		"""
 		assert self.is_course_staff()
 		module = StudentModule.objects.get(pk=module_id)
@@ -471,10 +480,21 @@ class StaffGradedAssignmentXBlock(
 		return not self.past_due() and not self.is_submitted
 
 	def get_module(self, module_id):
+		"""Used for staff handlers that alter the fields of a student.
+		One user cannot access the fields of another user, even staff.
+		In order to change a students marks or upload an annotation
+		we must do so by grabbing the student module.
+		"""
 		assert self.is_course_staff()
 		return StudentModule.objects.get(pk=module_id)
 
 	def get_student_state(self, module_id):
+		"""Returns the current state of the student from the module
+		with id matching module_id
+
+		Keyword arguments:
+		module_id: the id of the student module to retrive
+		"""
 		assert self.is_course_staff()
 		module = StudentModule.objects.get(pk=module_id)
 		return json.loads(module.state)
@@ -491,6 +511,16 @@ class StaffGradedAssignmentXBlock(
 		in_studio_preview = self.scope_ids.user_id is None
 		return self.is_course_staff() and not in_studio_preview
 
+	def validate_staff_request(self, request = None):
+		if not self.is_course_staff():
+			raise ExceptionResponse.HTTPForbidden(
+				detail='Not a staff member')
+		if request is not None:
+			if 'module_id' not in response.params:
+				raise ExceptionResponse.HTTPBadRequest(
+					detail='No module id was sent.',
+					comment='staff must send student module id with requests involing students.'
+					)					
 
 def _resource(path):  # pragma: NO COVER
 	"""Handy helper for getting resources from our kit."""

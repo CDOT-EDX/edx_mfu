@@ -68,17 +68,30 @@ class FileSubmissionMixin(XBlockMixin):
 	#For downloading the entire assingment for one student.
 	@XBlock.handler
 	def staff_download_zipped(self, request, suffix=''):
+		"""Returns all uploaded files in a zip file.
+
+		Keyword arguments:
+		request: holds the module_id for a student module.
+		suffix:  not used.
+		"""
 		if not self.is_course_staff():
 			return Response(status=403)
 
-		module = self.get_module(request.params['module_id'])
+		module_id = request.params['module_id'];
+		module = self.get_module(module_id)
 		return self.download_zipped(
-			self.uploaded_file_list(request.params['moudule_id']), 
+			self.uploaded_file_list(module_id), 
 			self.display_name + "-" + module.student.username
 		)
 
 	@XBlock.handler
 	def student_download_zipped(self, request, suffix=''):
+		"""Returns all uploaded files in a zip file.
+
+		Keyword arguments:
+		request: not used.
+		suffix:  not used.
+		"""
 		return self.download_zipped(
 			self.uploaded_files, 
 			self.display_name + "assignment"
@@ -98,6 +111,12 @@ class FileSubmissionMixin(XBlockMixin):
 
 	@XBlock.handler
 	def staff_delete_file(self, request, suffix=''):
+		"""Removes an uploaded file from the assignemnt
+
+		Keyword arguments:
+		request: holds module_id.
+		suffix:  holds the key hash of the file to be deleted.
+		"""
 		if not self.is_course_staff():
 			return Response(status=403)
 

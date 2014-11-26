@@ -15,6 +15,7 @@ from xblock.core import XBlock
 from xblock.fields import XBlockMixin
 
 from webob.response import Response
+import webob.exc as ExceptionResponse
 
 from django.core.files import File
 from django.core.files.storage import default_storage
@@ -38,6 +39,12 @@ class FileManagementMixin(object):
 	def upload_file(self, filelist, upload):
 		"""Saves a file to a list of files.
 		"""
+		if upload.file is none:
+			raise ExceptionResponse.BadRequest(
+				detail='No file in body.',
+				comment='The body of the request must include a file.'
+				)
+
 		upload_key = _get_key(upload.file)
 
 		metadata = FileMetaData(
@@ -71,8 +78,10 @@ class FileManagementMixin(object):
 		assert filelist is not None
 
 		if key not in filelist:
-			log.error("File download failure: No matching file belongs to this student.", exc_info=True)
-			return Response(status=404)
+			raise ExceptionResponse.HTTPNotFound(
+				detail="File not found",
+				comment='No file matching hash ' . key . 'found'
+				)
 
 		#get file info
 		metadata = get_file_metadata(filelist, key)
@@ -84,8 +93,10 @@ class FileManagementMixin(object):
 
 		#check for file existance.
 		if metadata is None:
-			log.error("Attempt to download non-existant file at " + path)
-			return Response(status = 404)
+			log.error("Problem in download_file: key exists, but metadata not found.", exc_info=True)
+			raise ExceptionResponse.HTTPInternalServerError(
+				detail="Error retriving file.  See log.",
+				)
 
 		#set up download
 		BLOCK_SIZE = 2**10 * 8  # 8kb
@@ -107,10 +118,13 @@ class FileManagementMixin(object):
 		filelist: a list of all files for this students submission.
 		filename: the name of the zip file.
 		"""
-		assert filelist is not None 
+		assert filelist is not None:
 
 		if (len(filelist) == 0 or filelist is None):
-			return Response(status = 404)
+			raise ExceptionResponse.HTTPNotFound(
+				detail="No files found",
+				comment='There are no files of that type available.'
+				)
 
 		#buffer to create zip file in memory.
 		buff = StringIO.StringIO()
