@@ -321,13 +321,11 @@ function StaffGradedAssignmentXBlock(runtime, element)
             submission.approved = false;
         }
 
-
-
         function handleUpload(parent, state)
         {
             //look into removing
             //var state = data;
-            if (typeof state.error === undefined)
+            if (typeof state.error === 'undefined')
             {
                 state.error = "";
             }
