@@ -196,7 +196,7 @@ class StaffGradedAssignmentXBlock(
 
 			"upload_allowed":  self.upload_allowed(),
 			"submitted":       self.is_submitted,
-			"submission_time": str(self.submission_time)
+			"submission_time": self.submission_time
 		}
 
 	def staff_grading_data(self):
