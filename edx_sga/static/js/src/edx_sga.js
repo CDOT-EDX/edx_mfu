@@ -485,14 +485,3 @@ function StaffGradedAssignmentXBlock(runtime, element)
         require(["jquery", "underscore", "jquery.fileupload"], xblock);
     }
 }
-
-window.fmt = {
-    mfu_date: function(dString) {
-        // Your favorite ISO 8601 date formatter goes here, this
-        // is just a quick hack (which won't work in older IEs)
-        // for demonstration purposes.
-        var d = ;
-        return Date(dString).toString(/T.*$/, '');
-    },
-    // Any other formatting functions you need go here...
-};
