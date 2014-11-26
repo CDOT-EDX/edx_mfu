@@ -39,7 +39,7 @@ class FileManagementMixin(object):
 	def upload_file(self, filelist, upload):
 		"""Saves a file to a list of files.
 		"""
-		if upload.file is none:
+		if upload.file is None:
 			raise ExceptionResponse.BadRequest(
 				detail='No file in body.',
 				comment='The body of the request must include a file.'

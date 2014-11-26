@@ -14,7 +14,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
         var annotatedUploadUrl = runtime.handlerUrl(element, 'staff_upload_annotated');
         var studentAnnotationDownloadUrl = runtime.handlerUrl(element, 'student_download_annotated');
-        var studentAnootationDownloadZippedUrl = runtime.handlerUrl(element, 'student_download_annotated_zipped');
+        var studentAnnotationDownloadZippedUrl = runtime.handlerUrl(element, 'student_download_annotated_zipped');
         var deleteAnnotationFileUrl = runtime.handlerUrl(element, 'staff_delete_annotated');
 
         var staffDownloadAnnotatedUrl = runtime.handlerUrl(element, 'staff_download_annotated');
@@ -38,10 +38,10 @@ function StaffGradedAssignmentXBlock(runtime, element)
         function render(state) 
         {
             // Add download urls to template context
-            state.downloadUrl = studentDownloadUrl;
-            state.downloadZippedUrl = studentDownloadZippedUrl;
-            state.downloadAnnotatedUrl = studentAnnotationDownloadUrl;
-            state.downloadAnnotatedZippedUrl = studentAnootationDownloadZippedUrl;
+            //state.downloadUrl = studentDownloadUrl;
+            //state.downloadZippedUrl = studentDownloadZippedUrl;
+            //state.downloadAnnotatedUrl = studentAnnotationDownloadUrl;
+            //state.downloadAnnotatedZippedUrl = studentAnootationDownloadZippedUrl;
             state.error = state.error ? state.error : false;
 
             // Render template
@@ -65,7 +65,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
             var annotatedData = {
                 filelist:          state.annotated,
-                downloadZippedUrl: staffDownloadAnnotatedZippedUrl,
+                downloadZippedUrl: studentAnnotationDownloadZippedUrl,
                 downloadUrl: function(hash) 
                 {
                     return studentDownloadUrl + '/' + hash; 
@@ -99,10 +99,10 @@ function StaffGradedAssignmentXBlock(runtime, element)
             var allStudentData = data;
 
             // Add download urls to template context
-            data.downloadUrl = staffDownloadUrl;
-            data.downloadZippedUrl = staffDownloadZippedUrl;
-            data.reopenSubmissionUrl = reopenSubmissionUrl;
-            data.removeSubmissionUrl = removeSubmissionUrl;
+            //data.downloadUrl = staffDownloadUrl;
+            //data.downloadZippedUrl = staffDownloadZippedUrl;
+            //data.reopenSubmissionUrl = reopenSubmissionUrl;
+            //data.removeSubmissionUrl = removeSubmissionUrl;
 
             // Render template
             $(element).find("#grade-info")
