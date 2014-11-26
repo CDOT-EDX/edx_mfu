@@ -337,7 +337,7 @@ class StaffGradedAssignmentXBlock(
 	def student_submit(self, request, suffix=''):
 		if not self.is_submitted:
 			self.is_submitted = True
-			submission_time = str(_now)
+			submission_time = str(_now())
 
 		return Response(status=204)
 
