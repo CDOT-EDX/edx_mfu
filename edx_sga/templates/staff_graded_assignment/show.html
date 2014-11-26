@@ -26,7 +26,7 @@
       <h2>Annotated Files</h2>
       <div id="student-annotated">loading...</div>
 
-      <p>Submitted on: <%= submission_time %></p>
+      <p>Submitted on: <%= print(Date(submission_time).toString('MMMM d, YYYY at h:mm')) %></p>
 
     <% } else { %>
       <p>

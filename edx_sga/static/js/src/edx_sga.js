@@ -81,6 +81,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 $.get(submitUrl).success(function () {
                     state.submitted = true;
                     state.upload_allowed = false;
+                    state.submitted_on = Date.now();
                     render(state);
                 });
             });
@@ -308,6 +309,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             submission.uploaded = [];
             submission.annotated = [];
             submission.submitted = false;
+            submission.submitted_on = null;
 
             removeGrade(submission);
         }
@@ -483,3 +485,14 @@ function StaffGradedAssignmentXBlock(runtime, element)
         require(["jquery", "underscore", "jquery.fileupload"], xblock);
     }
 }
+
+window.fmt = {
+    mfu_date: function(dString) {
+        // Your favorite ISO 8601 date formatter goes here, this
+        // is just a quick hack (which won't work in older IEs)
+        // for demonstration purposes.
+        var d = ;
+        return Date(dString).toString(/T.*$/, '');
+    },
+    // Any other formatting functions you need go here...
+};
