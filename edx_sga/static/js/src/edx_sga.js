@@ -118,17 +118,22 @@ function StaffGradedAssignmentXBlock(runtime, element)
             // Set up grade entry modal
             $(element).find(".enter-grade-button")
                 .leanModal({closeButton: "#enter-grade-cancel"})
-                .on("click", handleGradeEntry);
+                .on("click", function() {
+                    var module_id = $(this).parents("tr").data('module_id');
+
+                    handleGradeEntry(allStudentData, module_id);
+                });
 
             //set up annotated file submision modal
             $(element).find(".manage-annotated-button")
                 .leanModal({closeButton: "#manage-annotated-exit"})
                 .on("click", function() {
-                    var pos = $(this).parents("tr").data('module_id');
+                    var module_id = $(this).parents("tr").data('module_id');
+
                     handleManageAnnotated(
                         $.grep(allStudentData.assignments, function(e){
-                            return e.module_id == pos;
-                        })[0])
+                            return e.module_id == module_id;
+                        })[0]);
                 });
 
             //all submission control
@@ -191,12 +196,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
             //All upload, download and delete for annotated files
             function handleManageAnnotated(studentData) 
-            {
-                //var row = $(this).parents("tr");
-                //var studentData = $.grep(allStudentData.assignments, function(e){ 
-                //        return e.module_id == row.data("module_id"); 
-                //    })[0];
-                
+            {   
                 $('#student-name-annotations').text(studentData.fullname);
 
                 //Object containing data needed for rendering file list
@@ -252,19 +252,26 @@ function StaffGradedAssignmentXBlock(runtime, element)
         }
 
         /* Click event handler for "enter grade" */
-        function handleGradeEntry() 
+        function handleGradeEntry(allStudentData, module_id) 
         {
-            var row = $(this).parents("tr");
-            var module_id = row.data("module_id")
+            var studentData = 
+                $.grep(allStudentData.assignments, function(e){
+                    return e.module_id == module_id;
+                })[0];
+            //var row = $(this).parents("tr");
+            //var module_id = row.data("module_id")
             var form = $(element).find("#enter-grade-form");
             $(element).find("#student-name").text(row.data("fullname"));
-            form.find("#module_id-input").val(row.data("module_id"));
-            form.find("#grade-input").val(row.data("score"));
-            form.find("#comment-input").text(row.data("comment"));
+
+            form.find("#module_id-input").val(studentData.module_id);
+            form.find("#grade-input").val(studentData.score);
+            form.find("#comment-input").text(studentData.comment);
+
             form.off("submit").on("submit", function(event) {
                 var max_score = row.parents("#grade-info").data("max_score");
                 var score = Number(form.find("#grade-input").val());
                 event.preventDefault();
+                
                 if (isNaN(score)) {
                     form.find(".error").html("<br/>Grade must be a number.");
                 } 
@@ -277,7 +284,9 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 else {
                     // No errors
                     $.post(enterGradeUrl, form.serialize())
-                        .success(renderStaffGrading);
+                        .success(function() {
+                            renderStaffGrading(allStudentData)
+                        });
                 }
             });
             form.find("#remove-grade").on("click", function() {
