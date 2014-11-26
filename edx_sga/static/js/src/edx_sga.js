@@ -191,6 +191,8 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         return e.module_id == row.data("module_id"); 
                     })[0];;
                 
+                $('#student-name-annotations').text(studentData.fullname)
+
                 //package data for other handlers
                 var fileData = {
                     filelist:          studentData.annotated,
