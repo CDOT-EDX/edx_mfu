@@ -128,7 +128,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                     handleManageAnnotated(
                         $.grep(allStudentData.assignments, function(e){
                             return e.module_id == pos;
-                        }))
+                        })[0])
                 });
 
             //all submission control
