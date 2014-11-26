@@ -118,7 +118,7 @@ class FileManagementMixin(object):
 		filelist: a list of all files for this students submission.
 		filename: the name of the zip file.
 		"""
-		assert filelist is not None:
+		assert filelist is not None
 
 		if (len(filelist) == 0 or filelist is None):
 			raise ExceptionResponse.HTTPNotFound(
