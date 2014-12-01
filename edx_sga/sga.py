@@ -149,6 +149,7 @@ class StaffGradedAssignmentXBlock(
 		)
 		fragment.add_css(_resource("static/css/edx_sga.css"))
 		fragment.add_javascript(_resource("static/js/src/edx_sga.js"))
+		Fragment.add_javascript(_resource("/static/js/vendor/date.js"))
 		fragment.initialize_js('StaffGradedAssignmentXBlock')
 		return fragment
 
