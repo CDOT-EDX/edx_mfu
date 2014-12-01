@@ -133,7 +133,6 @@
 
           <td><%= assignment.fullname %></td>
 
-
           <td>
             <% if (assignment.may_grade && assignment.uploaded.length > 0) { %>
               <ul>
@@ -166,10 +165,12 @@
           <td><%= assignment.comment %></td>
 
           <td>
-            <p><a class="manage-annotated-button" 
-                  href="#{{ id }}-manage-annotated">
-              {% trans "Manage" %}
-            </a></p>
+            <% if (assignment.may_grade) { %>
+              <p><a class="manage-annotated-button" 
+                    href="#{{ id }}-manage-annotated">
+                {% trans "Manage" %}
+              </a></p>          
+            <% } %>
           </td>
 
           <td>
