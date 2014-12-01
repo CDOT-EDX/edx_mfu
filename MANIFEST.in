@@ -1,2 +1,2 @@
-recursive-include edx_sga/static *
-recursive-include edx_sga/templates *
+recursive-include edx_mfu/static *
+recursive-include edx_mfu/templates *

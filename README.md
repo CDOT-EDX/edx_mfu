@@ -1,7 +1,9 @@
 Staff Graded Assignment XBlock
 ==============================
 
-This package provides an XBlock for use with the edX platform which provides a staff graded assignment. Students are invited to upload files which encapsulate their work on the assignment. Instructors are then able to download the files and enter grades for the assignment.
+This package provides an XBlock for use with the edX platform which provides a staff graded assignment with multiple 
+file uploads. Students are invited to upload files which encapsulate their work on the assignment. Instructors are 
+then able to download the files and enter grades for the assignment, as well as provided annoteded files for students.
 
 Note that this package is both an XBlock and a Django application. For installation:
 
@@ -22,8 +24,8 @@ Note that this package is both an XBlock and a Django application. For installat
     ```
 
 2. Install Package using Pip install (with VM running)
-    - `pip install -e git+https://github.com/mitodl/edx-sga@master#egg=edx-sga`
-3. Add edx_sga to INSTALLED_APPS in Django settings. Enable an XBlock for testing in your devstack.
+    - `pip install -e git+https://github.com/mitodl/edx-mfu@master#egg=edx-mfu`
+3. Add edx_mfu to INSTALLED_APPS in Django settings. Enable an XBlock for testing in your devstack.
     - In `edx-platform/lms/envs/common.py`, uncomment:
     ```sh
     # from xmodule.x_module import prefer_xmodules  
@@ -58,7 +60,7 @@ Note that this package is both an XBlock and a Django application. For installat
 5. Change Advanced Settings
     1. Open a course you are authoring and select "Settings" ⇒ "Advanced Settings
     2. Navigate to the section titled “Advanced Modules”
-    3. Add “edx_sga” to module list.
+    3. Add “edx_mfu” to module list.
     4. Now when you add an “Advanced” unit in Studio, “Staff Graded Assignment” will be an option.
 
 ![image](/../screenshots/img/screenshot-studio-new-unit.png?raw=tru)

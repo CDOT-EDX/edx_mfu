@@ -1,4 +1,4 @@
-"""Setup for edx-sga XBlock."""
+"""Setup for edx-mfu XBlock."""
 
 import os
 from setuptools import setup, find_packages
@@ -15,11 +15,11 @@ def package_data(pkg, root_list):
     return {pkg: data}
 
 setup(
-    name='edx-sga',
+    name='edx-mfu',
     version='0.3.1',
-    description='edx-sga Staff Graded Assignment XBlock',
+    description='edx-mfu Multiple File Upload XBlock',
     license='Affero GNU General Public License v3 (GPLv3)',
-    url="https://github.com/wastedelectrons/edx-sga/tree/bssnively_multifileupload",
+    url="https://github.com/wastedelectrons/edx-sga",
     author="MITx",
     zip_safe=False,
     packages=find_packages(),
@@ -29,8 +29,8 @@ setup(
     ],
     entry_points={
         'xblock.v1': [
-            'edx_sga = edx_sga:StaffGradedAssignmentXBlock',
+            'edx_mfu = edx_mfu:MultipleFileUploadXBlock',
         ]
     },
-    package_data=package_data("edx_sga", ["static", "templates"]),
+    package_data=package_data("edx_mfu", ["static", "templates"]),
 )
