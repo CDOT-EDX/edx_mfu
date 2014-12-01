@@ -76,7 +76,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
             handleFilelist($('#student-annotated'), annotatedData);
             $("#student-view-submission-time")
                 .text(Date(state.submission_time)
-                    .toString('F'));
+                    .toString('MMMM, d yyyy h:mm tt'));
 
             //submit assignment for marking.
             $(content).find(".assingmentsubmit").click(function(e)
