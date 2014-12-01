@@ -4,14 +4,15 @@
      data-staff="{{ is_course_staff }}">
   <script type="text/template" id="sga-tmpl">
 
-    <b>Uploaded Files</b>
+    <h2>Uploaded Files</h2>
 
-    <div id="student-upload">
+    <div class="studentFileBox" id="student-upload">
       <div class="filelist">loading...</div>     
       <div class="upload">loading...</div>
     </div>
 
     <% if (submitted) { %>
+      <p>Submitted on: <span id="student-view-submission-time"/></p>
 
       <% if (graded) { %>
         <p>Your score is <%= graded.score %> / <%= max_score %><br/>
@@ -23,10 +24,10 @@
         {% trans "This assignment has not yet been graded." %}
       <% } %>
 
-      <h2>Annotated Files</h2>
-      <div id="student-annotated">loading...</div>
-
-      <p>Submitted on: <span id="student-view-submission-time"/></p>
+      <div class="studentFileBox">
+        <h2>Annotated Files</h2>
+        <div id="student-annotated">loading...</div>
+      </div>
 
     <% } else { %>
       <p>
