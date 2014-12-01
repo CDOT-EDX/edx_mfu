@@ -133,8 +133,9 @@
 
           <td><%= assignment.fullname %></td>
 
+
           <td>
-            <% if (assignment.uploaded.length > 0) { %>
+            <% if (assignment.may_grade && assignment.uploaded.length > 0) { %>
               <ul>
                 <% for (var i = 0; i < assignment.uploaded.length; i++) { %>
 
@@ -150,7 +151,7 @@
             <% } %>
           </td>
 
-          <td><%= assignment.timestamp %></td>
+          <td><%= assignment.submitted_on %></td>
 
           <td>
             <% if (assignment.score !== null) { %>
