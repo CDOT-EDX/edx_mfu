@@ -74,6 +74,9 @@ function StaffGradedAssignmentXBlock(runtime, element)
 
             handleUpload($('#student-upload'), uploadData);
             handleFilelist($('#student-annotated'), annotatedData);
+            $("#student-view-submission-time")
+                .text(Date(state.submission_time)
+                    .toString('F'));
 
             //submit assignment for marking.
             $(content).find(".assingmentsubmit").click(function(e)
@@ -176,7 +179,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                         reopenSubmission($.grep(allStudentData.assignments, function(e) {
                             return e.module_id == module_id;
                         })[0]);
-                        
+
                         renderStaffGrading(allStudentData);
                     });
                 });
