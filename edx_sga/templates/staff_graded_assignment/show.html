@@ -9,10 +9,12 @@
     <div class="studentFileBox" id="student-upload">
       <div class="filelist">loading...</div>     
       <div class="upload">loading...</div>
+      <% if (submitted) { %>
+        <p>Submitted on: <span id="student-view-submission-time"/></p>
+      <% } %>
     </div>
 
     <% if (submitted) { %>
-      <p>Submitted on: <span id="student-view-submission-time"/></p>
 
       <% if (graded) { %>
         <p>Your score is <%= graded.score %> / <%= max_score %><br/>
