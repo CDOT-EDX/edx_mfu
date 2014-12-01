@@ -33,6 +33,13 @@
     background-color: #ffffff;
 }
 
+.studentFileBox {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #000000;
+}
+
 /*These impact the function of the upload methods.
   No clue why.
 */
