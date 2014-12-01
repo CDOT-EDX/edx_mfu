@@ -84,7 +84,7 @@ function StaffGradedAssignmentXBlock(runtime, element)
                 $.get(submitUrl).success(function () {
                     state.submitted = true;
                     state.upload_allowed = false;
-                    state.submitted_on = Date.now().toISOString();
+                    state.submitted_on = Date.now().toString();
                     render(state);
                 });
             });
