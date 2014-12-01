@@ -27,7 +27,6 @@
       <div id="student-annotated">loading...</div>
 
       <p>Submitted on: <span id="student-view-submission-time"/></p>
-      <p>Submitted on: <%= print(Date(submission_time).toString('F')) %></p>
 
     <% } else { %>
       <p>
@@ -181,19 +180,20 @@
                   {% trans "Enter grade" %}
                 <% } %>
               </a></p>
+
+              <% if (assignment.uploaded.length > 0) { %>
+                <p><a class="remove-submission-button" href="#{{ id }}-remove-submission">
+                  {% trans "Remove Submission" %}
+                </a></p>
+              <% } %>
+
+              <% if (assignment.submitted) { %>
+                <p><a class="reopen-submission-button" href="#{{ id }}-reopen-submission">
+                  {% trans "Reopen Submission" %}
+                </a></p>
+              <% } %>
             <% } %>
 
-            <% if (assignment.uploaded.length > 0) { %>
-              <p><a class="remove-submission-button" href="#{{ id }}-remove-submission">
-                {% trans "Remove Submission" %}
-              </a></p>
-            <% } %>
-
-            <% if (assignment.submitted) { %>
-              <p><a class="reopen-submission-button" href="#{{ id }}-reopen-submission">
-                {% trans "Reopen Submission" %}
-              </a></p>
-            <% } %>
           </td>
 
         </tr>
