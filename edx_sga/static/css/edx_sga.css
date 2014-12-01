@@ -37,7 +37,8 @@
     border-width: 1px;
     padding: 8px;
     border-style: solid;
-    border-color: #000000;
+    border-radius: 15px;
+    /*border-color: #000000;*/
 }
 
 /*These impact the function of the upload methods.
