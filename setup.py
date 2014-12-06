@@ -20,7 +20,7 @@ setup(
     description='edx-mfu Multiple File Upload XBlock',
     license='Affero GNU General Public License v3 (GPLv3)',
     url="https://github.com/wastedelectrons/edx-sga",
-    author="MITx",
+    author="MITx, Seneca CDOT",
     zip_safe=False,
     packages=find_packages(),
     include_package_data=True,
