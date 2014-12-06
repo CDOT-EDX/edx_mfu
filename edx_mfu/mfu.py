@@ -1,5 +1,5 @@
 """
-This block defines a Staff Graded Assignment.  Students are shown a rubric
+This block defines a Multiple File Upload Assignment.  Students are shown a rubric
 and invited to upload a file which is then graded by staff.
 """
 import datetime
@@ -39,14 +39,14 @@ class MultipleFileUploadXBlock(
 	FileSubmissionMixin,
 	FileAnnotationMixin):
 	"""
-	This block defines a Staff Graded Assignment.  Students are shown a rubric
+	This block defines a Multiple File Upload Assignment.  Students are shown a rubric
 	and invited to upload a file which is then graded by staff.
 	"""
 	has_score = True
 	icon_class = 'problem'
 
 	display_name = String(
-		default='Staff Graded Assignment', scope=Scope.settings,
+		default='Multiple File Upload Assignment', scope=Scope.settings,
 		help="This name appears in the horizontal navigation at the top of "
 			 "the page."
 	)

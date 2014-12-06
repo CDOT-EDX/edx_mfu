@@ -1,4 +1,4 @@
-Staff Graded Assignment XBlock
+Multiple File Upload XBlock
 ==============================
 
 This package provides an XBlock for use with the edX platform which provides a staff graded assignment with multiple 
