@@ -142,7 +142,7 @@ class MultipleFileUploadXBlock(
 		fragment = Fragment()
 		fragment.add_content(
 			render_template(
-				'templates/staff_graded_assignment/show.html',
+				'templates/multiple_file_upload/show.html',
 				context
 			)
 		)
@@ -288,7 +288,7 @@ class MultipleFileUploadXBlock(
 			fragment = Fragment()
 			fragment.add_content(
 				render_template(
-					'templates/staff_graded_assignment/edit.html',
+					'templates/multiple_file_upload/edit.html',
 					context
 				)
 			)

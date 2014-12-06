@@ -107,7 +107,7 @@ class MultipleFileUploadXblockTests(unittest.TestCase):
         template_arg = render_template.call_args[0][0]
         self.assertEqual(
             template_arg,
-            'templates/staff_graded_assignment/show.html'
+            'templates/multiple_file_upload/show.html'
         )
         context = render_template.call_args[0][1]
         self.assertEqual(context['is_course_staff'], True)
@@ -166,7 +166,7 @@ class MultipleFileUploadXblockTests(unittest.TestCase):
         template_arg = render_template.call_args[0][0]
         self.assertEqual(
             template_arg,
-            'templates/staff_graded_assignment/edit.html'
+            'templates/multiple_file_upload/edit.html'
         )
         cls = type(block)
         context = render_template.call_args[0][1]
