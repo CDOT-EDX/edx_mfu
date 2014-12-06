@@ -1,1 +1,1 @@
-from .mfu import MultiFileUploadXBlock
+from .mfu import MultipleFileUploadXBlock
