@@ -63,7 +63,7 @@ function MultipleFileUploadXBlock(runtime, element)
                 downloadZippedUrl: studentAnnotationDownloadZippedUrl,
                 downloadUrl: function(hash) 
                 {
-                    return studentDownloadUrl + '/' + hash; 
+                    return studentAnnotationDownloadUrl + '/' + hash; 
                 },
                 deleteUrl: function(hash) 
                 {
