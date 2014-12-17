@@ -129,9 +129,9 @@ function MultipleFileUploadXBlock(runtime, element)
                     var url = removeAllSubmissionsUrl;
                     
                     $.get(url).success(function() {
-                        allStudentData.assignments.each(
-                            removeSubmission(this)
-                        );
+                        $.each(allStudentData.assignments, function(i, val) {
+                            removeSubmission(val)
+                        });
 
                         renderStaffGrading(allStudentData);
                     });
@@ -144,8 +144,8 @@ function MultipleFileUploadXBlock(runtime, element)
                     var url = reopenAllSubmissionsUrl;
                     
                     $.get(url).success(function() {
-                        allStudentData.assignments.each(function() {
-                            reopenSubmission(this);
+                        $.each(allStudentData.assignments, function(i, val) {
+                            reopenSubmission(val);
                         });
 
                         renderStaffGrading(allStudentData);
