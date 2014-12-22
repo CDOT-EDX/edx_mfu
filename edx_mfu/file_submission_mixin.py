@@ -19,138 +19,143 @@ from xblock.fields import XBlockMixin, Scope, Dict
 from webob.response import Response
 
 from django.core.files import File
-from django.core.files.storage import default_storage
-from django.template import Context, Template
+#from django.core.files.storage import default_storage
+#from django.template import Context, Template
 
 log = logging.getLogger(__name__)
 
 class FileSubmissionMixin(XBlockMixin):
-	"""
-	Mixin for handling file submissions.
-	"""
-	uploaded_files = Dict(
-		display_name="Uploaded Files",
-		scope=Scope.user_state,
-		default=dict(),
-		help="Files uploaded by the user. Tuple of filename, mimetype and timestamp"
-	)	
+    """
+    Mixin for handling file submissions.
+    """
+    uploaded_files = Dict(
+        display_name="Uploaded Files",
+        scope=Scope.user_state,
+        default=dict(),
+        help="Files uploaded by the user. Tuple of filename, "
+             "mimetype and timestamp"
+    )
 
-	@XBlock.handler
-	def student_upload_file(self, request, suffix=''):
-		"""Allows a student to upload a file for submission.
+    @XBlock.handler
+    def student_upload_file(self, request, suffix=''):
+        """Allows a student to upload a file for submission.
 
-		Keyword arguments:
-		request: holds the file to be added to the submission.
-		suffix:  not used.
-		"""
+        Arguments:
+        request: holds the file to be added to the submission.
+        suffix:  not used.
+        """
 
-		key, uploaded = self.upload_file(
-			self.uploaded_files, 
-			request.params['uploadedFile']
-		)
-		
-		return Response(json_body={
-			"sha1":      key, 
-			"filename":  uploaded.filename,
-			"timestamp": uploaded.timestamp
-		})
-		
-	@XBlock.handler
-	def student_download_file(self, request, suffix=''):
-		"""Returns a temporary download link for a file.
+        key, uploaded = self.upload_file(
+            self.uploaded_files,
+            request.params['uploadedFile']
+        )
 
-		Keyword arguments:
-		request: not used
-		suffix:  the hash of the file.
-		"""
-		return self.download_file(self.uploaded_files, suffix)
+        return Response(json_body={
+            "sha1":      key,
+            "filename":  uploaded.filename,
+            "timestamp": uploaded.timestamp
+        })
 
-	@XBlock.handler
-	def staff_download_file(self, request, suffix=''):
-		"""Returns a temporary download link for a file.
+    @XBlock.handler
+    def student_download_file(self, request, suffix=''):
+        """Returns a temporary download link for a file.
 
-		Keyword arguments:
-		request: holds the module_id for a student module.
-		suffix:  the hash of the file.
-		"""
-		self.validate_staff_request(request)
+        Arguments:
+        request: not used
+        suffix:  the hash of the file.
+        """
+        return self.download_file(self.uploaded_files, suffix)
 
-		return self.download_file(
-			self.uploaded_file_list(request.params['module_id']),
-			suffix
-		 )
-	
-	@XBlock.handler
-	def staff_download_zipped(self, request, suffix=''):
-		"""Returns all uploaded files in a zip file.
+    @XBlock.handler
+    def staff_download_file(self, request, suffix=''):
+        """Returns a temporary download link for a file.
 
-		Keyword arguments:
-		request: holds the module_id for a student module.
-		suffix:  not used.
-		"""
-		self.validate_staff_request(request)
+        Arguments:
+        request: holds the module_id for a student module.
+        suffix:  the hash of the file.
+        """
+        self.validate_staff_request(request)
 
-		module_id = request.params['module_id'];
-		module = self.get_module(module_id)
-		return self.download_zipped(
-			self.uploaded_file_list(module_id), 
-			self.display_name + "-" + module.student.username
-		)
+        return self.download_file(
+            self.uploaded_file_list(request.params['module_id']),
+            suffix
+        )
 
-	@XBlock.handler
-	def student_download_zipped(self, request, suffix=''):
-		"""Returns all uploaded files in a zip file.
+    @XBlock.handler
+    def staff_download_zipped(self, request, suffix=''):
+        """Returns all uploaded files in a zip file.
 
-		Keyword arguments:
-		request: not used.
-		suffix:  not used.
-		"""
-		return self.download_zipped(
-			self.uploaded_files, 
-			self.display_name + "assignment"
-		)
+        Arguments:
+        request: holds the module_id for a student module.
+        suffix:  not used.
+        """
+        self.validate_staff_request(request)
 
-	@XBlock.handler
-	def student_delete_file(self, request, suffix=''):
-		"""Removes an uploaded file from the assignemnt
+        module_id = request.params['module_id']
+        module = self.get_module(module_id)
+        return self.download_zipped(
+            self.uploaded_file_list(module_id),
+            "{}-{}".format(
+                self.display_name.replace(" ","_"),
+                module.student.username
+            )
+        )
 
-		Keyword arguments:
-		request: not used.
-		suffix:  holds the key hash of the file to be deleted.
-		"""
-		assert self.upload_allowed()
-		self.delete_file(self.uploaded_files, suffix)
-		return Response(status = 204)
+    @XBlock.handler
+    def student_download_zipped(self, request, suffix=''):
+        """Returns all uploaded files in a zip file.
 
-	@XBlock.handler
-	def staff_delete_file(self, request, suffix=''):
-		"""Removes an uploaded file from the assignemnt
+        Arguments:
+        request: not used.
+        suffix:  not used.
+        """
+        return self.download_zipped(
+            self.uploaded_files,
+            "{}".format(self.display_name.replace(" ","_"))
+        )
 
-		Keyword arguments:
-		request: holds module_id.
-		suffix:  holds the key hash of the file to be deleted.
-		"""
-		self.validate_staff_request(request)
+    @XBlock.handler
+    def student_delete_file(self, request, suffix=''):
+        """Removes an uploaded file from the assignemnt
 
-		module_id = request.params['module_id']
-		uploaded = self.get_student_state(module_id).get('uploaded_files')
+        Arguments:
+        request: not used.
+        suffix:  holds the key hash of the file to be deleted.
+        """
+        assert self.upload_allowed()
+        self.delete_file(self.uploaded_files, suffix)
+        return Response(status=204)
 
-		newFilelist = self.delete_file(uploaded, suffix)
-		self.set_student_state(
-			module_id, 
-			uploaded_files = newFilelist
-		)
+    @XBlock.handler
+    def staff_delete_file(self, request, suffix=''):
+        """Removes an uploaded file from the assignemnt
 
-		return Response(status=204)
+        Arguments:
+        request: holds module_id.
+        suffix:  holds the key hash of the file to be deleted.
+        """
+        self.validate_staff_request(request)
 
-	def uploaded_file_list(self, module_id):
-		"""Returns a list of files uploaded by a student.
-		
-		Keyword arguments:
-		module_id: A student module id.
-		"""
-		assert self.is_course_staff()
-		return self.get_student_state(module_id)['uploaded_files']
+        module_id = request.params['module_id']
+        uploaded = self.get_student_state(module_id).get('uploaded_files')
+
+        newFilelist = self.delete_file(uploaded, suffix)
+        self.set_student_state(
+            module_id,
+            uploaded_files=newFilelist
+        )
+
+        return Response(status=204)
+
+    def uploaded_file_list(self, module_id):
+        """Returns a list of files uploaded by a student.
+
+        Arguments:
+        module_id: A student module id.
+        """
+        assert self.is_course_staff()
+        return self.get_student_state(module_id)['uploaded_files']
+
 
 def _now():
-	return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+    return datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
