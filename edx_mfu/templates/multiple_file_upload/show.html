@@ -110,6 +110,85 @@
         <th>Annotations</th>
         <th>Options</th>
       </tr>
+
+      <% for (var i = 0; i < assignments.length; i++) { %>
+      <%     var assignment = assignments[i]; %>
+      <tr id="row-<%= assignment.module_id %>">
+      
+        <td><%= assignment.username %></td>
+
+        <td><%= assignment.fullname %></td>
+
+        <td>
+          <% if (assignment.may_grade && assignment.uploaded.length > 0) { %>
+            <ul>
+              <% for (var i = 0; i < assignment.uploaded.length; i++) { %>
+
+                <li>
+                  <a href="<%= downloadUrl + '/' + assignment.uploaded[i].sha1 %>?module_id=<%= assignment.module_id %>">
+                    <%= assignment.uploaded[i].filename %>
+                  </a>
+                </li>
+
+              <% } %></p>
+            </ul>
+            <a href="<%= downloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a>
+          <% } %>
+        </td>
+
+        <td><%= assignment.submitted_on %></td>
+
+        <td>
+          <% if (assignment.score !== null) { %>
+            <%= assignment.score %> /
+            <%= max_score %>
+            <% if (! assignment.approved) { %>
+              ({% trans "Awaiting instructor approval" %})
+            <% } %>
+          <% } %>
+        </td>
+
+        <td><%= assignment.comment %></td>
+
+        <td>
+          <% if (assignment.may_grade) { %>
+            <p><a class="manage-annotated-button" 
+                  href="#{{ id }}-manage-annotated">
+              {% trans "Manage" %}
+            </a></p>          
+          <% } %>
+        </td>
+
+        <td>
+          <% if (assignment.may_grade) { %>
+            <p><a class="enter-grade-button" href="#{{ id }}-enter-grade">
+              <% if (assignment.needs_approval) { %>
+                {% trans "Approve grade" %}
+              <% } else { %>
+                {% trans "Enter grade" %}
+              <% } %>
+            </a></p>
+
+            <% if (assignment.uploaded.length > 0) { %>
+              <p><a class="remove-submission-button" href="#{{ id }}-remove-submissions">
+                {% trans "Remove Submission" %}
+              </a></p>
+            <% } %>
+
+          <% } %>
+          <p><a class="toggle-submission-button" href="#toggle-submission">
+            <% if (assignment.submitted) { %>
+              {% trans "Open Submission" %}
+            <% } else { %>
+              {% trans "Close Submission" %}
+            <% } %>
+          </a></p>
+
+        </td>
+
+      </tr>
+      <% } %>
+
       <tr>
         <td></td>
         <td></td>
@@ -118,95 +197,25 @@
         <td></td>
         <td></td>
         <td>
-          <a class="remove-all-submissions-button" href="#command-remove-submission">
+          <P><a class="remove-all-submissions-button" href ="#{{ id }}-remove-all-submissions">
                 {% trans "Remove All Submissions" %}
-          </a>
+          </a></p>
         </td>
         <td>
-          <a class="reopen-all-submissions-button" href="#command-reopen-submission">
-                {% trans "Reopen All Submissions" %}
-          </a>
+          <p><a class="open-all-submissions-button" href="#{{ id }}-open-all-submissions">
+                {% trans "Open All Submissions" %}
+          </a></p>
+
+          <p><a class="close-all-submissions-button" href="#{{ id }}-close-all-submissions">
+                {% trans "Close All Submissions" %}
+          </a></p>
         </td>
       </tr>
-      <% for (var i = 0; i < assignments.length; i++) { %>
-      <%     var assignment = assignments[i]; %>
-        <tr id="row-<%= assignment.module_id %>">
-        
-          <td><%= assignment.username %></td>
-
-          <td><%= assignment.fullname %></td>
-
-          <td>
-            <% if (assignment.may_grade && assignment.uploaded.length > 0) { %>
-              <ul>
-                <% for (var i = 0; i < assignment.uploaded.length; i++) { %>
-
-                  <li>
-                    <a href="<%= downloadUrl + '/' + assignment.uploaded[i].sha1 %>?module_id=<%= assignment.module_id %>">
-                      <%= assignment.uploaded[i].filename %>
-                    </a>
-                  </li>
-
-                <% } %></p>
-              </ul>
-              <a href="<%= downloadZippedUrl %>?module_id=<%= assignment.module_id %>"> Download All </a>
-            <% } %>
-          </td>
-
-          <td><%= assignment.submitted_on %></td>
-
-          <td>
-            <% if (assignment.score !== null) { %>
-              <%= assignment.score %> /
-              <%= max_score %>
-              <% if (! assignment.approved) { %>
-                ({% trans "Awaiting instructor approval" %})
-              <% } %>
-            <% } %>
-          </td>
-
-          <td><%= assignment.comment %></td>
-
-          <td>
-            <% if (assignment.may_grade) { %>
-              <p><a class="manage-annotated-button" 
-                    href="#{{ id }}-manage-annotated">
-                {% trans "Manage" %}
-              </a></p>          
-            <% } %>
-          </td>
-
-          <td>
-            <% if (assignment.may_grade) { %>
-              <p><a class="enter-grade-button" href="#{{ id }}-enter-grade">
-                <% if (assignment.needs_approval) { %>
-                  {% trans "Approve grade" %}
-                <% } else { %>
-                  {% trans "Enter grade" %}
-                <% } %>
-              </a></p>
-
-              <% if (assignment.uploaded.length > 0) { %>
-                <p><a class="remove-submission-button" href="#{{ id }}-remove-submission">
-                  {% trans "Remove Submission" %}
-                </a></p>
-              <% } %>
-
-              <% if (assignment.submitted) { %>
-                <p><a class="reopen-submission-button" href="#{{ id }}-reopen-submission">
-                  {% trans "Reopen Submission" %}
-                </a></p>
-              <% } %>
-            <% } %>
-
-          </td>
-
-        </tr>
-      <% } %>
     </table>
+    <div style="display: none;">
+      <a id="confirm-dialog" href="#{{ id }}-confirm"></a>
+    </div>
   </script>
-
-
 
   <div aria-hidden="true" class="wrap-instructor-info">
     <a class="instructor-info-action" id="grade-submissions-button"
@@ -246,6 +255,24 @@
           {% endfor %}
         </table><br/>
         category = {{category}}
+      </div>
+    </div>
+  </section>
+
+  <section aria-hidden="true" class="modal confirm-modal" id="{{ id }}-confirm">
+    <div class="inner-wrapper" style="color: black">
+      <header><h2>
+        {% trans "Are you sure?" %}
+      </h2></header>
+      <br/>
+      <div style="display: block;">
+        <p><span id="confirm-message"></span></p>
+        <button type="button" id="confirm-accept">
+          {% trans "Yes" %}
+        </button>
+        <button type="button" id="confirm-exit">
+          {% trans "No" %}
+        </button>
       </div>
     </div>
   </section>

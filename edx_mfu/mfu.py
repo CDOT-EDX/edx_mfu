@@ -22,7 +22,6 @@ from file_annotation_mixin import FileAnnotationMixin
 
 from courseware.models import StudentModule
 
-#from django.core.files import File
 from django.template import Context, Template
 
 from webob.response import Response
@@ -222,9 +221,9 @@ class MultipleFileUploadXBlock(
 
             # can a grade be entered?
             due = get_extended_due_date(self)
-            may_grade = (instructor or not approved)
+            may_grade = (instructor or not approved) and submitted
             if due is not None:
-                may_grade = may_grade and (submitted or (due < _now()))
+                may_grade = may_grade and (due < _now())
 
             uploaded = []
             if (state.get('is_submitted')):
@@ -368,7 +367,7 @@ class MultipleFileUploadXBlock(
         return Response(status=204)
 
     @XBlock.handler
-    def staff_reopen_all_submissions(self, request, suffix=''):
+    def staff_open_all_submissions(self, request, suffix=''):
         """Unsubmits all submissions.
         """
         if not self.is_course_staff():
@@ -383,8 +382,61 @@ class MultipleFileUploadXBlock(
         for module in query:
             self.set_student_state(
                 module.id,
-                is_submitted=False
+                is_submitted=False,
+                submission_time=None
             )
+
+        return Response(status=204)
+
+    @XBlock.handler
+    def staff_close_all_submissions(self, request, suffix=''):
+        """Closes all submissions.
+        """
+        if not self.is_course_staff():
+            return Response(status=403)
+
+        # Get all student modules for this assingment
+        query = StudentModule.objects.filter(
+            course_id=self.xmodule_runtime.course_id,
+            module_state_key=self.location
+        )
+
+        for module in query:
+            self.set_student_state(
+                module.id,
+                is_submitted=True,
+                submission_time=str(_now())
+            )
+
+        return Response(status=204)
+
+    @XBlock.handler
+    def staff_open_submission(self, request, suffix=''):
+        """Unsubmits a student's submission.
+        """
+        if not self.is_course_staff():
+            return Response(status=403)
+
+        self.set_student_state(
+            request.params['module_id'],
+            is_submitted=False,
+            submission_time=None
+        )
+
+        return Response(status=204)
+
+    @XBlock.handler
+    def staff_close_submission(self, request, suffix=''):
+        """Closes a student's submissions.
+        """
+        if not self.is_course_staff():
+            return Response(status=403)
+
+        self.set_student_state(
+            request.params['module_id'],
+            is_submitted=True,
+            submission_time=str(_now())
+        )
 
         return Response(status=204)
 

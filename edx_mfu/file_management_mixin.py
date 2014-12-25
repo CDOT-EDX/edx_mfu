@@ -10,9 +10,6 @@ import mimetypes
 import pkg_resources
 import pytz
 
-# from xblock.core import XBlock
-# from xblock.fields import XBlockMixin
-
 from webob.response import Response
 import webob.exc as ExceptionResponse
 
@@ -128,8 +125,8 @@ class FileManagementMixin(object):
         # pack assignment submission into a zip file.
         for key, metadata in get_file_metadata(filelist).iteritems():
             afile = fs.get(ObjectId(key))
-
             assignment_zip.writestr(metadata.filename, afile.read())
+            afile.close()
 
         assignment_zip.close()
         buff.seek(0)
@@ -166,6 +163,9 @@ class FileManagementMixin(object):
         Arguments:
         filelist: A dictionary containint file metadata.
         """
+        if filelist is None:
+            return
+
         for key in filelist.keys():
             self.delete_file(filelist, ObjectId(key))
 
