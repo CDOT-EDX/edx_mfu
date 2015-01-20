@@ -32,7 +32,7 @@ from xmodule.util.duedate import get_extended_due_date
 
 log = logging.getLogger(__name__)
 
-
+#test
 class MultipleFileUploadXBlock(
 	XBlock, 
 	FileManagementMixin, 
